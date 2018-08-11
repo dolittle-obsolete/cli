@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+"use strict";
+
+var _args = require("args");
+
+var _args2 = _interopRequireDefault(_args);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_args2.default.command("config", "Work with the configuration of Dolittle CLI").command("boundedcontext", "Work with bounded contexts");
+
+console.log("Hello");
+
+var flags = _args2.default.parse(process.argv);
+
+if (_args2.default.sub.length == 0) _args2.default.showHelp();
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL1NvdXJjZS9kb2xpdHRsZS5qcyJdLCJuYW1lcyI6WyJhcmdzIiwiY29tbWFuZCIsImNvbnNvbGUiLCJsb2ciLCJmbGFncyIsInBhcnNlIiwicHJvY2VzcyIsImFyZ3YiLCJzdWIiLCJsZW5ndGgiLCJzaG93SGVscCJdLCJtYXBwaW5ncyI6Ijs7QUFDQTs7Ozs7O0FBRUFBLGVBQ0tDLE9BREwsQ0FDYSxRQURiLEVBQ3VCLDZDQUR2QixFQUVLQSxPQUZMLENBRWEsZ0JBRmIsRUFFK0IsNEJBRi9COztBQU1BQyxRQUFRQyxHQUFSLENBQVksT0FBWjs7QUFFQSxJQUFNQyxRQUFRSixlQUFLSyxLQUFMLENBQVdDLFFBQVFDLElBQW5CLENBQWQ7O0FBRUEsSUFBSVAsZUFBS1EsR0FBTCxDQUFTQyxNQUFULElBQW1CLENBQXZCLEVBQTJCVCxlQUFLVSxRQUFMIiwiZmlsZSI6ImRvbGl0dGxlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiXG5pbXBvcnQgYXJncyBmcm9tICdhcmdzJztcblxuYXJnc1xuICAgIC5jb21tYW5kKFwiY29uZmlnXCIsIFwiV29yayB3aXRoIHRoZSBjb25maWd1cmF0aW9uIG9mIERvbGl0dGxlIENMSVwiKVxuICAgIC5jb21tYW5kKFwiYm91bmRlZGNvbnRleHRcIiwgXCJXb3JrIHdpdGggYm91bmRlZCBjb250ZXh0c1wiKVxuICAgIDtcblxuXG5jb25zb2xlLmxvZyhcIkhlbGxvXCIpO1xuXG5jb25zdCBmbGFncyA9IGFyZ3MucGFyc2UocHJvY2Vzcy5hcmd2KTtcblxuaWYoIGFyZ3Muc3ViLmxlbmd0aCA9PSAwICkgYXJncy5zaG93SGVscCgpO1xuIl19
