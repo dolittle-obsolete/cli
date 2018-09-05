@@ -5,7 +5,10 @@
   "main": "bin/dolittle.js",
   "preferGlobal": true,
   "bin": {
-    "dolittle": "bin/dolittle.js"
+    "dolittle": "bin/dolittle.js",
+    "dolittle-cluster": "bin/cluster/index.js",
+    "dolittle-cluster-info": "bin/cluster/info.js",
+    "dolittle-cluster-add": "bin/cluster/add.js"
   },
   "scripts": {
     "start": "node bin/dolittle.js",
@@ -31,9 +34,12 @@
     "karma-mocha": "^1.3.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "mocha": "^5.2.0",
-    "sinon": "^6.1.5"
+    "sinon": "^6.1.5",
+    "sinon-chai": "^3.2.0"
   },
   "dependencies": {
-    "args": "^5.0.0"
+    "args": "^5.0.0",
+    "fs-extra": "^7.0.0",
+    "simple-git": "^1.96.0",
   }
 }

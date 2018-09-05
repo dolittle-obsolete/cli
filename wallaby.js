@@ -8,6 +8,7 @@ module.exports = function(wallaby) {
             { pattern: 'node_modules/chai/chai.js', instrument: false },
             { pattern: 'node_modules/chai-as-promised/chai-as-promised.js', instrument: false },
             { pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false },
+            { pattern: 'node_modules/sinon-chai/lib/sinon-chai.js', instrument: false },
             { pattern: 'Source/**/for_*/*.js', ignore: true },
             { pattern: 'Source/**/*.js' }
         ],
@@ -28,6 +29,9 @@ module.exports = function(wallaby) {
         setup: () => {
             global.expect = chai.expect;
             let should = chai.should();
+            global.sinon = require('sinon');
+            let sinonChai = require('sinon-chai');
+            chai.use(sinonChai);
         }
     }
 };
