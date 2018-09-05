@@ -2,29 +2,29 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { config } from './config';
-import {  cluster } from './cluster';
+import { Config } from './Config';
+import { Cluster } from './Cluster';
 
 /**
  * Represents a parser for {config}
  */
-export class configParser {
+export class ConfigParser {
     /**
      * Parses a JSON from string into a {config} instance
      * @param {string | object} configuration String or object holding configuration
-     * @returns {config}
+     * @returns {Config}
      */
     parse(configuration) {
         if (typeof configuration == 'undefined') configuration = {};
         if (typeof configuration == 'string') configuration = JSON.parse(configuration);
 
-        let c = new config();
+        let config = new Config();
         if (configuration.clusters) {
-            configuration.clusters.forEach(cl => c.clusters.push(Object.assign(new cluster, cl)));
+            configuration.clusters.forEach(cl => config.clusters.push(Object.assign(new Cluster, cl)));
         }
 
-        c.current = c.clusters.find(cl => cl.name == configuration.current);
+        config.current = config.clusters.find(cl => cl.name == configuration.current);
 
-        return c;
+        return config;
     }
 }

@@ -2,7 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { configParser } from '../configParser';
+import { ConfigParser } from '../ConfigParser';
 
 describe("when parsing object with two clusters and current set to second", () => {
     let reader = null;
@@ -16,7 +16,7 @@ describe("when parsing object with two clusters and current set to second", () =
     };
 
     (beforeEach => {
-        reader = new configParser();
+        reader = new ConfigParser();
         result = reader.parse(configuration);
     })();
 
