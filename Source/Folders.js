@@ -10,7 +10,7 @@ const _fileSystem = new WeakMap();
 /**
  * Represents helpers for working with folders
  */
-export class folders
+export class Folders
 {
     /**
      * Initializes a new instance of {folders}
