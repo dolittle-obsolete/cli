@@ -57,8 +57,8 @@ class global {
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
-        _applicationManager.set(this, new ApplicationManager(this.folders, this.configManager, this.logger));
-        _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.folders));
+        _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
+        _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
     }
 
     /**

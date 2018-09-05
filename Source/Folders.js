@@ -60,6 +60,26 @@ export class Folders
     }
 
     /**
+     * Get all folders and files within a specific folder recursively
+     * @param {string} folder Path of the folder to get from
+     * @returns {string[]} Array of files and folders
+     */
+    getFoldersAndFilesRecursivelyIn(folder) {
+        let self = this;
+        let results = [];
+        fs.readdirSync(folder).forEach(function (dirInner) {
+            let actualPath = path.resolve(folder, dirInner);
+            let stat = fs.statSync(actualPath);
+
+            if (stat.isDirectory()) {
+                results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
+            }
+            results.push(actualPath);
+        });
+        return results;
+    }
+
+    /**
      * Search for a specific file pattern within a folder, recursively
      * @param {string} folder Folder to search from
      * @param {string} pattern Pattern of files to look for

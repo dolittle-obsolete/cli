@@ -4,10 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import { Folders } from '../Folders';
 import { Logger } from 'winston';
+import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import { ConfigManager } from '../configuration/ConfigManager';
+import { Guid } from '../Guid';
+import { Application } from './Application';
+import fs from 'fs';
+import path from 'path';
 
-const _folders = new WeakMap();
+const applicationFilename = "application.json";
+
+const _boilerPlatesManager = new WeakMap();
 const _configManager = new WeakMap();
+const _folders = new WeakMap();
+const _fileSystem = new WeakMap();
 
 
 /**
@@ -17,13 +26,17 @@ export class ApplicationManager {
 
     /**
      * Initializes a new instance of {ApplicationManager}
-     * @param {Folders} folders 
+     * @param {BoilerPlatesManager} boilerPlatesManager
      * @param {ConfigManager} configManager
+     * @param {Folders} folders 
+     * @param {fs} fileSystem
      * @param {Logger} logger
      */
-    constructor(folders, configManager, logger) {
-        _folders.set(this, folders);
+    constructor(boilerPlatesManager, configManager, folders, fileSystem, logger) {
+        _boilerPlatesManager.set(this, boilerPlatesManager);
         _configManager.set(this, configManager);
+        _folders.set(this, folders);
+        _fileSystem.set(this, fileSystem);
         this._logger = logger;
     }
 
@@ -33,7 +46,21 @@ export class ApplicationManager {
      */
     create(name) {
         this._logger.info(`Creating application with name '${name}'`);
-        
 
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType("application")[0];
+        let context = {
+            id: Guid.create(),
+            name: name
+        };
+        let destination = process.cwd();
+        
+        _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
+    }
+
+    /**
+     * Check if an application has been setup
+     */
+    hasApplication() {
+        return _fileSystem.get(this).existsSync(path.join(process.cwd(),applicationFilename));
     }
 }
