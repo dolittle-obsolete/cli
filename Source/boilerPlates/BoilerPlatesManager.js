@@ -257,13 +257,15 @@ export class BoilerPlatesManager {
     createInstance(boilerPlate, destination, context) {
         _folders.get(this).copy(destination, boilerPlate.location);
         boilerPlate.pathsNeedingBinding.forEach(_ => {
-            let template = Handlebars.compile(_);
+            let pathToRename = path.join(destination, _);
+            let template = Handlebars.compile(pathToRename);
             let result = template(context);
-            fs.renameSync(_, result);
+            fs.renameSync(pathToRename, result);
         });
 
         boilerPlate.filesNeedingBinding.forEach(_ => {
             let file = path.join(destination,_);
+            console.log("File : "+file);
             
             let content = _fileSystem.get(this).readFileSync(file, 'utf8')
             let template = Handlebars.compile(content);
