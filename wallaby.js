@@ -32,6 +32,11 @@ module.exports = function(wallaby) {
             global.sinon = require('sinon');
             let sinonChai = require('sinon-chai');
             chai.use(sinonChai);
+
+            let winston = require('winston');
+            global.logger = winston.createLogger({
+
+            });
         }
     }
 };
