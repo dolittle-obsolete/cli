@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { ConfigParser } from './ConfigParser';
 import { Config } from './Config';
+import { Logger } from 'winston';
 import fs from 'fs';
 import path from 'path';
 
@@ -31,6 +32,7 @@ function expandPath(filepath) {
  */
 function makeSureCentralFolderExists(fileSystem) {
     if( !fileSystem.existsSync(this.centralFolderLocation)) {
+        this._logger.info("Central Dolittle folder does not exist - creating it and setting up default configuration");
         fileSystem.mkdir(this.centralFolderLocation);
         let config = new Config();
         fileSystem.writeFile(this.configFileLocation, JSON.stringify(config));
@@ -46,10 +48,13 @@ export class ConfigManager {
      * Initializes a new instance of {ConfigManager}
      * @param {fs} fileSystem
      * @param {ConfigParser} configParser
+     * @param {Logger} logger
      */
-    constructor(fileSystem, configParser) {
+    constructor(fileSystem, configParser, logger) {
         _fileSystem.set(this, fileSystem);
         _configParser.set(this, configParser);
+        this._logger = logger;        
+        
         _centralFolderLocation.set(this, expandPath(centralFolder));
         makeSureCentralFolderExists.call(this, fileSystem);
     }
@@ -62,6 +67,10 @@ export class ConfigManager {
         return _centralFolderLocation.get(this);
     }
 
+    /**
+     * Gets the location of the config file
+     * @returns {string} The path to the config file
+     */
     get configFileLocation() {
         return path.join(this.centralFolderLocation, configFile);
     }

@@ -9,6 +9,6 @@ export class a_config_manager extends all_dependencies {
     constructor() {
         super();
         
-        this.configManager = new ConfigManager(this.fs, this.configParser);
+        this.configManager = new ConfigManager(this.fs, this.configParser, logger);
     }
 }
