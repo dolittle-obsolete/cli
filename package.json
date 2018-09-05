@@ -8,7 +8,9 @@
     "dolittle": "bin/dolittle.js",
     "dolittle-cluster": "bin/cluster/index.js",
     "dolittle-cluster-info": "bin/cluster/info.js",
-    "dolittle-cluster-add": "bin/cluster/add.js"
+    "dolittle-cluster-add": "bin/cluster/add.js",
+    "dolittle-create": "bin/create/index.js",
+    "dolittle-create-application": "bin/create/application.js"
   },
   "scripts": {
     "start": "node bin/dolittle.js",
