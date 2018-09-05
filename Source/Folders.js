@@ -27,7 +27,7 @@ export class Folders
      */
     copy(destination, source)
     {
-        _fileSystem.get(this).copySync(source, destination);
+        fs.copySync(source, destination);
     }
 
     /**

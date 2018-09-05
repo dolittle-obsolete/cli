@@ -9,8 +9,6 @@ import { Logger } from 'winston';
 import path from 'path';
 import fs from 'fs';
 
-import Handlebars from 'handlebars';
-
 const _boilerPlatesManager = new WeakMap();
 const _applicationManager = new WeakMap();
 const _folders = new WeakMap();
@@ -57,12 +55,5 @@ export class BoundedContextManager {
             name: name
         };
         _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
-        let filesAndFolders = _folders.get(this).getFoldersAndFilesRecursivelyIn(destination);
-        let filesAndFoldersToBind = filesAndFolders.filter(_ => _.indexOf('{{') > 0);
-        filesAndFoldersToBind.forEach(_ => {
-            let template = Handlebars.compile(_);
-            let result = template(context);
-            fs.renameSync(_, result);
-        });
     }
 }
