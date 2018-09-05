@@ -2,12 +2,9 @@
 import args from 'args';
 
 args
-    .command("config", "Work with the configuration of Dolittle CLI")
-    .command("boundedcontext", "Work with bounded contexts")
+    .command('cluster', 'Work with cluster hosting Dolittle')
     ;
 
-
-console.log("Hello");
 
 const flags = args.parse(process.argv);
 
