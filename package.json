@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node bin/dolittle.js",
-    "build": "babel Source -d bin --source-maps inline"
+    "build": "babel Source -d bin --source-maps inline --ignore **/for_*"
   },
   "author": "",
   "license": "ISC",
@@ -40,6 +40,6 @@
   "dependencies": {
     "args": "^5.0.0",
     "fs-extra": "^7.0.0",
-    "simple-git": "^1.96.0",
+    "simple-git": "^1.96.0"
   }
 }
