@@ -13,6 +13,16 @@ import {  BoilerPlate } from './BoilerPlate';
 
 const boilerPlateFolder = 'boiler-plates';
 
+const binaryFiles = [
+    ".jpg",
+    ".png",
+    ".obj",
+    ".dll",
+    ".bin",
+    ".exe",
+    ".ttf"
+];
+
 const _configManager = new WeakMap();
 const _httpWrapper = new WeakMap();
 const _git = new WeakMap();
@@ -186,6 +196,7 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     updateConfiguration() {
+        let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
         folders.forEach(folder => {
@@ -193,13 +204,38 @@ export class BoilerPlatesManager {
             
             if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
                 let boilerPlateFromFile = require(boilerPlateFile);
+                let contentFolder = path.join(folder, "content"); 
+
+                let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
+                paths = paths.filter(_ => {
+                    let isBinary = false;
+                    binaryFiles.forEach(b => {
+                        if(_.toLowerCase().indexOf(b)>0) isBinary = true;
+                    });
+                    return !isBinary;
+                });
+                let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length+1));
+                let filesNeedingBinding = [];
+
+                paths.forEach(_ => {
+                    let stat = _fileSystem.get(self).statSync(_);
+                    if( !stat.isDirectory()) {
+                        let file = _fileSystem.get(self).readFileSync(_);
+                        if( file.indexOf('{{') >= 0 ) {
+                            filesNeedingBinding.push(_.substr(contentFolder.length+1));
+                        }
+                    }
+                });
 
                 let boilerPlate = new BoilerPlate(
                     boilerPlateFromFile.language || 'any',
                     boilerPlateFromFile.name,
                     boilerPlateFromFile.description,
                     boilerPlateFromFile.type,
-                    path.join(folder, "content"));
+                    contentFolder,
+                    pathsNeedingBinding,
+                    filesNeedingBinding
+                );
                 boilerPlates.push(boilerPlate);
             }
         });
@@ -217,6 +253,5 @@ export class BoilerPlatesManager {
      */
     createInstance(boilerPlate, destination, context) {
         _folders.get(this).copy(destination, boilerPlate.location);
-
     }
 }

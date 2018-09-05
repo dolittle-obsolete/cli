@@ -7,6 +7,8 @@ const _name = new WeakMap();
 const _description = new WeakMap();
 const _type = new WeakMap();
 const _location = new WeakMap();
+const _pathsNeedingBinding = new WeakMap();
+const _filesNeedingBinding = new WeakMap();
 
 /**
  * Represents a boiler plate
@@ -20,13 +22,17 @@ export class BoilerPlate {
      * @param {string} description 
      * @param {string} type
      * @param {string} location 
+     * @param {string[]} [pathsNeedingBinding]
+     * @param {string[]} [filesNeedingBinding]
      */
-    constructor(language, name, description, type, location) {
+    constructor(language, name, description, type, location, pathsNeedingBinding, filesNeedingBinding) {
         _language.set(this, language);
         _name.set(this, name);
         _description.set(this, description);
         _type.set(this, type);
         _location.set(this, location);
+        _pathsNeedingBinding.set(this, pathsNeedingBinding || []);
+        _filesNeedingBinding.set(this, filesNeedingBinding || []);
     }
 
     /**
@@ -60,6 +66,18 @@ export class BoilerPlate {
     get location() { return _location.get(this); }
 
     /**
+     * Get the paths that need binding - relative within the content of the location of the {BoilerPlate}
+     * @returns {string[]} Paths
+     */
+    get pathsNeedingBinding() { return _pathsNeedingBinding.get(this); }
+
+    /**
+     * Gets the files that need binding - relative within the content of the location of the {BoilerPlate}
+     * @returns {string[]} Files
+     */
+    get filesNeedingBinding() { return _filesNeedingBinding.get(this); }
+
+    /**
      * Convert to a JSON object
      * @returns {*} Object literal
      */
@@ -69,7 +87,9 @@ export class BoilerPlate {
             language: this.language,
             description: this.description,
             type: this.type,
-            location: this.location
+            location: this.location,
+            pathsNeedingBinding: this.pathsNeedingBinding,
+            filesNeedingBinding: this.filesNeedingBinding
         }
     }
 }

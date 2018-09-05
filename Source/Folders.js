@@ -27,7 +27,7 @@ export class Folders
      */
     copy(destination, source)
     {
-        fs.copySync(source, destination);
+        _fileSystem.get(this).copySync(source, destination);
     }
 
     /**
@@ -38,8 +38,8 @@ export class Folders
     {
         var dir = path;
 
-        if (!fs.existsSync(dir)){
-            fs.mkdirSync(dir);
+        if (!_fileSystem.get(this).existsSync(dir)){
+            _fileSystem.get(this).mkdirSync(dir);
         }
     }
 
@@ -48,10 +48,11 @@ export class Folders
      * @param {string} path 
      */
     getFoldersIn(folder) {
+        let self = this;
         var results = [];
-        fs.readdirSync(folder).forEach(function (dirInner) {
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             let actualPath = path.resolve(folder, dirInner);
-            let stat = fs.statSync(actualPath);
+            let stat = _fileSystem.get(self).statSync(actualPath);
             if (stat.isDirectory()) {
                 results.push(actualPath);
             }
@@ -67,9 +68,9 @@ export class Folders
     getFoldersAndFilesRecursivelyIn(folder) {
         let self = this;
         let results = [];
-        fs.readdirSync(folder).forEach(function (dirInner) {
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             let actualPath = path.resolve(folder, dirInner);
-            let stat = fs.statSync(actualPath);
+            let stat = _fileSystem.get(self).statSync(actualPath);
 
             if (stat.isDirectory()) {
                 results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
@@ -85,14 +86,15 @@ export class Folders
      * @param {string} pattern Pattern of files to look for
      */
     searchRecursive(folder, pattern) {
+        let self = this;
         var results = [];
 
-        fs.readdirSync(folder).forEach(function (dirInner) {
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             dirInner = path.resolve(folder, dirInner);
-            var stat = fs.statSync(dirInner);
+            var stat = _fileSystem.get(self).statSync(dirInner);
 
             if (stat.isDirectory()) {
-                results = results.concat(this.SearchRecursive(dirInner, pattern));
+                results = results.concat(self.SearchRecursive(dirInner, pattern));
             }
 
             if (stat.isFile() && dirInner.endsWith(pattern)) {
