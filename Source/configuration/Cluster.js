@@ -6,7 +6,7 @@
  /**
   * Represents the configuration of a cluster
   */
-export class cluster
+export class Cluster
 {
     name = ""
     url = 0
