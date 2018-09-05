@@ -181,8 +181,6 @@ export class BoilerPlatesManager {
             let boilerPlateFile = path.join(folder, 'boilerplate.js');
             
             if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
-                this._logger.info(boilerPlateFile);
-
                 let boilerPlateFromFile = require(boilerPlateFile);
 
                 let boilerPlate = new BoilerPlate(
@@ -194,7 +192,6 @@ export class BoilerPlatesManager {
                 boilerPlates.push(boilerPlate);
             }
         });
-        this._logger.info(boilerPlates);
 
         let boilerPlatesAsObjects = boilerPlates.map(_ => _.toJson());
         let boilerPlatesAsJson = JSON.stringify(boilerPlatesAsObjects, null, 4);
