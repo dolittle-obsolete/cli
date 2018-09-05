@@ -76,7 +76,7 @@ export class BoilerPlatesManager {
      * @returns {BoilerPlate[]} Avaiable boiler plates for the language
      */
     boilerPlatesByLanguage(language) {
-        return _boilerPlates.get(this).some(boilerPlate => boilerPlate.language == language);
+        return _boilerPlates.get(this).filter(boilerPlate => boilerPlate.language == language);
     }
 
     /**
@@ -85,8 +85,19 @@ export class BoilerPlatesManager {
      * @returns {BoilerPlate[]} Avaiable boiler plates for the type
      */
     boilerPlatesByType(type) {
-        return _boilerPlates.get(this).some(boilerPlate => boilerPlate.type == type);
+        return _boilerPlates.get(this).filter(boilerPlate => boilerPlate.type == type);
     }
+
+    /**
+     * Get all available boiler plates for a specific language
+     * @param {string} language
+     * @param {string} type
+     * @returns {BoilerPlate[]} Avaiable boiler plates for the language
+     */
+    boilerPlatesByLanguageAndType(language, type) {
+        return _boilerPlates.get(this).filter(boilerPlate => boilerPlate.language == language && boilerPlate.type == type);
+    }
+
 
     /**
      * Read all boiler plates from disk
@@ -196,5 +207,16 @@ export class BoilerPlatesManager {
         let boilerPlatesAsObjects = boilerPlates.map(_ => _.toJson());
         let boilerPlatesAsJson = JSON.stringify(boilerPlatesAsObjects, null, 4);
         _fileSystem.get(this).writeFileSync(this.boilerPlateConfigFile, boilerPlatesAsJson);
+    }
+
+    /**
+     * 
+     * @param {BoilerPlate} boilerPlate 
+     * @param {string} destination 
+     * @param {object} context 
+     */
+    createInstance(boilerPlate, destination, context) {
+        _folders.get(this).copy(destination, boilerPlate.location);
+
     }
 }

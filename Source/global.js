@@ -9,6 +9,7 @@ import { Git } from 'simple-git';
 import { ConfigManager } from './configuration/ConfigManager';
 import { ConfigParser } from './configuration/ConfigParser';
 import { ApplicationManager } from './applications/ApplicationManager';
+import { BoundedContextManager } from './boundedContexts/BoundedContextManager';
 import { BoilerPlatesManager } from './boilerPlates/BoilerPlatesManager';
 import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
@@ -16,6 +17,7 @@ import { Folders } from './Folders';
 const _configManager = new WeakMap();
 const _configParser = new WeakMap();
 const _applicationManager = new WeakMap();
+const _boundedContextManager = new WeakMap();
 const _boilerPlatesManager = new WeakMap();
 const _folders = new WeakMap();
 const _git = new WeakMap();
@@ -56,6 +58,7 @@ class global {
         _folders.set(this, new Folders(fs));
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.folders, this.configManager, this.logger));
+        _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.folders));
     }
 
     /**
@@ -88,6 +91,14 @@ class global {
      */
     get applicationManager() {
         return _applicationManager.get(this);
+    }
+
+    /**
+     * Gets the {BoundedContextManager}
+     * @returns {BoundedContextManager}
+     */
+    get boundedContextManager() {
+        return _boundedContextManager.get(this);
     }
 
     /**

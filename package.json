@@ -10,7 +10,8 @@
     "dolittle-cluster-info": "bin/cluster/info.js",
     "dolittle-cluster-add": "bin/cluster/add.js",
     "dolittle-create": "bin/create/index.js",
-    "dolittle-create-application": "bin/create/application.js"
+    "dolittle-create-application": "bin/create/application.js",
+    "dolittle-create-boundedcontext": "bin/create/boundedContext.js"
   },
   "scripts": {
     "start": "node bin/dolittle.js",
