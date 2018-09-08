@@ -215,7 +215,7 @@ export class BoilerPlatesManager {
 
             if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
                 let boilerPlateFromFile = require(boilerPlateFile);
-                let contentFolder = path.join(folder, "content");
+                let contentFolder = path.join(folder, "Content");
 
                 let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
                 paths = paths.filter(_ => {
