@@ -9,7 +9,7 @@ import { Folders } from '../Folders';
 import fs from 'fs';
 import { Logger } from 'winston';
 import path from 'path';
-import {  BoilerPlate } from './BoilerPlate';
+import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
 
 const boilerPlateFolder = 'boiler-plates';
@@ -53,6 +53,8 @@ export class BoilerPlatesManager {
         _fileSystem.set(this, fileSystem);
         _git.set(this, git);
 
+        folders.makeFolderIfNotExists(this.boilerPlateLocation);
+
         this._logger = logger;
         this.readBoilerPlates();
     }
@@ -70,7 +72,7 @@ export class BoilerPlatesManager {
      * @returns {string} Path to the config file
      */
     get boilerPlateConfigFile() {
-        return path.join(_configManager.get(this).centralFolderLocation,"boiler-plates.json");
+        return path.join(_configManager.get(this).centralFolderLocation, "boiler-plates.json");
     }
 
     /**
@@ -115,11 +117,11 @@ export class BoilerPlatesManager {
      */
     readBoilerPlates() {
         let configFile = this.boilerPlateConfigFile;
-        if( _fileSystem.get(this).existsSync(configFile) ) {
+        if (_fileSystem.get(this).existsSync(configFile)) {
             let json = _fileSystem.get(this).readFileSync(configFile);
             let boilerPlatesAsObjects = JSON.parse(json);
             let boilerPlates = [];
-            
+
 
             boilerPlatesAsObjects.forEach(boilerPlateObject => {
                 let boilerPlate = new BoilerPlate(
@@ -128,19 +130,19 @@ export class BoilerPlatesManager {
                     boilerPlateObject.description,
                     boilerPlateObject.type,
                     boilerPlateObject.location,
-                    boilerPlateObject.pathsNeedingBinding||[],
-                    boilerPlateObject.filesNeedingBinding||[]
+                    boilerPlateObject.pathsNeedingBinding || [],
+                    boilerPlateObject.filesNeedingBinding || []
                 );
                 boilerPlates.push(boilerPlate);
             });
 
             _boilerPlates.set(this, boilerPlates);
         } else {
-            
+
             _boilerPlates.set(this, []);
         }
 
-        if( _boilerPlates.get(this).length == 0 ) {
+        if (_boilerPlates.get(this).length == 0) {
             this._logger.warn("There are no boiler plates installed - run 'dolittle update' to get it updated");
         }
     }
@@ -181,17 +183,23 @@ export class BoilerPlatesManager {
         this.updateBoilerPlatesOnDisk();
 
         this.getAvailableBoilerPlates().then(names => {
+            let cloneCount = 0;
             names.forEach(name => {
+
                 let folderName = path.join(this.boilerPlateLocation, name);
                 if (!_fileSystem.get(this).existsSync(folderName)) {
                     let url = `https://github.com/dolittle-boilerplates/${name}.git`;
                     this._logger.info(`Getting boilerplate not on disk from '${url}'`);
+                    cloneCount++;
                     _git.get(this).silent(false)
-                        .clone(url, folderName, { '--recursive': null });
+                        .clone(url, folderName, { '--recursive': null })
+                        .exec(() => {
+                            if (--cloneCount == 0) {
+                                this.updateConfiguration();
+                            }
+                        });
                 }
             });
-
-            this.updateConfiguration();
         });
     }
 
@@ -204,28 +212,28 @@ export class BoilerPlatesManager {
         let boilerPlates = [];
         folders.forEach(folder => {
             let boilerPlateFile = path.join(folder, 'boilerplate.js');
-            
+
             if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
                 let boilerPlateFromFile = require(boilerPlateFile);
-                let contentFolder = path.join(folder, "content"); 
+                let contentFolder = path.join(folder, "content");
 
                 let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
                 paths = paths.filter(_ => {
                     let isBinary = false;
                     binaryFiles.forEach(b => {
-                        if(_.toLowerCase().indexOf(b)>0) isBinary = true;
+                        if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
                     });
                     return !isBinary;
                 });
-                let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length+1));
+                let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
                 let filesNeedingBinding = [];
 
                 paths.forEach(_ => {
                     let stat = _fileSystem.get(self).statSync(_);
-                    if( !stat.isDirectory()) {
+                    if (!stat.isDirectory()) {
                         let file = _fileSystem.get(self).readFileSync(_);
-                        if( file.indexOf('{{') >= 0 ) {
-                            filesNeedingBinding.push(_.substr(contentFolder.length+1));
+                        if (file.indexOf('{{') >= 0) {
+                            filesNeedingBinding.push(_.substr(contentFolder.length + 1));
                         }
                     }
                 });
@@ -264,9 +272,9 @@ export class BoilerPlatesManager {
         });
 
         boilerPlate.filesNeedingBinding.forEach(_ => {
-            let file = path.join(destination,_);
-            console.log("File : "+file);
-            
+            let file = path.join(destination, _);
+            console.log("File : " + file);
+
             let content = _fileSystem.get(this).readFileSync(file, 'utf8')
             let template = Handlebars.compile(content);
             let result = template(context);

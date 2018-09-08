@@ -53,7 +53,7 @@ export class ConfigManager {
     constructor(fileSystem, configParser, logger) {
         _fileSystem.set(this, fileSystem);
         _configParser.set(this, configParser);
-        this._logger = logger;        
+        this._logger = logger;      
         
         _centralFolderLocation.set(this, expandPath(centralFolder));
         makeSureCentralFolderExists.call(this, fileSystem);
