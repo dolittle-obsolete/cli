@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.12",
+  "version": "2.0.0-alpha2.13",
   "description": "",
   "main": "bin/dolittle.js",
   "preferGlobal": true,
@@ -15,7 +15,8 @@
   },
   "scripts": {
     "start": "node bin/dolittle.js",
-    "build": "babel Source -d bin --source-maps inline --ignore **/for_*"
+    "build": "babel Source -d bin --source-maps inline --ignore **/for_*",
+    "postinstall": "dolittle update"
   },
   "author": "",
   "license": "ISC",
