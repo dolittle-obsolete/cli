@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.29",
+  "version": "2.0.0-alpha2.30",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -50,7 +50,7 @@
     "sinon-chai": "^3.2.0"
   },
   "dependencies": {
-    "args": "^3.0.8",
+    "args": "^5.0.0",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "simple-git": "^1.96.0",
