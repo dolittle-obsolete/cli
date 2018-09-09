@@ -10,7 +10,6 @@ args
     .command('create', 'Create something from one of the boilerplates')
     ;
 
-
 const flags = args.parse(process.argv);
 
 if( args.sub.length == 0 ) args.showHelp();

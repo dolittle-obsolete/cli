@@ -1,17 +1,17 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.13",
+  "version": "2.0.0-alpha2.16",
   "description": "",
   "main": "bin/dolittle.js",
   "preferGlobal": true,
   "bin": {
-    "dolittle": "./bin/dolittle.js",
-    "dolittle-cluster": "./bin/cluster/index.js",
-    "dolittle-cluster-info": "./bin/cluster/info.js",
-    "dolittle-cluster-add": "./bin/cluster/add.js",
-    "dolittle-create": "./bin/create/index.js",
-    "dolittle-create-application": "./bin/create/application.js",
-    "dolittle-create-boundedcontext": "./bin/create/boundedContext.js"
+    "dolittle": "./bin/dolittle",
+    "dolittle-cluster": "./bin/cluster/index",
+    "dolittle-cluster-info": "./bin/cluster/info",
+    "dolittle-cluster-add": "./bin/cluster/add",
+    "dolittle-create": "./bin/create/index",
+    "dolittle-create-application": "./bin/create/application",
+    "dolittle-create-boundedcontext": "./bin/create/boundedContext"
   },
   "scripts": {
     "start": "node bin/dolittle.js",
