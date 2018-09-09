@@ -1,25 +1,33 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.16",
-  "description": "",
+  "version": "2.0.0-alpha2.29",
+  "description": "CLI tool for Dolittle",
+  "homepage": "https://dolittle.io",
+  "author": "Dolittle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dolittle-tools/cli.git"
+  },
   "main": "bin/dolittle.js",
+  "module": "bin/dolittle.js",
   "preferGlobal": true,
   "bin": {
-    "dolittle": "./bin/dolittle.js",
-    "dolittle-cluster": "./bin/cluster/index.js",
-    "dolittle-cluster-info": "./bin/cluster/info.js",
-    "dolittle-cluster-add": "./bin/cluster/add.js",
-    "dolittle-create": "./bin/create/index.js",
-    "dolittle-create-application": "./bin/create/application.js",
-    "dolittle-create-boundedcontext": "./bin/create/boundedContext.js"
+    "dolittle": "bin/dolittle.js",
+    "dolittle-cluster": "bin/dolittle-cluster.js",
+    "dolittle-cluster-info": "bin/dolittle-cluster-info.js",
+    "dolittle-cluster-add": "bin/dolittle-cluster-add.js",
+    "dolittle-create": "bin/dolittle-create.js",
+    "dolittle-create-application": "bin/dolittle-create-application.js",
+    "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js"
   },
+  "files": [
+    "bin"
+  ],
   "scripts": {
     "start": "node bin/dolittle.js",
-    "build": "babel Source -d bin --source-maps inline --ignore **/for_*",
-    "postinstall": "dolittle update"
+    "build": "babel Source -d bin --source-maps inline --ignore **/for_*"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-flow": "^6.18.0",
@@ -42,7 +50,7 @@
     "sinon-chai": "^3.2.0"
   },
   "dependencies": {
-    "args": "^5.0.0",
+    "args": "^3.0.8",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "simple-git": "^1.96.0",

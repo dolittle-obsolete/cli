@@ -7,9 +7,8 @@ args
         global.boilerPlatesManager.update();
     })
     .command('cluster', 'Work with cluster hosting Dolittle')
-    .command('create', 'Create something from one of the boilerplates')
-    ;
+    .command('create', 'Create something from one of the boilerplates');
 
-const flags = args.parse(process.argv);
+args.parse(process.argv);
 
-if( args.sub.length == 0 ) args.showHelp();
+if( !args.sub.length ) args.showHelp();

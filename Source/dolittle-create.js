@@ -4,14 +4,11 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import global from '../global';
 
 args
-    .example("dolittle create application [name]", "Creates an application with a given name")
-    ;
+    .command('application', 'A bounded context')
+    .command('boundedcontext', 'A bounded context');
     
-const flags = args.parse(process.argv);
+args.parse(process.argv);
 
-if( args.sub.length != 1 ) args.showHelp();
-
-global.applicationManager.create(args.sub[0]);
+if( !args.sub.length ) args.showHelp();

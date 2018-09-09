@@ -4,15 +4,13 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-
-// Dynamically get all boilerplates by language
-
+import global from './global';
 
 args
-    .command('application', 'A bounded context')
-    .command('boundedcontext', 'A bounded context')
-    ;
+    .example("dolittle create application [name]", "Creates an application with a given name");
     
-const flags = args.parse(process.argv);
+args.parse(process.argv);
 
-if( args.sub.length == 0 ) args.showHelp();
+if( !args.sub.length ) args.showHelp();
+
+global.applicationManager.create(args.sub[0]);
