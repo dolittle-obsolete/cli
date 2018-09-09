@@ -5,4 +5,9 @@ keywords: Tools
 author: einari
 ---
 
-Blah
+The `create` command starts
+
+## Application
+
+
+## Bounded Context
