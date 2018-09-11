@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { a_boiler_plates_manager } from './given/a_boiler_plates_manager';
 
-describe("when creating instance with paths needing binding where paths are separated with forward slash", () => {
+describe('when creating instance with paths needing binding where paths are separated with forward slash', () => {
     const fileNeedingBinding = '/Somwhere/On/{{the}}/Harddrive/{{file}}.txt';
     let context = null;
     let bindingContext = {
@@ -29,5 +29,5 @@ describe("when creating instance with paths needing binding where paths are sepa
         context.boilerPlatesManager.createInstance(boilerPlate, destination, bindingContext);
     })();
    
-    it("should expand bindings with correct values and rename path accordingly", () => context.fileSystem.renameSync.should.be.calledWith(boilerPlate.pathsNeedingBinding[0],expectedResult));
+    it('should expand bindings with correct values and rename path accordingly', () => context.fileSystem.renameSync.should.be.calledWith(boilerPlate.pathsNeedingBinding[0],expectedResult));
 });
