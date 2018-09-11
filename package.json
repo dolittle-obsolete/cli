@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "args": "^5.0.0",
+    "babel-runtime": "^6.26.0",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "simple-git": "^1.96.0",

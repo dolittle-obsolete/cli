@@ -2,6 +2,9 @@
 import args from 'args';
 import global from './global';
 
+let pkg = require('../package.json');
+console.log(`Dolittle CLI v${pkg.version}\n`);
+
 args
     .command('update', 'Update all artifacts', () => {
         global.boilerPlatesManager.update();
