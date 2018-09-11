@@ -20,9 +20,6 @@ export class a_boiler_plates_manager {
         this.fileSystem = {
             existsSync: sinon.stub()
         };
-        this.logger = {
-            warn: sinon.stub()
-        };
 
         this.boilerPlatesManager = new BoilerPlatesManager(
             this.configManager,
@@ -30,7 +27,7 @@ export class a_boiler_plates_manager {
             this.git,
             this.folders,
             this.fileSystem,
-            this.logger
+            logger
         );
     }
 }
