@@ -3,10 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Guid = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Dolittle. All rights reserved.
@@ -18,10 +25,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 var Guid = exports.Guid = function () {
   function Guid() {
-    _classCallCheck(this, Guid);
+    (0, _classCallCheck3.default)(this, Guid);
   }
 
-  _createClass(Guid, null, [{
+  (0, _createClass3.default)(Guid, null, [{
     key: "create",
 
 
@@ -47,7 +54,6 @@ var Guid = exports.Guid = function () {
       return "00000000-0000-0000-0000-000000000000";
     }
   }]);
-
   return Guid;
 }();
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL1NvdXJjZS9HdWlkLmpzIl0sIm5hbWVzIjpbIkd1aWQiLCJTNCIsIk1hdGgiLCJyYW5kb20iLCJ0b1N0cmluZyIsInN1YnN0cmluZyIsImd1aWQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBQTs7Ozs7QUFLQTs7O0lBR2FBLEksV0FBQUEsSTs7Ozs7Ozs7O0FBU1Q7Ozs7NkJBSWdCO0FBQ1osVUFBSUMsS0FBSyxTQUFMQSxFQUFLLEdBQU07QUFDWCxlQUFPLENBQUUsQ0FBQyxJQUFJQyxLQUFLQyxNQUFMLEVBQUwsSUFBc0IsT0FBdkIsR0FBa0MsQ0FBbkMsRUFBc0NDLFFBQXRDLENBQStDLEVBQS9DLEVBQW1EQyxTQUFuRCxDQUE2RCxDQUE3RCxDQUFQO0FBQ0gsT0FGRDtBQUdBLFVBQUlDLE9BQVFMLE9BQU9BLElBQVAsR0FBYyxHQUFkLEdBQW9CQSxJQUFwQixHQUEyQixHQUEzQixHQUFpQ0EsSUFBakMsR0FBd0MsR0FBeEMsR0FBOENBLElBQTlDLEdBQXFELEdBQXJELEdBQTJEQSxJQUEzRCxHQUFrRUEsSUFBbEUsR0FBeUVBLElBQXJGO0FBQ0EsYUFBT0ssSUFBUDtBQUNIOzs7OztBQWpCRDs7O3dCQUdtQjtBQUNmLGFBQU8sc0NBQVA7QUFDSCIsImZpbGUiOiJHdWlkLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAqICBDb3B5cmlnaHQgKGMpIERvbGl0dGxlLiBBbGwgcmlnaHRzIHJlc2VydmVkLlxuICogIExpY2Vuc2VkIHVuZGVyIHRoZSBNSVQgTGljZW5zZS4gU2VlIExJQ0VOU0UgaW4gdGhlIHByb2plY3Qgcm9vdCBmb3IgbGljZW5zZSBpbmZvcm1hdGlvbi5cbiAqLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0qL1xuXG4vKipcbiAqIFJlcHJlc2VudHMgYSBnbG9iYWxseSB1bmlxdWUgaWRlbnRpZmllclxuICovXG5leHBvcnQgY2xhc3MgR3VpZCB7XG5cbiAgICAvKipcbiAgICAgKiBHZXQgdGhlIGVtcHR5IHJlcHJlc2VudGF0aW9uXG4gICAgICovXG4gICAgc3RhdGljIGdldCBlbXB0eSgpIHtcbiAgICAgICAgcmV0dXJuIFwiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwXCI7XG4gICAgfVxuXG4gICAgLyoqXG4gICAgICogQ3JlYXRlIGEgbmV3IHtHdWlkfSBhcyB7c3RyaW5nfVxuICAgICAqIEByZXR1cm5zIHtzdHJpbmd9IFN0cmluZyByZXByZXNlbnRhdGlvbiBvZiB7R3VpZH1cbiAgICAgKi9cbiAgICBzdGF0aWMgY3JlYXRlKCkge1xuICAgICAgICBsZXQgUzQgPSAoKSA9PiB7XG4gICAgICAgICAgICByZXR1cm4gKCgoMSArIE1hdGgucmFuZG9tKCkpICogMHgxMDAwMCkgfCAwKS50b1N0cmluZygxNikuc3Vic3RyaW5nKDEpO1xuICAgICAgICB9O1xuICAgICAgICBsZXQgZ3VpZCA9IChTNCgpICsgUzQoKSArIFwiLVwiICsgUzQoKSArIFwiLVwiICsgUzQoKSArIFwiLVwiICsgUzQoKSArIFwiLVwiICsgUzQoKSArIFM0KCkgKyBTNCgpKTtcbiAgICAgICAgcmV0dXJuIGd1aWQ7XG4gICAgfVxufVxuIl19
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL1NvdXJjZS9HdWlkLmpzIl0sIm5hbWVzIjpbIkd1aWQiLCJTNCIsIk1hdGgiLCJyYW5kb20iLCJ0b1N0cmluZyIsInN1YnN0cmluZyIsImd1aWQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBQUE7Ozs7O0FBS0E7OztJQUdhQSxJLFdBQUFBLEk7Ozs7Ozs7OztBQVNUOzs7OzZCQUlnQjtBQUNaLFVBQUlDLEtBQUssU0FBTEEsRUFBSyxHQUFNO0FBQ1gsZUFBTyxDQUFFLENBQUMsSUFBSUMsS0FBS0MsTUFBTCxFQUFMLElBQXNCLE9BQXZCLEdBQWtDLENBQW5DLEVBQXNDQyxRQUF0QyxDQUErQyxFQUEvQyxFQUFtREMsU0FBbkQsQ0FBNkQsQ0FBN0QsQ0FBUDtBQUNILE9BRkQ7QUFHQSxVQUFJQyxPQUFRTCxPQUFPQSxJQUFQLEdBQWMsR0FBZCxHQUFvQkEsSUFBcEIsR0FBMkIsR0FBM0IsR0FBaUNBLElBQWpDLEdBQXdDLEdBQXhDLEdBQThDQSxJQUE5QyxHQUFxRCxHQUFyRCxHQUEyREEsSUFBM0QsR0FBa0VBLElBQWxFLEdBQXlFQSxJQUFyRjtBQUNBLGFBQU9LLElBQVA7QUFDSDs7Ozs7QUFqQkQ7Ozt3QkFHbUI7QUFDZixhQUFPLHNDQUFQO0FBQ0giLCJmaWxlIjoiR3VpZC5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8qLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gKiAgQ29weXJpZ2h0IChjKSBEb2xpdHRsZS4gQWxsIHJpZ2h0cyByZXNlcnZlZC5cbiAqICBMaWNlbnNlZCB1bmRlciB0aGUgTUlUIExpY2Vuc2UuIFNlZSBMSUNFTlNFIGluIHRoZSBwcm9qZWN0IHJvb3QgZm9yIGxpY2Vuc2UgaW5mb3JtYXRpb24uXG4gKi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKi9cblxuLyoqXG4gKiBSZXByZXNlbnRzIGEgZ2xvYmFsbHkgdW5pcXVlIGlkZW50aWZpZXJcbiAqL1xuZXhwb3J0IGNsYXNzIEd1aWQge1xuXG4gICAgLyoqXG4gICAgICogR2V0IHRoZSBlbXB0eSByZXByZXNlbnRhdGlvblxuICAgICAqL1xuICAgIHN0YXRpYyBnZXQgZW1wdHkoKSB7XG4gICAgICAgIHJldHVybiBcIjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMFwiO1xuICAgIH1cblxuICAgIC8qKlxuICAgICAqIENyZWF0ZSBhIG5ldyB7R3VpZH0gYXMge3N0cmluZ31cbiAgICAgKiBAcmV0dXJucyB7c3RyaW5nfSBTdHJpbmcgcmVwcmVzZW50YXRpb24gb2Yge0d1aWR9XG4gICAgICovXG4gICAgc3RhdGljIGNyZWF0ZSgpIHtcbiAgICAgICAgbGV0IFM0ID0gKCkgPT4ge1xuICAgICAgICAgICAgcmV0dXJuICgoKDEgKyBNYXRoLnJhbmRvbSgpKSAqIDB4MTAwMDApIHwgMCkudG9TdHJpbmcoMTYpLnN1YnN0cmluZygxKTtcbiAgICAgICAgfTtcbiAgICAgICAgbGV0IGd1aWQgPSAoUzQoKSArIFM0KCkgKyBcIi1cIiArIFM0KCkgKyBcIi1cIiArIFM0KCkgKyBcIi1cIiArIFM0KCkgKyBcIi1cIiArIFM0KCkgKyBTNCgpICsgUzQoKSk7XG4gICAgICAgIHJldHVybiBndWlkO1xuICAgIH1cbn1cbiJdfQ==

@@ -3,8 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Cluster = undefined;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Dolittle. All rights reserved.
@@ -15,10 +20,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Represents the configuration of a cluster
  */
 var Cluster = exports.Cluster = function Cluster() {
-  _classCallCheck(this, Cluster);
-
+  (0, _classCallCheck3.default)(this, Cluster);
   this.name = "";
   this.url = 0;
   this.token = "";
 };
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL1NvdXJjZS9jb25maWd1cmF0aW9uL0NsdXN0ZXIuanMiXSwibmFtZXMiOlsiQ2x1c3RlciIsIm5hbWUiLCJ1cmwiLCJ0b2tlbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBQTs7Ozs7QUFLQzs7O0lBR1lBLE8sV0FBQUEsTzs7O09BRVRDLEksR0FBTyxFO09BQ1BDLEcsR0FBTSxDO09BQ05DLEssR0FBUSxFIiwiZmlsZSI6IkNsdXN0ZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuICogIENvcHlyaWdodCAoYykgRG9saXR0bGUuIEFsbCByaWdodHMgcmVzZXJ2ZWQuXG4gKiAgTGljZW5zZWQgdW5kZXIgdGhlIE1JVCBMaWNlbnNlLiBTZWUgTElDRU5TRSBpbiB0aGUgcHJvamVjdCByb290IGZvciBsaWNlbnNlIGluZm9ybWF0aW9uLlxuICotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSovXG5cbiAvKipcbiAgKiBSZXByZXNlbnRzIHRoZSBjb25maWd1cmF0aW9uIG9mIGEgY2x1c3RlclxuICAqL1xuZXhwb3J0IGNsYXNzIENsdXN0ZXJcbntcbiAgICBuYW1lID0gXCJcIlxuICAgIHVybCA9IDBcbiAgICB0b2tlbiA9IFwiXCJcbn0iXX0=
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL1NvdXJjZS9jb25maWd1cmF0aW9uL0NsdXN0ZXIuanMiXSwibmFtZXMiOlsiQ2x1c3RlciIsIm5hbWUiLCJ1cmwiLCJ0b2tlbiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7OztBQUFBOzs7OztBQUtDOzs7SUFHWUEsTyxXQUFBQSxPOztPQUVUQyxJLEdBQU8sRTtPQUNQQyxHLEdBQU0sQztPQUNOQyxLLEdBQVEsRSIsImZpbGUiOiJDbHVzdGVyLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAqICBDb3B5cmlnaHQgKGMpIERvbGl0dGxlLiBBbGwgcmlnaHRzIHJlc2VydmVkLlxuICogIExpY2Vuc2VkIHVuZGVyIHRoZSBNSVQgTGljZW5zZS4gU2VlIExJQ0VOU0UgaW4gdGhlIHByb2plY3Qgcm9vdCBmb3IgbGljZW5zZSBpbmZvcm1hdGlvbi5cbiAqLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0qL1xuXG4gLyoqXG4gICogUmVwcmVzZW50cyB0aGUgY29uZmlndXJhdGlvbiBvZiBhIGNsdXN0ZXJcbiAgKi9cbmV4cG9ydCBjbGFzcyBDbHVzdGVyXG57XG4gICAgbmFtZSA9IFwiXCJcbiAgICB1cmwgPSAwXG4gICAgdG9rZW4gPSBcIlwiXG59Il19
