@@ -29,6 +29,7 @@ const _httpWrapper = new WeakMap();
 const _git = new WeakMap();
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
+const _hasBoilerPlates = new WeakMap();
 
 const _boilerPlates = new WeakMap();
 
@@ -142,17 +143,15 @@ export class BoilerPlatesManager {
             _boilerPlates.set(this, []);
         }
 
-        if (_boilerPlates.get(this).length == 0) {
-            this._logger.warn("There are no boiler plates installed - run 'dolittle update' to get it updated");
-        }
+        _hasBoilerPlates.set(this, _boilerPlates.get(this).length == 0 ? false: true);
     }
 
     /**
      * Get available boiler plates from GitHub
      */
-    getAvailableBoilerPlates() {
+    async getAvailableBoilerPlates() {
         let uri = "https://api.github.com/orgs/dolittle-boilerplates/repos";
-        let promise = new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             _httpWrapper.get(this).getJson(uri).then(json => {
                 let result = JSON.parse(json);
                 let urls = [];
@@ -160,17 +159,23 @@ export class BoilerPlatesManager {
                 resolve(urls);
             });
         });
-        return promise;
     }
 
     /**
      * Update any existing boiler plates on disk
      */
-    updateBoilerPlatesOnDisk() {
-        let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
-        folders.forEach(folder => {
-            this._logger.info(`Update boiler plate in '${folder}'`);
-            _git.get(this).forFolder(folder).pull();
+    async updateBoilerPlatesOnDisk() {
+        return new Promise(async resolve => {
+            let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
+            let updateCount = folders.length;
+            if( updateCount == 0 ) resolve();
+
+            folders.forEach(folder => {
+                this._logger.info(`Update boiler plate in '${folder}'`);
+                _git.get(this).forFolder(folder).pull().exec(() => {
+                    if (--updateCount == 0) resolve();
+                })
+            });
         });
     }
 
@@ -178,11 +183,12 @@ export class BoilerPlatesManager {
      * Update boiler plates.
      * This will update any existing and download any new ones.
      */
-    update() {
+    async update() {
         this._logger.info('Updating all boiler plates');
-        this.updateBoilerPlatesOnDisk();
+        let promise = new Promise(async resolve => {
+            await this.updateBoilerPlatesOnDisk();
+            let names = await this.getAvailableBoilerPlates();
 
-        this.getAvailableBoilerPlates().then(names => {
             let cloneCount = 0;
             names.forEach(name => {
 
@@ -196,17 +202,19 @@ export class BoilerPlatesManager {
                         .exec(() => {
                             if (--cloneCount == 0) {
                                 this.updateConfiguration();
+                                resolve();
                             }
                         });
                 }
             });
         });
+        return promise;
     }
 
     /**
      * Update configuration file on disk
      */
-    updateConfiguration() {
+    async updateConfiguration() {
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
@@ -257,7 +265,7 @@ export class BoilerPlatesManager {
     }
 
     /**
-     * 
+     * Create an instance of {BoilerPlate} into a specific destination folder with a given context
      * @param {BoilerPlate} boilerPlate 
      * @param {string} destination 
      * @param {object} context 
@@ -280,5 +288,13 @@ export class BoilerPlatesManager {
             let result = template(context);
             _fileSystem.get(this).writeFileSync(file, result);
         });
+    }
+
+    /**
+     * Gets whether or not there are boiler plates installed
+     * @returns {boolean} True if there are, false if not
+     */
+    get hasBoilerPlates() {
+        return _hasBoilerPlates.get(this);
     }
 }
