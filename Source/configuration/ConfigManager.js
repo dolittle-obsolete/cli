@@ -11,6 +11,7 @@ import path from 'path';
 const _fileSystem = new WeakMap();
 const _configParser = new WeakMap();
 const _centralFolderLocation = new WeakMap();
+const _isFirstRun = new WeakMap();
 
 const centralFolder = '~/.dolittle';
 const configFile = "config.json";
@@ -32,10 +33,13 @@ function expandPath(filepath) {
  */
 function makeSureCentralFolderExists(fileSystem) {
     if( !fileSystem.existsSync(this.centralFolderLocation)) {
+        _isFirstRun.set(this, true);
         this._logger.info("Central Dolittle folder does not exist - creating it and setting up default configuration");
         fileSystem.mkdir(this.centralFolderLocation);
         let config = new Config();
         fileSystem.writeFile(this.configFileLocation, JSON.stringify(config));
+    } else {
+        _isFirstRun.set(this, false);
     }
 };
 
@@ -73,5 +77,13 @@ export class ConfigManager {
      */
     get configFileLocation() {
         return path.join(this.centralFolderLocation, configFile);
+    }
+
+    /**
+     * Gets whether or not this is a first run of the CLI tool
+     * @returns {boolean} True if it is, false if not
+     */
+    get isFirstRun() {
+        return _isFirstRun.get(this);
     }
 }
