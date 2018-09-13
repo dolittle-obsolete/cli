@@ -101,7 +101,7 @@ export class Folders
                 const lastPathSeparatorMatch = actualPath.match(/(\\|\/)/);
                 const lastIndex = actualPath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
                 const filename = actualPath.substring(lastIndex+1, actualPath.length);
-                if (templateFileNames.indexOf(filename) >= 0) {
+                if (templateFileNames.includes(filename)) {
                     results.push(actualPath);
                 }
             }
