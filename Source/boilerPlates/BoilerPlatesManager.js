@@ -289,7 +289,47 @@ export class BoilerPlatesManager {
             _fileSystem.get(this).writeFileSync(file, result);
         });
     }
+    /**
+     * Create an instance of {BoilerPlate} of an artifact into a specific destination folder with a given context
+     * @param {string} artifactType 
+     * @param {string} artifactLanguage 
+     * @param {BoilerPlate} boilerPlate 
+     * @param {string} destination 
+     * @param {object} context 
+     */
+    createArtifactInstance(artifactType, artifactLanguage, boilerPlate, destination, context) {
+        let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
+        let templatesAndLocation = [];
+        
+        templateFiles.forEach(_ => {
+            const lastPathSeparatorMatch = _.match(/(\\|\/)/);
+            const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+            const template = {
+                'template': JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
+                'location': _.substring(0, lastIndex+1)
+            };
+            templatesAndLocation.push(template);
+        });
+        const filesToCreateDir = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == artifactLanguage)[0].location;
+        let filesToCreate = _folders.get(this).getNonTemplateFilesRecursivelyIn(filesToCreateDir);
 
+        filesToCreate.forEach( filePath => {
+            const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
+            const lastIndex = filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+            const filename = filePath.substring(lastIndex+1, filePath.length);
+            const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
+
+            let segments = [];
+
+            path.join(destination, filename).split(/(\\|\/)/).forEach(segment => segments.push(Handlebars.compile(segment)(context)));
+            let newFilePath = segments.join('');
+           
+            let template = Handlebars.compile(oldContent);
+            let newContent = template(context);
+            _fileSystem.get(this).writeFileSync(newFilePath, newContent);
+        });
+    }
+    
     /**
      * Gets whether or not there are boiler plates installed
      * @returns {boolean} True if there are, false if not
