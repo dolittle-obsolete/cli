@@ -112,7 +112,6 @@ export class BoilerPlatesManager {
         return _boilerPlates.get(this).filter(boilerPlate => boilerPlate.language == language && boilerPlate.type == type);
     }
 
-
     /**
      * Read all boiler plates from disk
      */
