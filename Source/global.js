@@ -13,10 +13,12 @@ import { BoundedContextManager } from './boundedContexts/BoundedContextManager';
 import { BoilerPlatesManager } from './boilerPlates/BoilerPlatesManager';
 import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
+import { ArtifactsManager } from './artifacts/ArtifactsManager';
 
 const _configManager = new WeakMap();
 const _configParser = new WeakMap();
 const _applicationManager = new WeakMap();
+const _artifactsManager = new WeakMap();
 const _boundedContextManager = new WeakMap();
 const _boilerPlatesManager = new WeakMap();
 const _folders = new WeakMap();
@@ -59,6 +61,7 @@ class global {
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
+        _artifactsManager.set(this, new ArtifactsManager(this.boilerPlatesManager, this.folders, fs, this.logger));
     }
 
     /**
@@ -91,6 +94,14 @@ class global {
      */
     get applicationManager() {
         return _applicationManager.get(this);
+    }
+
+    /** 
+     * Gets the {ArtifactsManager}
+     * @returns {ArtifactsManager}
+     */
+    get artifactsManager() {
+        return _artifactsManager.get(this);
     }
 
     /**

@@ -19,7 +19,8 @@
     "dolittle-cluster-add": "bin/dolittle-cluster-add.js",
     "dolittle-create": "bin/dolittle-create.js",
     "dolittle-create-application": "bin/dolittle-create-application.js",
-    "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js"
+    "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js",
+    "dolittle-create-command": "bin/dolittle-create-command.js"
   },
   "files": [
     "bin"
