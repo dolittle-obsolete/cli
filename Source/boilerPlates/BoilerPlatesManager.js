@@ -310,15 +310,14 @@ export class BoilerPlatesManager {
             };
             templatesAndLocation.push(template);
         });
-        const filesToCreateDir = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == artifactLanguage)[0].location;
-        let filesToCreate = _folders.get(this).getNonTemplateFilesRecursivelyIn(filesToCreateDir);
+        const template = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == artifactLanguage)[0];
+        let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(template.location, template.template.includedFiles);
 
         filesToCreate.forEach( filePath => {
             const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
             const lastIndex = filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
             const filename = filePath.substring(lastIndex+1, filePath.length);
             const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
-
             let segments = [];
 
             path.join(destination, filename).split(/(\\|\/)/).forEach(segment => segments.push(Handlebars.compile(segment)(context)));

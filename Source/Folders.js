@@ -85,9 +85,10 @@ export class Folders
     /**
      * Get all files within a specific folder recursively
      * @param {string} folder Path of the folder to get from
+     * @param {string[]} templateFileNames The template file names
      * @returns {string[]} Array of files
      */
-    getNonTemplateFilesRecursivelyIn(folder) {
+    getArtifactTemplateFilesRecursivelyIn(folder, templateFileNames) {
         let self = this;
         let results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -97,11 +98,10 @@ export class Folders
                 results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
             }
             if (stat.isFile()) {
-
                 const lastPathSeparatorMatch = actualPath.match(/(\\|\/)/);
                 const lastIndex = actualPath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
                 const filename = actualPath.substring(lastIndex+1, actualPath.length);
-                if (! filename.endsWith('template.json')) {
+                if (templateFileNames.indexOf(filename) >= 0) {
                     results.push(actualPath);
                 }
             }
