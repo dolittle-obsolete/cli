@@ -61,6 +61,55 @@ export class Folders
     }
 
     /**
+     * Get all files within a specific folder recursively
+     * @param {string} folder Path of the folder to get from
+     * @returns {string[]} Array of files
+     */
+    getFilesRecursivelyIn(folder) {
+        let self = this;
+        let results = [];
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
+            let actualPath = path.resolve(folder, dirInner);
+            let stat = _fileSystem.get(self).statSync(actualPath);
+
+            if (stat.isDirectory()) {
+                results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
+            }
+            if (stat.isFile()) {
+                results.push(actualPath);
+            }
+        });
+        return results;
+    }
+
+    /**
+     * Get all files within a specific folder recursively
+     * @param {string} folder Path of the folder to get from
+     * @returns {string[]} Array of files
+     */
+    getNonTemplateFilesRecursivelyIn(folder) {
+        let self = this;
+        let results = [];
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
+            let actualPath = path.resolve(folder, dirInner);
+            let stat = _fileSystem.get(self).statSync(actualPath);
+            if (stat.isDirectory()) {
+                results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
+            }
+            if (stat.isFile()) {
+
+                const lastPathSeparatorMatch = actualPath.match(/(\\|\/)/);
+                const lastIndex = actualPath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+                const filename = actualPath.substring(lastIndex+1, actualPath.length);
+                if (! filename.endsWith('template.json')) {
+                    results.push(actualPath);
+                }
+            }
+        });
+        return results;
+    }
+
+    /**
      * Get all folders and files within a specific folder recursively
      * @param {string} folder Path of the folder to get from
      * @returns {string[]} Array of files and folders
@@ -92,9 +141,8 @@ export class Folders
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             dirInner = path.resolve(folder, dirInner);
             var stat = _fileSystem.get(self).statSync(dirInner);
-
             if (stat.isDirectory()) {
-                results = results.concat(self.SearchRecursive(dirInner, pattern));
+                results = results.concat(self.searchRecursive(dirInner, pattern));
             }
 
             if (stat.isFile() && dirInner.endsWith(pattern)) {
