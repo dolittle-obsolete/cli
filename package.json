@@ -20,7 +20,10 @@
     "dolittle-create": "bin/dolittle-create.js",
     "dolittle-create-application": "bin/dolittle-create-application.js",
     "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js",
-    "dolittle-create-command": "bin/dolittle-create-command.js"
+    "dolittle-create-command": "bin/dolittle-create-command.js",
+    "dolittle-create-event": "bin/dolittle-create-event.js",
+    "dolittle-create-readmodel": "bin/dolittle-create-readmodel.js",
+    "dolittle-create-aggregateroot": "bin/dolittle-create-aggregateroot.js"
   },
   "files": [
     "bin"

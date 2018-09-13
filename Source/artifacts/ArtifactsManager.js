@@ -50,4 +50,55 @@ export class ArtifactsManager {
         
         _boilerPlatesManager.get(this).createArtifactInstance('command', 'csharp', boilerPlate, destination, context);
     }
+    /**
+     * Create an event
+     * @param {string} name 
+     * @param {string} namespace 
+     */
+    createEvent(name, namespace) {
+        this._logger.info(`Creating event with name '${name}' and namespace '${namespace}'`);
+
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let context = {
+            name: name,
+            namespace: namespace
+        };
+        let destination = process.cwd();
+        
+        _boilerPlatesManager.get(this).createArtifactInstance('event', 'csharp', boilerPlate, destination, context);
+    }
+    /**
+     * Create a read model
+     * @param {string} name 
+     * @param {string} namespace 
+     */
+    createReadModel(name, namespace) {
+        this._logger.info(`Creating read model with name '${name}' and namespace '${namespace}'`);
+
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let context = {
+            name: name,
+            namespace: namespace
+        };
+        let destination = process.cwd();
+        
+        _boilerPlatesManager.get(this).createArtifactInstance('readModel', 'csharp', boilerPlate, destination, context);
+    }
+    /**
+     * Create an event
+     * @param {string} name 
+     * @param {string} namespace 
+     */
+    createAggregateRoot(name, namespace) {
+        this._logger.info(`Creating aggregate root with name '${name}' and namespace '${namespace}'`);
+
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let context = {
+            name: name,
+            namespace: namespace
+        };
+        let destination = process.cwd();
+        
+        _boilerPlatesManager.get(this).createArtifactInstance('aggregateRoot', 'csharp', boilerPlate, destination, context);
+    }
 }
