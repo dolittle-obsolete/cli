@@ -143,6 +143,10 @@ class global {
     get httpWrapper() {
         return _httpWrapper.get(this);
     }
+
+    get usagePrefix() {
+        return '\n\t ';
+    }
 }
 
 export default new global();

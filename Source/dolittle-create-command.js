@@ -6,10 +6,11 @@
 import args from 'args';
 import global from './global';
 
+const USAGE = 'dolittle create command [name] [namespace]';
 args
-    .example("dolittle create command [name] [namespace]", "Creates a command with a given name and namespace in the current folder");
+    .example(USAGE, "Creates a command with a given name and namespace in the current folder");
  
-args.parse(process.argv);
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create command'});
 
 if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
 

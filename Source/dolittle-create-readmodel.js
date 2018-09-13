@@ -6,10 +6,11 @@
 import args from 'args';
 import global from './global';
 
+const USAGE = 'dolittle create readmodel [name] [namespace]';
 args
-    .example("dolittle create readmodel [name] [namespace]", "Creates a read model with a given name and namespace in the current folder");
+    .example(USAGE, "Creates a read model with a given name and namespace in the current folder");
  
-args.parse(process.argv);
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create readmodel'});
 
 if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
 
