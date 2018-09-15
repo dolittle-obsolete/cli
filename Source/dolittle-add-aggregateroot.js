@@ -6,11 +6,11 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle create aggregateroot [name] [namespace]';
+const USAGE = 'dolittle add aggregateroot [name] [namespace]';
 args
     .example(USAGE, "Creates an aggregate root with a given name and namespace in the current folder");
  
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create aggregateroot'});
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add aggregateroot'});
 
 if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
 

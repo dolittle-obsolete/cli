@@ -6,11 +6,11 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle create event [name] [namespace]';
+const USAGE = 'dolittle add event [name] [namespace]';
 args
     .example(USAGE, "Creates an event with a given name and namespace in the current folder");
  
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create event'});
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add event'});
 
 if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
 

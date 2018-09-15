@@ -6,12 +6,12 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle create command [name] [namespace]';
+const USAGE = 'dolittle add readmodel [name] [namespace]';
 args
-    .example(USAGE, "Creates a command with a given name and namespace in the current folder");
+    .example(USAGE, "Creates a read model with a given name and namespace in the current folder");
  
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create command'});
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add readmodel'});
 
 if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
 
-global.artifactsManager.createCommand(args.sub[0], args.sub[1]);
+global.artifactsManager.createReadModel(args.sub[0], args.sub[1]);

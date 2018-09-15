@@ -10,7 +10,8 @@ args
         global.boilerPlatesManager.update();
     })
     .command('cluster', 'Work with cluster hosting Dolittle')
-    .command('create', 'Create something from one of the boilerplates');
+    .command('create', 'Create something from one of the boilerplates')
+    .command('add', 'Adds an Artifact to the Bounded Context');
 
 args.parse(process.argv);    
 let showHelpIfNeeded = () => {
