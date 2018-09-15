@@ -20,10 +20,11 @@
     "dolittle-create": "bin/dolittle-create.js",
     "dolittle-create-application": "bin/dolittle-create-application.js",
     "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js",
-    "dolittle-create-command": "bin/dolittle-create-command.js",
-    "dolittle-create-event": "bin/dolittle-create-event.js",
-    "dolittle-create-readmodel": "bin/dolittle-create-readmodel.js",
-    "dolittle-create-aggregateroot": "bin/dolittle-create-aggregateroot.js"
+    "dolittle-add": "bin/dolittle-add.js",
+    "dolittle-add-command": "bin/dolittle-add-command.js",
+    "dolittle-add-event": "bin/dolittle-add-event.js",
+    "dolittle-add-readmodel": "bin/dolittle-add-readmodel.js",
+    "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js"
   },
   "files": [
     "bin"
@@ -59,6 +60,7 @@
     "babel-runtime": "^6.26.0",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
+    "inquirer": "^6.2.0",
     "simple-git": "^1.96.0",
     "winston": "^3.1.0"
   }
