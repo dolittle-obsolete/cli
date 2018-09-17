@@ -12,6 +12,6 @@ args
     .command('readmodel', 'A read model')
     .command('aggregateroot', 'An aggregate root');
     
-    args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add'});
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add'});
 
 if( !args.sub.length ) args.showHelp();

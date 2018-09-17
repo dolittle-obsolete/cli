@@ -9,6 +9,6 @@ args
     .command('application', 'An application')
     .command('boundedcontext', 'A bounded context')
     
-    args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create'});
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create'});
 
 if( !args.sub.length ) args.showHelp();

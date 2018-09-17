@@ -214,6 +214,9 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     async updateConfiguration() {
+        // TODO: 
+        // * Discover boilerplates recursively
+        // * 
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
@@ -299,10 +302,9 @@ export class BoilerPlatesManager {
     createArtifactInstance(artifactType, artifactLanguage, boilerPlate, destination, context) {
         let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
         let templatesAndLocation = [];
-        
         templateFiles.forEach(_ => {
             const lastPathSeparatorMatch = _.match(/(\\|\/)/);
-            const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+            const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1]);
             const template = {
                 'template': JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
                 'location': _.substring(0, lastIndex+1)

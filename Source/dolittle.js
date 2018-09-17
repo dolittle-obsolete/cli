@@ -2,6 +2,9 @@
 import args from 'args';
 import global from './global';
 
+// * First run - configure default bounded-context language. Store in config file in ~/.dolittle
+// * 
+
 let pkg = require('../package.json');
 console.log(`Dolittle CLI v${pkg.version}\n`);
 
