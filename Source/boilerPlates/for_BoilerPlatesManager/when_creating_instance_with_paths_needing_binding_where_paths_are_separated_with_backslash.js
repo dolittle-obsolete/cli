@@ -20,7 +20,6 @@ describe('when creating instance with paths needing binding where paths are sepa
         filesNeedingBinding: []
     };
 
-
     (beforeEach => {
         context = new a_boiler_plates_manager();
 
