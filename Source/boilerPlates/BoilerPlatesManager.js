@@ -15,13 +15,13 @@ import Handlebars from 'handlebars';
 const boilerPlateFolder = 'boiler-plates';
 
 const binaryFiles = [
-    ".jpg",
-    ".png",
-    ".obj",
-    ".dll",
-    ".bin",
-    ".exe",
-    ".ttf"
+    '.jpg',
+    '.png',
+    '.obj',
+    '.dll',
+    '.bin',
+    '.exe',
+    '.ttf'
 ];
 
 const _configManager = new WeakMap();
@@ -187,23 +187,30 @@ export class BoilerPlatesManager {
         let promise = new Promise(async resolve => {
             await this.updateBoilerPlatesOnDisk();
             let names = await this.getAvailableBoilerPlates();
-
+            
             let cloneCount = 0;
             names.forEach(name => {
-
                 let folderName = path.join(this.boilerPlateLocation, name);
+                
                 if (!_fileSystem.get(this).existsSync(folderName)) {
+                    
                     let url = `https://github.com/dolittle-boilerplates/${name}.git`;
                     this._logger.info(`Getting boilerplate not on disk from '${url}'`);
+                    
                     cloneCount++;
-                    _git.get(this).silent(false)
+
+                    
+                    _git.get(this)
+                        .silent(false)
                         .clone(url, folderName, { '--recursive': null })
                         .exec(() => {
+                            
                             if (--cloneCount == 0) {
                                 this.updateConfiguration();
                                 resolve();
                             }
                         });
+                        
                 }
             });
         });
@@ -281,7 +288,7 @@ export class BoilerPlatesManager {
             let result = segments.join('');
             _fileSystem.get(this).renameSync(pathToRename, result);
         });
-
+        
         boilerPlate.filesNeedingBinding.forEach(_ => {
             let file = path.join(destination, _);
 
