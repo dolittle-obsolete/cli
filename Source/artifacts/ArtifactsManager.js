@@ -5,14 +5,13 @@
 import { Folders } from '../Folders';
 import { Logger } from 'winston';
 import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
+import { InquirerManager } from './InquirerManager';
 import fs from 'fs';
-import path from 'path';
-
-const applicationFilename = "application.json";
 
 const _boilerPlatesManager = new WeakMap();
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
+const _inquirerManager = new WeakMap();
 
 
 /**
@@ -21,12 +20,14 @@ const _fileSystem = new WeakMap();
 export class ArtifactsManager {
     /**
      * Initializes a new instance of {ApplicationManager}
+     * @param {InquirerManager} inquirerManager
      * @param {BoilerPlatesManager} boilerPlatesManager
      * @param {Folders} folders 
      * @param {fs} fileSystem
      * @param {Logger} logger
      */
-    constructor(boilerPlatesManager, folders, fileSystem, logger) {
+    constructor(inquirerManager, boilerPlatesManager, folders, fileSystem, logger) {
+        _inquirerManager.set(this, inquirerManager);
         _boilerPlatesManager.set(this, boilerPlatesManager);
         _folders.set(this, folders);
         _fileSystem.set(this, fileSystem);
@@ -85,7 +86,7 @@ export class ArtifactsManager {
         _boilerPlatesManager.get(this).createArtifactInstance('readModel', 'csharp', boilerPlate, destination, context);
     }
     /**
-     * Create an event
+     * Create an aggregate root
      * @param {string} name 
      * @param {string} namespace 
      */
@@ -100,5 +101,35 @@ export class ArtifactsManager {
         let destination = process.cwd();
         
         _boilerPlatesManager.get(this).createArtifactInstance('aggregateRoot', 'csharp', boilerPlate, destination, context);
+    }
+    /**
+     * Create a query
+     * @param {string} language
+     */
+    createQuery(language) {
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let destination = process.cwd();
+
+        _inquirerManager.get(this).promptForQuery(language)
+            .then(context => {
+                _boilerPlatesManager.get(this).createArtifactInstance('query', 'csharp', boilerPlate, destination, context);  
+            });
+    }
+    /**
+     * Create a query for a specific read model
+     * @param {string} name 
+     * @param {string} namespace 
+     */
+    createQueryFor(name, namespace) {
+        this._logger.info(`Creating queryfor with name '${name}' and namespace '${namespace}'`);
+
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let context = {
+            name: name,
+            namespace: namespace
+        };
+        let destination = process.cwd();
+        
+        _boilerPlatesManager.get(this).createArtifactInstance('queryFor', 'csharp', boilerPlate, destination, context);
     }
 }

@@ -14,6 +14,7 @@ import { BoilerPlatesManager } from './boilerPlates/BoilerPlatesManager';
 import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
 import { ArtifactsManager } from './artifacts/ArtifactsManager';
+import { InquirerManager } from './artifacts/InquirerManager';
 
 const _configManager = new WeakMap();
 const _configParser = new WeakMap();
@@ -21,6 +22,8 @@ const _applicationManager = new WeakMap();
 const _artifactsManager = new WeakMap();
 const _boundedContextManager = new WeakMap();
 const _boilerPlatesManager = new WeakMap();
+const _inquirerManager = new WeakMap();
+
 const _folders = new WeakMap();
 const _git = new WeakMap();
 const _logger = new WeakMap();
@@ -31,6 +34,21 @@ const _httpWrapper = new WeakMap();
  */
 class global {
 
+    get supportedSDKLanguages() {
+        return [
+            "csharp",
+            'javascript'
+        ];
+    }
+
+    get languageQuestion() {
+        return [{
+            type: 'rawlist',
+            name: 'language',
+            message: 'Which SDK language are you working in?',
+            choices: this.supportedSDKLanguages
+        }];
+    }
     /**
      * Perform initialization
      */
@@ -61,7 +79,9 @@ class global {
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
-        _artifactsManager.set(this, new ArtifactsManager(this.boilerPlatesManager, this.folders, fs, this.logger));
+        _inquirerManager.set(this, new InquirerManager(this.folders, fs, this.logger));
+        _artifactsManager.set(this, new ArtifactsManager(this.inquirerManager, this.boilerPlatesManager, this.folders, fs, this.logger));
+        
     }
 
     /**
@@ -118,6 +138,13 @@ class global {
      */
     get boilerPlatesManager() {
         return _boilerPlatesManager.get(this);
+    }
+    /**
+     * Gets the {InquirerManager
+     * @returns {InquirerManager}}
+     */
+    get inquirerManager() {
+        return _inquirerManager.get(this);
     }
 
     /**
