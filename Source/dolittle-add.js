@@ -10,7 +10,8 @@ args
     .command('command', 'A command')
     .command('event', 'An event')
     .command('readmodel', 'A read model')
-    .command('aggregateroot', 'An aggregate root');
+    .command('aggregateroot', 'An aggregate root')
+    .command('query', "A query");
     
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add'});
 

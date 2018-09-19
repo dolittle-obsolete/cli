@@ -24,7 +24,8 @@
     "dolittle-add-command": "bin/dolittle-add-command.js",
     "dolittle-add-event": "bin/dolittle-add-event.js",
     "dolittle-add-readmodel": "bin/dolittle-add-readmodel.js",
-    "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js"
+    "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js",
+    "dolittle-add-query": "bin/dolittle-add-query.js"
   },
   "files": [
     "bin"
