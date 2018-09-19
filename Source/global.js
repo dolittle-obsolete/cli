@@ -45,7 +45,7 @@ class global {
 
     get languageQuestion() {
         return [{
-            type: 'rawlist',
+            type: 'list',
             name: 'language',
             message: 'Which SDK language are you working in?',
             choices: this.supportedSDKLanguages
