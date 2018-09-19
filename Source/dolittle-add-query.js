@@ -8,9 +8,9 @@ import global from './global';
 
 var inquirer = require('inquirer');
 
-const USAGE = 'dolittle add query [name] [namespace]';
+const USAGE = 'dolittle add query';
 args
-    .example(USAGE, "Creates a query root with a given name and namespace in the current folder");
+    .example(USAGE, "Creates a query in the current folder");
  
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add query'});
 
