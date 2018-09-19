@@ -39,68 +39,60 @@ export class ArtifactsManager {
      * @param {string} name 
      * @param {string} namespace 
      */
-    createCommand(name, namespace) {
-        this._logger.info(`Creating command with name '${name}' and namespace '${namespace}'`);
-
-        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
-        let context = {
-            name: name,
-            namespace: namespace
-        };
-        let destination = process.cwd();
+    createCommand(language) {
         
-        _boilerPlatesManager.get(this).createArtifactInstance('command', 'csharp', boilerPlate, destination, context);
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let destination = process.cwd();
+        _inquirerManager.get(this).promptForCommand(language)
+            .then(context => {
+                this._logger.info(`Creating command with name '${context.name}' and namespace '${context.namespace}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('command', language, boilerPlate, destination, context);  
+            });
     }
     /**
      * Create an event
      * @param {string} name 
      * @param {string} namespace 
      */
-    createEvent(name, namespace) {
-        this._logger.info(`Creating event with name '${name}' and namespace '${namespace}'`);
-
-        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
-        let context = {
-            name: name,
-            namespace: namespace
-        };
-        let destination = process.cwd();
+    createEvent(language) {
         
-        _boilerPlatesManager.get(this).createArtifactInstance('event', 'csharp', boilerPlate, destination, context);
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let destination = process.cwd();
+        _inquirerManager.get(this).promptForEvent(language)
+            .then(context => {
+                this._logger.info(`Creating event with name '${context.name}' and namespace '${context.namespace}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('event', language, boilerPlate, destination, context);  
+            });
     }
     /**
      * Create a read model
      * @param {string} name 
      * @param {string} namespace 
      */
-    createReadModel(name, namespace) {
-        this._logger.info(`Creating read model with name '${name}' and namespace '${namespace}'`);
+    createReadModel(language) {
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
-        let context = {
-            name: name,
-            namespace: namespace
-        };
         let destination = process.cwd();
-        
-        _boilerPlatesManager.get(this).createArtifactInstance('readModel', 'csharp', boilerPlate, destination, context);
+        _inquirerManager.get(this).promptForReadModel(language)
+            .then(context => {
+                this._logger.info(`Creating read model with name '${context.name}' and namespace '${context.namespace}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('readModel', language, boilerPlate, destination, context);  
+            });
     }
     /**
      * Create an aggregate root
      * @param {string} name 
      * @param {string} namespace 
      */
-    createAggregateRoot(name, namespace) {
-        this._logger.info(`Creating aggregate root with name '${name}' and namespace '${namespace}'`);
+    createAggregateRoot(language) {
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
-        let context = {
-            name: name,
-            namespace: namespace
-        };
         let destination = process.cwd();
-        
-        _boilerPlatesManager.get(this).createArtifactInstance('aggregateRoot', 'csharp', boilerPlate, destination, context);
+        _inquirerManager.get(this).promptForAggregateRoot(language)
+            .then(context => {
+                this._logger.info(`Creating aggregate root with name '${context.name}' and namespace '${context.namespace}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('aggregateRoot', language, boilerPlate, destination, context);  
+            });
     }
     /**
      * Create a query

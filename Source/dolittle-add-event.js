@@ -6,12 +6,13 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle add event [name] [namespace]';
+var inquirer = require('inquirer');
+const USAGE = 'dolittle add event';
 args
-    .example(USAGE, "Creates an event with a given name and namespace in the current folder");
+    .example(USAGE, "Creates an event in the current folder");
  
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add event'});
 
-if( !args.sub.length || args.sub.length < 2 ) args.showHelp();
-
-global.artifactsManager.createEvent(args.sub[0], args.sub[1]);
+inquirer.prompt(global.languageQuestion).then(answers => {
+    global.artifactsManager.createEvent(answers.language);
+  });

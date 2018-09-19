@@ -11,8 +11,6 @@ var inquirer = require('inquirer');
 const USAGE = 'dolittle add query';
 args
     .example(USAGE, "Creates a query in the current folder");
- 
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add query'});
 
 inquirer.prompt(global.languageQuestion).then(answers => {
     global.artifactsManager.createQuery(answers.language);
