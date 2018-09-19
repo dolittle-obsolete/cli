@@ -6,6 +6,7 @@ import { Folders } from '../Folders';
 import { Logger } from 'winston';
 import fs from 'fs';
 import { QueryInquirer } from './QueryInquirer';
+import { QueryforInquirer } from './QueryforInquirer';
 
 
 const _folders = new WeakMap();
@@ -26,6 +27,7 @@ export class InquirerManager {
         this._logger = logger;
 
         this._queryInquirer = new QueryInquirer(folders, fileSystem);
+        this._queryforInquirer = new QueryforInquirer(folders, fileSystem);
     }
 
     /**
@@ -35,6 +37,17 @@ export class InquirerManager {
      */
     promptForQuery(language) {
         return this._queryInquirer.promptUser(language)
+            .then(context => {
+                return context;
+            });
+    }
+    /**
+     * Create a query a read model
+     * @param {string} language
+     * @returns {Promise<any>} 
+     */
+    promptForQueryfor(language) {
+        return this._queryforInquirer.promptUser(language)
             .then(context => {
                 return context;
             });

@@ -11,7 +11,7 @@ const inquirer = require('inquirer');
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
 
-export class QueryInquirer {
+export class QueryforInquirer {
 
     /**
      * Constructor
@@ -34,13 +34,31 @@ export class QueryInquirer {
     }
 
     _getCSharpPrompt() {
+        const customReadModel = 'Write read model name';
         const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile());
         console.log(namespace);
+
+        let readModelChoices = this._findCSharpReadmodels();
+        readModelChoices.push(customReadModel);
         let questions = [
             {
                 type: 'input',
                 name: 'name',
                 message: `What's the Query's name?`
+            },
+            {
+                type: 'rawlist',
+                name: 'readModel',
+                message: 'Choose a read model: ',
+                choices: readModelChoices
+            },
+            {
+                type: 'input',
+                name: 'readModelCustom',
+                message: 'Write the name of the read model: ',
+                when: function(answers) {
+                    return answers.readModel === customReadModel;
+                }
             },
             {
                 type: 'confirm',
@@ -61,8 +79,28 @@ export class QueryInquirer {
             .then(answers => {
                 if (answers.generatedNamespace)
                     answers.namespace = namespace;
-                
+                if (answers.readModelCustom !== undefined && answers.readModelCustom !== null)
+                    answers.readModel = answers.readModelCustom;
+
+                console.log(answers);
                 return answers;
             });
+    }
+    /**
+     * Finds and returns the names of the public readModels
+     * @returns [string[]]
+     */
+    _findCSharpReadmodels() {
+        let filePaths = _folders.get(this).searchRecursive(process.cwd(), '.cs');
+        let readModels = [];
+        filePaths.forEach(filePath => {
+            console.log(filePath);
+            let content = _fileSystem.get(this).readFileSync(filePath, 'utf8');
+            const readModelNameMatch = content.match(/.*public\s*class\s*(\w*)\s*:\s*IReadModel/);
+            if (readModelNameMatch !== null && readModelNameMatch.length > 0){
+                readModels.push(readModelNameMatch[1]);
+            }
+        });
+        return readModels;
     }
 }

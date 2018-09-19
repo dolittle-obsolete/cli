@@ -107,29 +107,28 @@ export class ArtifactsManager {
      * @param {string} language
      */
     createQuery(language) {
+
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForQuery(language)
             .then(context => {
-                _boilerPlatesManager.get(this).createArtifactInstance('query', 'csharp', boilerPlate, destination, context);  
+                this._logger.info(`Creating query with name '${context.name}'`)
+                _boilerPlatesManager.get(this).createArtifactInstance('query', language, boilerPlate, destination, context);  
             });
     }
     /**
      * Create a query for a specific read model
-     * @param {string} name 
-     * @param {string} namespace 
+     * @param {string} language
      */
-    createQueryFor(name, namespace) {
-        this._logger.info(`Creating queryfor with name '${name}' and namespace '${namespace}'`);
-
-        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
-        let context = {
-            name: name,
-            namespace: namespace
-        };
-        let destination = process.cwd();
+    createQueryFor(language) {
         
-        _boilerPlatesManager.get(this).createArtifactInstance('queryFor', 'csharp', boilerPlate, destination, context);
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('artifacts')[0];
+        let destination = process.cwd();
+        _inquirerManager.get(this).promptForQueryfor(language)
+            .then(context => {
+                this._logger.info(`Creating query for '${context.readModel}' with name '${context.name}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('queryFor', language, boilerPlate, destination, context);  
+            });
     }
 }
