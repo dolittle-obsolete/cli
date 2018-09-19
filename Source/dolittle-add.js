@@ -11,7 +11,8 @@ args
     .command('event', 'An event')
     .command('readmodel', 'A read model')
     .command('aggregateroot', 'An aggregate root')
-    .command('query', "A query");
+    .command('query', "A query")
+    .command('queryfor', 'A query for a specific read model');
     
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add'});
 
