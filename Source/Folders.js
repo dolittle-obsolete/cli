@@ -152,6 +152,7 @@ export class Folders
      * Search for a specific file pattern within a folder, recursively
      * @param {string} folder Folder to search from
      * @param {string} pattern Pattern of files to look for
+     * @returns {string[]} The paths of the matching files
      */
     searchRecursive(folder, pattern) {
         let self = this;
