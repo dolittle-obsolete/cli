@@ -15,6 +15,7 @@ import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
 import { ArtifactsManager } from './artifacts/ArtifactsManager';
 import { InquirerManager } from './artifacts/InquirerManager';
+import path from 'path'
 
 const _configManager = new WeakMap();
 const _configParser = new WeakMap();
@@ -33,6 +34,7 @@ const _httpWrapper = new WeakMap();
  * Common global object
  */
 class global {
+    
 
     get supportedSDKLanguages() {
         return [
@@ -174,6 +176,80 @@ class global {
     get usagePrefix() {
         return '\n\t ';
     }
+    /**
+     * Gets the namespace based on the closest csprojPath and the cwd path
+     * @param {String} currentPath 
+     * @param {String} csprojPath 
+     * @returns {String}
+     */
+    createCSharpNamespace(currentPath, csprojPath) {
+        const csprojFileName = path.parse(this.getFileName(csprojPath)).name;
+        const csprojFileDir = this.getFileName(this.getFileDir(csprojPath));
+        let namespaceSegments = [];
+        
+        let segmentPath = currentPath;
+        let segment = this.getFileName(segmentPath);
+
+        console.log('csprojFileName: ', csprojFileName);
+        console.log('csprojFileDir: ', csprojFileDir);
+        while (segment != csprojFileDir) {
+
+            console.log('segmentPath: ', segmentPath);
+            console.log('segment: ', segment);
+            namespaceSegments.push(segment);
+            segmentPath = this.getFileDir(segmentPath);
+            segment = this.getFileName(segmentPath);
+        } 
+        namespaceSegments = namespaceSegments.reverse();
+        
+        let namespace = csprojFileName;
+        namespaceSegments.forEach(element => {
+            namespace += '.' + element;
+        });
+        return namespace;
+    }
+    /**
+     * Gets the path of the nearest .csproj file, searching upwards not recursively
+     */
+    getNearestCsprojFile() {
+        let currentPath = process.cwd();
+        let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
+        while (lastPathSepIndex != -1 && currentPath != null && currentPath != '')
+        {
+            let results = _folders.get(this).searchFolder(currentPath, '.csproj'); 
+            if (results.length >= 1)
+                return results[0];
+            currentPath = currentPath.substr(0, lastPathSepIndex);
+            lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
+        }
+        return '';
+    }
+    /**
+     * Get the index of the last path separator in the path
+     * @param {String} filePath 
+     * @returns {number} index
+     */
+    getLastPathSeparatorIndex(filePath) {
+        const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
+        if (lastPathSeparatorMatch === undefined || lastPathSeparatorMatch === null || lastPathSeparatorMatch.length == 0) 
+            return -1;
+        return filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+    }
+    /**
+     * Gets the filename / last directory from the path
+     * @param {String} filePath 
+     */
+    getFileName(filePath){
+        return filePath.substring(this.getLastPathSeparatorIndex(filePath)+1, filePath.length);
+    }
+    /**
+     * Gets the directory name
+     * @param {String} filePath 
+     */
+    getFileDir(filePath) {
+        return path.dirname(filePath);
+    }
+
 }
 
 export default new global();

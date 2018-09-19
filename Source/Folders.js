@@ -130,6 +130,25 @@ export class Folders
     }
 
     /**
+     * Search for a specific file pattern within a folder
+     * @param {string} folder Folder to search from
+     * @param {string} pattern Pattern of files to look for
+     */
+    searchFolder(folder, pattern) {
+        let self = this;
+        var results = [];
+
+        _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
+            dirInner = path.resolve(folder, dirInner);
+            var stat = _fileSystem.get(self).statSync(dirInner);
+            if (stat.isFile() && dirInner.endsWith(pattern)) {
+                results.push(dirInner);
+            }
+        });
+
+        return results;
+    };
+    /**
      * Search for a specific file pattern within a folder, recursively
      * @param {string} folder Folder to search from
      * @param {string} pattern Pattern of files to look for

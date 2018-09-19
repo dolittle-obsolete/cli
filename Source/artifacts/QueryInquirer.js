@@ -1,5 +1,6 @@
 import { Folders } from '../Folders';
 import fs from 'fs';
+import global from '../global'
 
 const inquirer = require('inquirer');
 
@@ -29,7 +30,8 @@ export class QueryInquirer {
     }
 
     _getCSharpPrompt() {
-        const namespace = "The.Namespace";
+        const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile());
+        console.log(namespace);
         let questions = [
             {
                 type: 'input',
