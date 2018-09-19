@@ -36,7 +36,6 @@ export class QueryforInquirer {
     _getCSharpPrompt() {
         const customReadModel = 'Write read model name';
         const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile());
-        console.log(namespace);
 
         let readModelChoices = this._findCSharpReadmodels();
         readModelChoices.push(customReadModel);
@@ -82,7 +81,6 @@ export class QueryforInquirer {
                 if (answers.readModelCustom !== undefined && answers.readModelCustom !== null)
                     answers.readModel = answers.readModelCustom;
 
-                console.log(answers);
                 return answers;
             });
     }
@@ -94,7 +92,6 @@ export class QueryforInquirer {
         let filePaths = _folders.get(this).searchRecursive(process.cwd(), '.cs');
         let readModels = [];
         filePaths.forEach(filePath => {
-            console.log(filePath);
             let content = _fileSystem.get(this).readFileSync(filePath, 'utf8');
             const readModelNameMatch = content.match(/.*public\s*class\s*(\w*)\s*:\s*IReadModel/);
             if (readModelNameMatch !== null && readModelNameMatch.length > 0){

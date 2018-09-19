@@ -190,12 +190,7 @@ class global {
         let segmentPath = currentPath;
         let segment = this.getFileName(segmentPath);
 
-        console.log('csprojFileName: ', csprojFileName);
-        console.log('csprojFileDir: ', csprojFileDir);
         while (segment != csprojFileDir) {
-
-            console.log('segmentPath: ', segmentPath);
-            console.log('segment: ', segment);
             namespaceSegments.push(segment);
             segmentPath = this.getFileDir(segmentPath);
             segment = this.getFileName(segmentPath);
