@@ -117,6 +117,23 @@ export class ArtifactsManager {
             });
     }
     /**
+     * Create an event processor
+     * @param {any} flags
+     */
+    createEventProcessor(flags) {
+        
+        let boundedContextConfig = this._getNearestBoundedContextConfig();
+        flags.language = boundedContextConfig.language;
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
+        let destination = process.cwd();
+
+        _inquirerManager.get(this).promptForEventProcessor(flags)
+            .then(context => {
+                this._logger.info(`Creating event with name '${context.name}' and namespace '${context.namespace}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance('eventProcessor', flags.language, boilerPlate, destination, context);  
+            });
+    }
+    /**
      * Create a read model
      * @param {any} flags
      */
