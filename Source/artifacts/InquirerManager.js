@@ -39,66 +39,66 @@ export class InquirerManager {
     }
     /**
      * Create a command
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForCommand(language) {
-        return this._commandInquirer.promptUser(language)
+    promptForCommand(flags) {
+        return this._commandInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
     }
     /**
      * Create an aggregate root
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForAggregateRoot(language) {
-        return this._aggregateRootInquirer.promptUser(language)
+    promptForAggregateRoot(flags) {
+        return this._aggregateRootInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
     }
     /**
      * Create an event
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForEvent(language) {
-        return this._eventInquirer.promptUser(language)
+    promptForEvent(flags) {
+        return this._eventInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
     }
     /**
      * Create a read model
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForReadModel(language) {
-        return this._readModelInquirer.promptUser(language)
+    promptForReadModel(flags) {
+        return this._readModelInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
     }
     /**
      * Create a query
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForQuery(language) {
-        return this._queryInquirer.promptUser(language)
+    promptForQuery(flags) {
+        return this._queryInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
     }
     /**
      * Create a query a read model
-     * @param {string} language
+     * @param {any} flags
      * @returns {Promise<any>} 
      */
-    promptForQueryfor(language) {
-        return this._queryforInquirer.promptUser(language)
+    promptForQueryfor(flags) {
+        return this._queryforInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });

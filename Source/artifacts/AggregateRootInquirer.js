@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Folders } from '../Folders';
 import fs from 'fs';
-import global from '../global'
+import cSharpInquirer from './cSharpInquirerQuestions'
 
 const inquirer = require('inquirer');
 
@@ -12,7 +12,6 @@ const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
 
 export class AggregateRootInquirer {
-
     /**
      * Constructor
      * @param {Folders} folders
@@ -24,45 +23,28 @@ export class AggregateRootInquirer {
     }
     /**
      * Gets the inquirer.js prompt answers based on the language
-     * @param {String} language
+     * @param {any} flags
      * @returns {Promise<any>} The answers
      */
-    promptUser(language){
-        if (language === 'csharp') {
-            return this._getCSharpPrompt()
+    promptUser(flags){
+        if (flags.language === 'csharp') {
+            return this._getCSharpPrompt(flags.name)
         }
     }
-
-    _getCSharpPrompt() {
-        const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile());
-        console.log(namespace);
-        let questions = [
-            {
-                type: 'input',
-                name: 'name',
-                message: `What's the Aggregate Root's name?`
-            },
-            {
-                type: 'confirm',
-                name: 'generatedNamespace',
-                message: `Do you want to use this namespace ${namespace}?`,
-            },
-            {
-                type: 'input',
-                name: 'namespace',
-                message: `Enter the Aggregate Root's namespace`,
-                when: function(answers) {
-                    return !answers.generatedNamespace;
-                }
-            }
-        ];
+    /**
+     * Gets the C# prompt
+     * @param {string} name
+     */
+    _getCSharpPrompt(name) {
+        
+        let questions = cSharpInquirer.getCSharpQuestions(); 
 
         return inquirer.prompt(questions)
             .then(answers => {
-                if (answers.generatedNamespace)
-                    answers.namespace = namespace;
+                answers.name = name;
                 
                 return answers;
             });
     }
+
 }
