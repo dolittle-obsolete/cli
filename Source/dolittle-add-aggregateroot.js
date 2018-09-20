@@ -13,7 +13,7 @@ args
 
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add aggregateroot'});
 
-if (! args.sub.length || args.sub.length < 2) args.showHelp();
+if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-let flags = {language: args.sub[0], name: args.sub[1]}; 
+let flags = {name: args.sub[0]}; 
 global.artifactsManager.createAggregateRoot(flags);

@@ -46,7 +46,9 @@ export class ArtifactsManager {
     
         return JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
     }
-    _getArtifactBoilerPlateByLanguageAndType(language, type) {
+    _getArtifactsBoilerPlateByLanguage(language) {
+        const type = 'artifacts';
+
         let boilerPlates = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType(language, type);
         if (boilerPlates === null || boilerPlates.length === 0) {
             this._logger.error(`Could not find a boilerplate.json configuration for language: ${language} and type: ${type}`)
@@ -63,9 +65,10 @@ export class ArtifactsManager {
      * @param {any} flags 
      */
     createCommand(flags) {
+        
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
         _inquirerManager.get(this).promptForCommand(flags)
             .then(context => {
@@ -81,7 +84,7 @@ export class ArtifactsManager {
         
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForEvent(flags)
@@ -98,7 +101,7 @@ export class ArtifactsManager {
 
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForReadModel(flags)
@@ -115,7 +118,7 @@ export class ArtifactsManager {
 
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForAggregateRoot(flags)
@@ -132,7 +135,7 @@ export class ArtifactsManager {
 
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForQuery(flags)
@@ -148,7 +151,7 @@ export class ArtifactsManager {
     createQueryFor(flags) {
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactBoilerPlateByLanguageAndType(flags.language, 'command');
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
         let destination = process.cwd();
 
         _inquirerManager.get(this).promptForQueryfor(flags)
