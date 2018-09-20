@@ -206,7 +206,6 @@ export class BoilerPlatesManager {
                         .exec(() => {
                             
                             if (--cloneCount == 0) {
-                                this._logger.info('update config');
                                 this.updateConfiguration();
                                 resolve();
                             }
