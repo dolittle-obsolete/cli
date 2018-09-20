@@ -206,6 +206,7 @@ export class BoilerPlatesManager {
                         .exec(() => {
                             
                             if (--cloneCount == 0) {
+                                this._logger.info('update config');
                                 this.updateConfiguration();
                                 resolve();
                             }
@@ -221,53 +222,57 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     async updateConfiguration() {
-        // TODO: 
-        // * Discover boilerplates recursively
-        // * 
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
         folders.forEach(folder => {
-            let boilerPlateFile = path.join(folder, 'boilerplate.js');
-
-            if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
-                let boilerPlateFromFile = require(boilerPlateFile);
-                let contentFolder = path.join(folder, "Content");
-
-                let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
-                paths = paths.filter(_ => {
-                    let isBinary = false;
-                    binaryFiles.forEach(b => {
-                        if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
+            let boilerPlatesPaths = _folders.get(this).searchRecursive(folder, 'boilerplate.json');
+            let contentFolder = path.join(folder, 'Content');
+            
+            boilerPlatesPaths.forEach(boilerPlatePath => {
+                let boilerPlateObject = JSON.parse(_fileSystem.get(this).readFileSync(boilerPlatePath, 'utf8'));
+                if (boilerPlateObject.type != 'artifacts') {
+                    let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
+                    paths = paths.filter(_ => {
+                        let isBinary = false;
+                        binaryFiles.forEach(b => {
+                            if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
+                        });
+                        return isBinary;
                     });
-                    return !isBinary;
-                });
-                let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
-                let filesNeedingBinding = [];
-
-                paths.forEach(_ => {
-                    let stat = _fileSystem.get(self).statSync(_);
-                    if (!stat.isDirectory()) {
-                        let file = _fileSystem.get(self).readFileSync(_);
-                        if (file.indexOf('{{') >= 0) {
-                            filesNeedingBinding.push(_.substr(contentFolder.length + 1));
+                    let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
+                    let filesNeedingBinding = [];
+                    paths.forEach(_ => {
+                        let stat = _fileSystem.get(self).statSync(_);
+                        if (!stat.isDirectory()) {
+                            let file = _fileSystem.get(self).readFileSync(_);
+                            if (file.indexOf('{{') >= 0) {
+                                filesNeedingBinding.push(_.substr(contentFolder.length + 1));
+                            }
                         }
-                    }
-                });
+                    });
+                    boilerPlateObject.location = contentFolder;
+                    boilerPlateObject.pathsNeedingBinding = pathsNeedingBinding;
+                    boilerPlateObject.filesNeedingBinding = filesNeedingBinding;
+                }
+                else {
+                    boilerPlateObject.location = path.dirname(boilerPlatePath);
+                    boilerPlateObject.pathsNeedingBinding = [];
+                    boilerPlateObject.filesNeedingBinding = [];
+                }
 
                 let boilerPlate = new BoilerPlate(
-                    boilerPlateFromFile.language || 'any',
-                    boilerPlateFromFile.name,
-                    boilerPlateFromFile.description,
-                    boilerPlateFromFile.type,
-                    contentFolder,
-                    pathsNeedingBinding,
-                    filesNeedingBinding
+                    boilerPlateObject.language || 'any',
+                    boilerPlateObject.name,
+                    boilerPlateObject.description,
+                    boilerPlateObject.type,
+                    boilerPlateObject.location,
+                    boilerPlateObject.pathsNeedingBinding,
+                    boilerPlateObject.filesNeedingBinding
                 );
                 boilerPlates.push(boilerPlate);
-            }
+            });
         });
-
         let boilerPlatesAsObjects = boilerPlates.map(_ => _.toJson());
         let boilerPlatesAsJson = JSON.stringify(boilerPlatesAsObjects, null, 4);
         _fileSystem.get(this).writeFileSync(this.boilerPlateConfigFile, boilerPlatesAsJson);
