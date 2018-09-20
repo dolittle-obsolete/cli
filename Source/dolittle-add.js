@@ -9,6 +9,7 @@ const USAGE = 'dolittle add [command] [args]'
 args
     .command('command', 'A command')
     .command('event', 'An event')
+    .command('eventprocessor', 'An event processor')
     .command('readmodel', 'A read model')
     .command('aggregateroot', 'An aggregate root')
     .command('query', "A query")

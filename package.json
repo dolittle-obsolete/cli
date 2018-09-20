@@ -26,7 +26,8 @@
     "dolittle-add-readmodel": "bin/dolittle-add-readmodel.js",
     "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js",
     "dolittle-add-query": "bin/dolittle-add-query.js",
-    "dolittle-add-queryfor": "bin/dolittle-add-queryfor.js"
+    "dolittle-add-queryfor": "bin/dolittle-add-queryfor.js",
+    "dolittle-add-eventprocessor": "bin/dolittle-add-eventprocessor.js"
   },
   "files": [
     "bin"
