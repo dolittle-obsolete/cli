@@ -323,6 +323,10 @@ export class BoilerPlatesManager {
             templatesAndLocation.push(template);
         });
         const template = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == artifactLanguage)[0];
+        if (template === undefined || template === null) {
+            this._logger.error(`Could not find template.json for artifact with language '${artifactLanguage}' and type '${artifactType}'`);
+            process.exit(1);
+        }
         let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(template.location, template.template.includedFiles);
 
         filesToCreate.forEach( filePath => {
