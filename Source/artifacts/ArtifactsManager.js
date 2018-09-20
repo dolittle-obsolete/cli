@@ -8,6 +8,7 @@ import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import { InquirerManager } from './InquirerManager';
 import fs from 'fs';
 import global from '../global';
+import { BoilerPlate } from '../boilerPlates/BoilerPlate';
 
 const _boilerPlatesManager = new WeakMap();
 const _folders = new WeakMap();
@@ -35,6 +36,10 @@ export class ArtifactsManager {
         
         
     }
+    /**
+     * Searches the file directories for the bounded-context.json configuration file recursively by going upwards in the hierarchy
+     * @return {any} bounded context configuration object
+     */
     _getNearestBoundedContextConfig() {
         let boundedContextConfigPath = global.getNearestBoundedContextConfig();
     
@@ -42,10 +47,28 @@ export class ArtifactsManager {
             this._logger.error('bounded-context.json was not found. Cannot create artifacts. Run dolittle create boundedcontext to create a new bounded context from scratch');
             process.exit(1);
         }
+        
         this._logger.info(`Using bounded-context.json at path '${boundedContextConfigPath}'`);
-    
-        return JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
+
+        let boundedContext = JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
+        this._validateBoundedContext(boundedContext);
+        return boundedContext;
     }
+    /**
+     * Validates the fields of the parsed bounded-context.json object 
+     * @param {any} boundedContext 
+     */
+    _validateBoundedContext(boundedContext) {
+        if (boundedContext.language === undefined || boundedContext.language === null || boundedContext.language === '') {
+            this._logger.error('The bounded-context.json configuration is missing "language"');
+            process.exit(1);
+        }
+    }
+    /**
+     * Retrieves the boilerplate.json configuration for artifacts with the given language
+     * @param {string} language 
+     * @return {BoilerPlate} The Boilerplate with of the given language
+     */
     _getArtifactsBoilerPlateByLanguage(language) {
         const type = 'artifacts';
 
@@ -65,7 +88,7 @@ export class ArtifactsManager {
      * @param {any} flags 
      */
     createCommand(flags) {
-        
+
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
@@ -149,6 +172,7 @@ export class ArtifactsManager {
      * @param {any} flags
      */
     createQueryFor(flags) {
+
         let boundedContextConfig = this._getNearestBoundedContextConfig();
         flags.language = boundedContextConfig.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
