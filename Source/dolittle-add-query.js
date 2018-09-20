@@ -6,12 +6,13 @@
 import args from 'args';
 import global from './global';
 
-var inquirer = require('inquirer');
-
-const USAGE = 'dolittle add query';
+const USAGE = 'dolittle add query [name]';
 args
     .example(USAGE, "Creates a query in the current folder");
 
-inquirer.prompt(global.languageQuestion).then(answers => {
-    global.artifactsManager.createQuery(answers.language);
-  });
+
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add query'});
+if (! args.sub.length || args.sub.length < 1) args.showHelp();
+
+let flags = {name: args.sub[0]}; 
+global.artifactsManager.createQuery(flags);

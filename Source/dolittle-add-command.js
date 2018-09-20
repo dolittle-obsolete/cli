@@ -6,13 +6,13 @@
 import args from 'args';
 import global from './global';
 
-var inquirer = require('inquirer');
-const USAGE = 'dolittle add command';
+const USAGE = 'dolittle add command [name]';
 args
     .example(USAGE, "Creates a command in the current folder");
  
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add command'});
 
-inquirer.prompt(global.languageQuestion).then(answers => {
-    global.artifactsManager.createCommand(answers.language);
-  });
+if (! args.sub.length || args.sub.length < 2) args.showHelp();
+
+let flags = {language: args.sub[0], name: args.sub[1]}; 
+global.artifactsManager.createCommand(flags);

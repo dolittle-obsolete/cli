@@ -6,11 +6,12 @@
 import args from 'args';
 import global from './global';
 
-var inquirer = require('inquirer');
-const USAGE = 'dolittle add readmodel';
+const USAGE = 'dolittle add readmodel [name]';
 args
     .example(USAGE, "Creates a read model in the current folder");
 
-inquirer.prompt(global.languageQuestion).then(answers => {
-    global.artifactsManager.createReadModel(answers.language);
-  });
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add readmodel'});
+if (! args.sub.length || args.sub.length < 1) args.showHelp();
+
+let flags = {name: args.sub[0]}; 
+global.artifactsManager.createReadModel(flags);

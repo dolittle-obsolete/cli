@@ -6,13 +6,14 @@
 import args from 'args';
 import global from './global';
 
-var inquirer = require('inquirer');
-const USAGE = 'dolittle add aggregateroot';
+const USAGE = 'dolittle add aggregateroot [name]';
+
 args
-    .example(USAGE, "Creates an aggregate root in the current folder");
- 
+   .example(USAGE, "Creates an aggregate root in the current folder");
+
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add aggregateroot'});
 
-inquirer.prompt(global.languageQuestion).then(answers => {
-    global.artifactsManager.createAggregateRoot(answers.language);
-  });
+if (! args.sub.length || args.sub.length < 2) args.showHelp();
+
+let flags = {language: args.sub[0], name: args.sub[1]}; 
+global.artifactsManager.createAggregateRoot(flags);
