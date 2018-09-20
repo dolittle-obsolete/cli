@@ -34,23 +34,6 @@ const _httpWrapper = new WeakMap();
  * Common global object
  */
 class global {
-    
-
-    get supportedSDKLanguages() {
-        return [
-            "csharp",
-            'javascript'
-        ];
-    }
-
-    get languageQuestion() {
-        return [{
-            type: 'list',
-            name: 'language',
-            message: 'Which SDK language are you working in?',
-            choices: this.supportedSDKLanguages
-        }];
-    }
     /**
      * Perform initialization
      */
@@ -206,6 +189,22 @@ class global {
     /**
      * Gets the path of the nearest .csproj file, searching upwards not recursively
      */
+    getNearestBoundedContextConfig() {
+        let currentPath = process.cwd();
+        let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
+        while (lastPathSepIndex != -1 && currentPath != null && currentPath != '')
+        {
+            let results = _folders.get(this).searchFolder(currentPath, 'bounded-context.json'); 
+            if (results.length >= 1)
+                return results[0];
+            currentPath = currentPath.substr(0, lastPathSepIndex);
+            lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
+        }
+        return '';
+    }
+    /**
+     * Gets the path of the nearest .csproj file, searching upwards not recursively
+     */
     getNearestCsprojFile() {
         let currentPath = process.cwd();
         let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
@@ -219,6 +218,7 @@ class global {
         }
         return '';
     }
+
     /**
      * Get the index of the last path separator in the path
      * @param {String} filePath 
