@@ -27,7 +27,8 @@
     "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js",
     "dolittle-add-query": "bin/dolittle-add-query.js",
     "dolittle-add-queryfor": "bin/dolittle-add-queryfor.js",
-    "dolittle-add-eventprocessor": "bin/dolittle-add-eventprocessor.js"
+    "dolittle-add-eventprocessor": "bin/dolittle-add-eventprocessor.js",
+    "dolittle-add-commandhandler": "bin/dolittle-add-commandhandler.js"
   },
   "files": [
     "bin"

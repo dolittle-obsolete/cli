@@ -8,6 +8,7 @@ import args from 'args';
 const USAGE = 'dolittle add [command] [args]'
 args
     .command('command', 'A command')
+    .command('commandhandler', 'A command handler')
     .command('event', 'An event')
     .command('eventprocessor', 'An event processor')
     .command('readmodel', 'A read model')

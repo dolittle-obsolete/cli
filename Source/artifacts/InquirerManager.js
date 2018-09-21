@@ -12,6 +12,7 @@ import { AggregateRootInquirer } from './AggregateRootInquirer';
 import { EventInquirer } from './EventInquirer';
 import { ReadModelInquirer } from './ReadModelInquirer';
 import { EventProcessorInquirer } from './EventProcessorInquirer';
+import { CommandHandlerInquirer } from './CommandHandlerInquirer';
 
 
 const _folders = new WeakMap();
@@ -34,6 +35,7 @@ export class InquirerManager {
         this._queryInquirer = new QueryInquirer(folders, fileSystem);
         this._queryforInquirer = new QueryforInquirer(folders, fileSystem);
         this._commandInquirer = new CommandInquirer(folders, fileSystem);
+        this._commandHandlerInquirer = new CommandHandlerInquirer(folders, fileSystem);
         this._aggregateRootInquirer = new AggregateRootInquirer(folders, fileSystem);
         this._eventInquirer = new EventInquirer(folders, fileSystem);
         this._eventProcessorInquirer = new EventProcessorInquirer(folders, fileSystem);
@@ -47,6 +49,17 @@ export class InquirerManager {
      */
     promptForCommand(flags) {
         return this._commandInquirer.promptUser(flags)
+            .then(context => {
+                return context;
+            });
+    }
+    /**
+     * Create a command handler
+     * @param {any} flags
+     * @returns {Promise<any>} 
+     */
+    promptForCommandHandler(flags) {
+        return this._commandHandlerInquirer.promptUser(flags)
             .then(context => {
                 return context;
             });
