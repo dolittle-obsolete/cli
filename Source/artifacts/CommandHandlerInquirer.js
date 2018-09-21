@@ -5,6 +5,7 @@
 import { Folders } from '../Folders';
 import fs from 'fs';
 import cSharpInquirer from './cSharpInquirerQuestions';
+import global from '../global';
 
 const inquirer = require('inquirer');
 
@@ -37,12 +38,24 @@ export class CommandHandlerInquirer {
      * @param {string} name
      */
     _getCSharpPrompt(name) {
-        let choices = this._findCSharpCommands().map(item => {return {name: item}});
+        let choices =  [];
+        let commandsMap = this._findCSharpCommands();
+        
+        commandsMap.forEach((value, key) => {
+            value.forEach(commandName => {
+                choices.push( {
+                    name: key + '.' + commandName,
+                    value: commandName
+                    });
+                })
+                choices.push(new inquirer.Separator(''));
+            });
 
         let questions = [{
                 type: 'checkbox',
                 message: 'Select commands to handle: ',
                 name: 'commandNames',
+                pageSize: 10,
                 choices: choices
             }
         ];
@@ -53,6 +66,12 @@ export class CommandHandlerInquirer {
             .then(answers => {
                 answers.name = name;
                 answers.commands = [];
+                answers.imports = [];
+                commandsMap.forEach((value, key) => {
+                    answers.imports.push( {
+                        namespace: key
+                    });
+                });
                 answers.commandNames.forEach(commandName => 
                     answers.commands.push({
                         commandName: commandName
@@ -62,18 +81,26 @@ export class CommandHandlerInquirer {
     }
     /**
      * Finds and returns the names of the public ICommand classes
-     * @returns [string[]]
+     * @returns {Map<string, string[]}
      */
     _findCSharpCommands() {
+        
+        const nearestCsProj = global.getNearestCsprojFile(process.cwd());
         let filePaths = _folders.get(this).searchRecursive(process.cwd(), '.cs');
-        let commands = [];
+        let commandsMap = new Map();
+        
         filePaths.forEach(filePath => {
             let content = _fileSystem.get(this).readFileSync(filePath, 'utf8');
             const commandNameMatch = content.match(/.*public\s*class\s*(\w*)\s*:\s*ICommand/);
+
             if (commandNameMatch !== null && commandNameMatch.length > 0){
-                commands.push(commandNameMatch[1]);
+                const namespace = global.createCSharpNamespace(global.getFileDir(filePath), nearestCsProj);
+                const commandName = commandNameMatch[1];
+                let values = commandsMap.get(namespace) || [];
+                values.push(commandName);
+                commandsMap.set(namespace, values);
             }
         });
-        return commands;
+        return commandsMap;
     }
 }

@@ -8,8 +8,14 @@ function generatedNamespaceQuestion(namespace) {
         name: 'namespace',
         message: `Choose or create namespace:`,
         choices: [
-            `${namespace}`,
-            customNamespaceChoice
+            {
+                name: `(default) ${namespace}`,
+                value: namespace  
+            },
+            {
+                name: customNamespaceChoice,
+                value: customNamespaceChoice
+            }
         ]
     }
 };
@@ -29,7 +35,7 @@ class cSharpInquirerQuestions {
     getCSharpQuestions() {
         let questions = [];
         
-        const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile());
+        const namespace = global.createCSharpNamespace(process.cwd(), global.getNearestCsprojFile(process.cwd()));
     
         questions.push(generatedNamespaceQuestion(namespace));
         questions.push(inputNamespaceQuestion);
