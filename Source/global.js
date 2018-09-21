@@ -159,6 +159,7 @@ class global {
     get usagePrefix() {
         return '\n\t ';
     }
+
     /**
      * Gets the namespace based on the closest csprojPath and the cwd path
      * @param {String} currentPath 
@@ -186,6 +187,7 @@ class global {
         });
         return namespace;
     }
+
     /**
      * Gets the path of the nearest .csproj file, searching upwards not recursively
      */
@@ -205,8 +207,8 @@ class global {
     /**
      * Gets the path of the nearest .csproj file, searching upwards not recursively
      */
-    getNearestCsprojFile() {
-        let currentPath = process.cwd();
+    getNearestCsprojFile(path) {
+        let currentPath = path;
         let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
         while (lastPathSepIndex != -1 && currentPath != null && currentPath != '')
         {
