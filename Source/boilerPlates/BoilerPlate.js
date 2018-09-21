@@ -31,6 +31,7 @@ export class BoilerPlate {
         _description.set(this, description);
         _type.set(this, type);
         _location.set(this, location);
+        // TODO: Add options field
         _pathsNeedingBinding.set(this, pathsNeedingBinding || []);
         _filesNeedingBinding.set(this, filesNeedingBinding || []);
     }

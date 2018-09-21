@@ -6,12 +6,14 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle create boundedcontext [name]';
+const USAGE = 'dolittle add aggregateroot [name]';
+
 args
-    .example(USAGE, "Creates a bounded context with a given name");
-    
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
+   .example(USAGE, "Creates an aggregate root in the current folder");
 
-if( !args.sub.length ) args.showHelp();
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add aggregateroot'});
 
-global.boundedContextManager.create(args.sub[0]);
+if (! args.sub.length || args.sub.length < 1) args.showHelp();
+
+let flags = {name: args.sub[0]}; 
+global.artifactsManager.createAggregateRoot(flags);

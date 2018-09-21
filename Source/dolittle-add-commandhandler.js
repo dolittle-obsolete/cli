@@ -6,12 +6,13 @@
 import args from 'args';
 import global from './global';
 
-const USAGE = 'dolittle create boundedcontext [name]';
+const USAGE = 'dolittle add commandhandler [name]';
 args
-    .example(USAGE, "Creates a bounded context with a given name");
-    
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
+    .example(USAGE, "Creates a command handler in the current folder");
+ 
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add commandhandler'});
 
-if( !args.sub.length ) args.showHelp();
+if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-global.boundedContextManager.create(args.sub[0]);
+let flags = {name: args.sub[0]}; 
+global.artifactsManager.createCommandHandler(flags);
