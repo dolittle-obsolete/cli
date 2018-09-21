@@ -12,7 +12,7 @@ const inquirer = require('inquirer');
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
 
-let eventNames = [];
+
 export class EventProcessorInquirer {
 
     /**
@@ -39,9 +39,8 @@ export class EventProcessorInquirer {
      * @param {string} name
      */
     _getCSharpPrompt(name) {
-        let events = [];
-        eventNames = this._findCSharpEvents();
-        let choices = eventNames.map(item => {return {name: item}});
+        
+        let choices = this._findCSharpEvents().map(item => {return {name: item}});
         console.log('choices: ', choices);
         let questions = [{
                 type: 'checkbox',
@@ -66,20 +65,24 @@ export class EventProcessorInquirer {
             });
     }
     /**
-     * Finds and returns the names of the public readModels
+     * Finds and returns the names of the public IEvent classes
      * @returns [string[]]
      */
     _findCSharpEvents() {
         //TODO: Need to find events in a separate folder. Discuss strategies
+        /**
+         * Thoughts: Go by convention, folders named Events[.something] are where events are made.
+         * Find all events and group them by events folder / Module / Feature, give user a checkbox thing where they can pick events.
+         */
         let filePaths = _folders.get(this).searchRecursive(process.cwd(), '.cs');
-        let readModels = [];
+        let events = [];
         filePaths.forEach(filePath => {
             let content = _fileSystem.get(this).readFileSync(filePath, 'utf8');
-            const readModelNameMatch = content.match(/.*public\s*class\s*(\w*)\s*:\s*IEvent/);
-            if (readModelNameMatch !== null && readModelNameMatch.length > 0){
-                readModels.push(readModelNameMatch[1]);
+            const eventNameMatch = content.match(/.*public\s*class\s*(\w*)\s*:\s*IEvent/);
+            if (eventNameMatch !== null && eventNameMatch.length > 0){
+                events.push(eventNameMatch[1]);
             }
         });
-        return readModels;
+        return events;
     }
 }

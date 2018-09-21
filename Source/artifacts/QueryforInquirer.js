@@ -71,7 +71,7 @@ export class QueryforInquirer {
             });
     }
     /**
-     * Finds and returns the names of the public readModels
+     * Finds and returns the names of the public IReadModel classes
      * @returns [string[]]
      */
     _findCSharpReadmodels() {
