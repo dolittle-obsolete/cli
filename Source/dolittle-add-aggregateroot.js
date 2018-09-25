@@ -15,5 +15,13 @@ args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add
 
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-let flags = {name: args.sub[0]}; 
-global.artifactsManager.createAggregateRoot(flags);
+let context = {
+    artifactName: args.sub[0], 
+    artifactType: 'aggregateRoot',
+    destination: process.cwd()
+};
+
+global.artifactsManager.createArtifact(context);
+
+// let context = {name: args.sub[0], destination: process.cwd()}; 
+// global.artifactsManager.createAggregateRoot(context);

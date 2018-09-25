@@ -8,13 +8,15 @@ import { ApplicationManager } from '../applications/ApplicationManager';
 import { Logger } from 'winston';
 import path from 'path';
 import fs from 'fs';
+import { BoundedContext } from './BoundedContext';
+import global from '../global';
 
 const _boilerPlatesManager = new WeakMap();
 const _applicationManager = new WeakMap();
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
 
-
+const BOUNDED_CONTEXT_FILE_NAME = 'bounded-context.json';
 /**
  * Represents the manager for bounded contexts
  */
@@ -37,8 +39,8 @@ export class BoundedContextManager {
     }
 
     /**
-     * 
-     * @param {*} name 
+     * Creates a complete bounded context from boilerplate
+     * @param {string} name of the bounded context 
      */
     create(name) {
         this._logger.info(`Creating bounded context with name '${name}'`);
@@ -55,5 +57,41 @@ export class BoundedContextManager {
             name: name
         };
         _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
+    }
+    /**
+     * Searches the file hierarchy for bounded-context.json and returns the BoundedContext
+     * @param {string} startPath to search from
+     * @returns {BoundedContext} the bounded context
+     */
+    getNearestBoundedContextConfig(startPath) {
+        const boundedContextConfigPath = this.getNearestBoundedContextPath(startPath);
+        if (boundedContextConfigPath === "") {
+            this._logger.error(`${BOUNDED_CONTEXT_FILE_NAME} was not found. Cannot create artifacts. Run dolittle create boundedcontext to create a new bounded context from scratch`);
+            throw "Bounded context configuration not found"
+        }
+        this._logger.info(`Found bounded context configuration at path '${boundedContextConfigPath}'`);
+
+        let boundedContextObj = JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
+        let boundedContext = new BoundedContext(boundedContextObj.application, boundedContextObj.boundedContext, boundedContextObj.boundedContextName,
+            boundedContextObj.backend, boundedContextObj.interaction);
+        
+        return boundedContext;
+    }
+    /**
+     * Searches the file hierarchy for bounded-context.json and returns the path of the file
+     * @param {string} startPath to search from
+     * @returns {string} the path of the bounded context or '' if it was not found
+     */
+    getNearestBoundedContextPath(startPath) {
+        let lastPathSepIndex = global.getLastPathSeparatorIndex(startPath);
+        while (lastPathSepIndex != -1 && startPath != null && startPath != '')
+        {
+            let results = _folders.get(this).searchFolder(startPath, BOUNDED_CONTEXT_FILE_NAME); 
+            if (results.length >= 1)
+                return results[0];
+            startPath = startPath.substr(0, lastPathSepIndex);
+            lastPathSepIndex = global.getLastPathSeparatorIndex(startPath);
+        }
+        return '';
     }
 }

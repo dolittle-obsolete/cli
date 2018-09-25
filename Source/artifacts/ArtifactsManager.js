@@ -9,11 +9,14 @@ import { InquirerManager } from './InquirerManager';
 import fs from 'fs';
 import global from '../global';
 import { BoilerPlate } from '../boilerPlates/BoilerPlate';
+import { BoundedContext } from '../boundedContexts/BoundedContext';
 
 const _boilerPlatesManager = new WeakMap();
+const _boundedContextManager = new WeakMap();
 const _folders = new WeakMap();
 const _fileSystem = new WeakMap();
 const _inquirerManager = new WeakMap();
+
 
 /**
  * Represents a manager for artifacts
@@ -23,13 +26,15 @@ export class ArtifactsManager {
      * Initializes a new instance of {ApplicationManager}
      * @param {InquirerManager} inquirerManager
      * @param {BoilerPlatesManager} boilerPlatesManager
+     * @param {boundedContextManager} boundedContextManager
      * @param {Folders} folders 
      * @param {fs} fileSystem
      * @param {Logger} logger
      */
-    constructor(inquirerManager, boilerPlatesManager, folders, fileSystem, logger) {
+    constructor(inquirerManager, boilerPlatesManager, boundedContextManager, folders, fileSystem, logger) {
         _inquirerManager.set(this, inquirerManager);
         _boilerPlatesManager.set(this, boilerPlatesManager);
+        _boundedContextManager.set(this, boundedContextManager);
         _folders.set(this, folders);
         _fileSystem.set(this, fileSystem);
         this._logger = logger;
@@ -38,30 +43,23 @@ export class ArtifactsManager {
     }
     /**
      * Searches the file directories for the bounded-context.json configuration file recursively by going upwards in the hierarchy
-     * @return {any} bounded context configuration object
+     * @param {string} startPath Where to start looking for the bounded context
+     * @return {BoundedContext} bounded context configuration object
      */
-    _getNearestBoundedContextConfig() {
-        let boundedContextConfigPath = global.getNearestBoundedContextConfig();
-    
-        if (boundedContextConfigPath === "") {
-            this._logger.error('bounded-context.json was not found. Cannot create artifacts. Run dolittle create boundedcontext to create a new bounded context from scratch');
-            process.exit(1);
-        }
-        
-        this._logger.info(`Using bounded-context.json at path '${boundedContextConfigPath}'`);
+    _getNearestBoundedContextConfig(startPath) {
+        let boundedContext = _boundedContextManager.get(this).getNearestBoundedContextConfig(startPath);
 
-        let boundedContext = JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
         this._validateBoundedContext(boundedContext);
         return boundedContext;
     }
     /**
      * Validates the fields of the parsed bounded-context.json object 
-     * @param {any} boundedContext 
+     * @param {BoundedContext} boundedContext 
      */
     _validateBoundedContext(boundedContext) {
-        if (boundedContext.language === undefined || boundedContext.language === null || boundedContext.language === '') {
+        if ( !(boundedContext.backend && boundedContext.backend.language && boundedContext.backend.language !== '')) {
             this._logger.error('The bounded-context.json configuration is missing "language"');
-            process.exit(1);
+            throw "Bounded Context configuration missing language";
         }
     }
     /**
@@ -71,151 +69,56 @@ export class ArtifactsManager {
      */
     _getArtifactsBoilerPlateByLanguage(language) {
         const type = 'artifacts';
-
         let boilerPlates = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType(language, type);
         if (boilerPlates === null || boilerPlates.length === 0) {
             this._logger.error(`Could not find a boilerplate.json configuration for language: ${language} and type: ${type}`)
-            process.exit(1);
+            throw "Could not find boilerplate for given language and type";
         }
         if (boilerPlates.length > 1) {
             this._logger.error(`Found more than one boilerplate.json configuration for language: ${language} and type: ${type}`)
-            process.exit(1);
+            throw "Found multiple boilerplates";
         }
         return boilerPlates[0];
     }
     /**
-     * Create a command
-     * @param {any} flags 
+     * Gets the artifact template alongside with the location of where it was found based on the language and type of the artifact
+     * @param {BoilerPlate} boilerPlate 
+     * @param {string} artifactType
+     * @returns {{template: any, location: string}}
      */
-    createCommand(flags) {
+    _getArtifactTemplateByBoilerplate(boilerPlate, artifactType)
+    {
+        let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
+        let templatesAndLocation = [];
+        templateFiles.forEach(_ => {
+            const lastPathSeparatorMatch = _.match(/(\\|\/)/);
+            const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1]);
+            const template = {
+                'template': JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
+                'location': _.substring(0, lastIndex+1)
+            };
+            templatesAndLocation.push(template);
+        });
+        const artifactTemplate = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == boilerPlate.language)[0];
+        if (artifactTemplate === undefined || artifactTemplate === null) 
+            throw 'Artifact template not found';
 
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-        _inquirerManager.get(this).promptForCommand(flags)
-            .then(context => {
-                this._logger.info(`Creating command with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('command', flags.language, boilerPlate, destination, context);  
-            });
+        return artifactTemplate;
     }
     /**
-     * Create a command handler
-     * @param {any} flags 
+     * Creates an artifact of the given type at the given destination with the given name 
+     * @param {{artifactName: string, destination: string, artifactType: string}} context 
      */
-    createCommandHandler(flags) {
+    createArtifact(context) {
+        let boundedContextConfig = this._getNearestBoundedContextConfig(context.destination);
+        let language = boundedContextConfig.backend.language;
+        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
+        let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
 
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForCommandHandler(flags)
-            .then(context => {
-                this._logger.info(`Creating command handler with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('commandHandler', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create an event
-     * @param {any} flags
-     */
-    createEvent(flags) {
-        
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForEvent(flags)
-            .then(context => {
-                this._logger.info(`Creating event with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('event', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create an event processor
-     * @param {any} flags
-     */
-    createEventProcessor(flags) {
-        
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForEventProcessor(flags)
-            .then(context => {
-                this._logger.info(`Creating event processor with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('eventProcessor', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create a read model
-     * @param {any} flags
-     */
-    createReadModel(flags) {
-
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForReadModel(flags)
-            .then(context => {
-                this._logger.info(`Creating read model with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('readModel', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create an aggregate root
-     * @param {any} flags
-     */
-    createAggregateRoot(flags) {
-
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForAggregateRoot(flags)
-            .then(context => {
-                this._logger.info(`Creating aggregate root with name '${context.name}' and namespace '${context.namespace}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('aggregateRoot', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create a query
-     * @param {any} flags
-     */
-    createQuery(flags) {
-
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForQuery(flags)
-            .then(context => {
-                this._logger.info(`Creating query with name '${context.name}'`)
-                _boilerPlatesManager.get(this).createArtifactInstance('query', flags.language, boilerPlate, destination, context);  
-            });
-    }
-    /**
-     * Create a query for a specific read model
-     * @param {any} flags
-     */
-    createQueryFor(flags) {
-
-        let boundedContextConfig = this._getNearestBoundedContextConfig();
-        flags.language = boundedContextConfig.language;
-        let boilerPlate = this._getArtifactsBoilerPlateByLanguage(flags.language);
-        let destination = process.cwd();
-
-        _inquirerManager.get(this).promptForQueryfor(flags)
-            .then(context => {
-                this._logger.info(`Creating query for '${context.readModel}' with name '${context.name}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance('queryFor', flags.language, boilerPlate, destination, context);  
+        _inquirerManager.get(this).promptUser(context.artifactName, context.destination, boilerPlate, artifactTemplate)
+            .then(templateContext => {
+                this._logger.info(`Creating an artifact of type '${context.artifactType}' with name '${context.artifactName}' and language '${context.language}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance(artifactTemplate, context.destination, templateContext);
             });
     }
 }
