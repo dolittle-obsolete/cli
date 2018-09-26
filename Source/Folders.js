@@ -72,7 +72,7 @@ export class Folders
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             let actualPath = path.resolve(folder, dirInner);
             let stat = _fileSystem.get(self).statSync(actualPath);
-            let regexMatch = actualPath.match(regularExp);
+            let regexMatch = path.parse(actualPath).name.match(regularExp);
             if (stat.isDirectory() && regexMatch && regexMatch.length > 0) {
                 results.push(actualPath);
             }
@@ -140,7 +140,7 @@ export class Folders
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
             let actualPath = path.resolve(folder, dirInner);
             let stat = _fileSystem.get(self).statSync(actualPath);
-
+            
             if (stat.isDirectory()) {
                 results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
             }
@@ -244,13 +244,12 @@ export class Folders
      */
     getNearestDirsSearchingUpwards(folder, regularExp) {
         let results = [];
-        while (folder !== null && folder !== '')
-        {
-            let folders = this.getFoldersInRegex(folder, regularExp); 
-            if (folders.length >= 1)
+        while (folder !== null && folder !== '') {
+            let folders = this.getFoldersInRegex(folder, regularExp);
+            if (folders.length > 0)
                 results.push(...folders);
             folder = path.join(folder, '../');
-            if (results.length > 1)
+            if (results.length > 0)
                 break;
         }
         return results;

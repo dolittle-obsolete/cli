@@ -232,13 +232,14 @@ export class BoilerPlatesManager {
                 if (boilerPlateObject.type != 'artifacts') {
                     let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
                     paths = paths.filter(_ => {
-                        let isBinary = false;
+                        let include = true;
                         binaryFiles.forEach(b => {
-                            if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
+                            if (_.toLowerCase().indexOf(b) > 0) include = false;
                         });
-                        return isBinary;
+                        return include;
                     });
                     let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
+
                     let filesNeedingBinding = [];
                     paths.forEach(_ => {
                         let stat = _fileSystem.get(self).statSync(_);
@@ -249,6 +250,7 @@ export class BoilerPlatesManager {
                             }
                         }
                     });
+
                     boilerPlateObject.location = contentFolder;
                     boilerPlateObject.pathsNeedingBinding = pathsNeedingBinding;
                     boilerPlateObject.filesNeedingBinding = filesNeedingBinding;
@@ -258,6 +260,7 @@ export class BoilerPlatesManager {
                     boilerPlateObject.pathsNeedingBinding = [];
                     boilerPlateObject.filesNeedingBinding = [];
                 }
+
                 let boilerPlate = new BoilerPlate(
                     boilerPlateObject.language || 'any',
                     boilerPlateObject.name,
@@ -294,7 +297,6 @@ export class BoilerPlatesManager {
         
         boilerPlate.filesNeedingBinding.forEach(_ => {
             let file = path.join(destination, _);
-
             let content = _fileSystem.get(this).readFileSync(file, 'utf8')
             let template = Handlebars.compile(content);
             let result = template(context);
