@@ -112,7 +112,6 @@ export class BoilerPlatesManager {
         return _boilerPlates.get(this).filter(boilerPlate => boilerPlate.language == language && boilerPlate.type == type);
     }
 
-
     /**
      * Read all boiler plates from disk
      */
@@ -122,14 +121,13 @@ export class BoilerPlatesManager {
             let json = _fileSystem.get(this).readFileSync(configFile);
             let boilerPlatesAsObjects = JSON.parse(json);
             let boilerPlates = [];
-
-
             boilerPlatesAsObjects.forEach(boilerPlateObject => {
                 let boilerPlate = new BoilerPlate(
                     boilerPlateObject.language,
                     boilerPlateObject.name,
                     boilerPlateObject.description,
                     boilerPlateObject.type,
+                    boilerPlateObject.dependencies,
                     boilerPlateObject.location,
                     boilerPlateObject.pathsNeedingBinding || [],
                     boilerPlateObject.filesNeedingBinding || []
@@ -226,46 +224,53 @@ export class BoilerPlatesManager {
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
         folders.forEach(folder => {
-            let boilerPlateFile = path.join(folder, 'boilerplate.js');
-
-            if (_fileSystem.get(this).existsSync(boilerPlateFile)) {
-                let boilerPlateFromFile = require(boilerPlateFile);
-                let contentFolder = path.join(folder, "Content");
-
-                let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
-                paths = paths.filter(_ => {
-                    let isBinary = false;
-                    binaryFiles.forEach(b => {
-                        if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
+            let boilerPlatesPaths = _folders.get(this).searchRecursive(folder, 'boilerplate.json');
+            let contentFolder = path.join(folder, 'Content');
+            
+            boilerPlatesPaths.forEach(boilerPlatePath => {
+                let boilerPlateObject = JSON.parse(_fileSystem.get(this).readFileSync(boilerPlatePath, 'utf8'));
+                if (boilerPlateObject.type != 'artifacts') {
+                    let paths = _folders.get(this).getFoldersAndFilesRecursivelyIn(contentFolder);
+                    paths = paths.filter(_ => {
+                        let isBinary = false;
+                        binaryFiles.forEach(b => {
+                            if (_.toLowerCase().indexOf(b) > 0) isBinary = true;
+                        });
+                        return isBinary;
                     });
-                    return !isBinary;
-                });
-                let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
-                let filesNeedingBinding = [];
-
-                paths.forEach(_ => {
-                    let stat = _fileSystem.get(self).statSync(_);
-                    if (!stat.isDirectory()) {
-                        let file = _fileSystem.get(self).readFileSync(_);
-                        if (file.indexOf('{{') >= 0) {
-                            filesNeedingBinding.push(_.substr(contentFolder.length + 1));
+                    let pathsNeedingBinding = paths.filter(_ => _.indexOf('{{') > 0).map(_ => _.substr(contentFolder.length + 1));
+                    let filesNeedingBinding = [];
+                    paths.forEach(_ => {
+                        let stat = _fileSystem.get(self).statSync(_);
+                        if (!stat.isDirectory()) {
+                            let file = _fileSystem.get(self).readFileSync(_);
+                            if (file.indexOf('{{') >= 0) {
+                                filesNeedingBinding.push(_.substr(contentFolder.length + 1));
+                            }
                         }
-                    }
-                });
+                    });
+                    boilerPlateObject.location = contentFolder;
+                    boilerPlateObject.pathsNeedingBinding = pathsNeedingBinding;
+                    boilerPlateObject.filesNeedingBinding = filesNeedingBinding;
+                }
+                else {
+                    boilerPlateObject.location = path.dirname(boilerPlatePath);
+                    boilerPlateObject.pathsNeedingBinding = [];
+                    boilerPlateObject.filesNeedingBinding = [];
+                }
 
                 let boilerPlate = new BoilerPlate(
-                    boilerPlateFromFile.language || 'any',
-                    boilerPlateFromFile.name,
-                    boilerPlateFromFile.description,
-                    boilerPlateFromFile.type,
-                    contentFolder,
-                    pathsNeedingBinding,
-                    filesNeedingBinding
+                    boilerPlateObject.language || 'any',
+                    boilerPlateObject.name,
+                    boilerPlateObject.description,
+                    boilerPlateObject.type,
+                    boilerPlateObject.location,
+                    boilerPlateObject.pathsNeedingBinding,
+                    boilerPlateObject.filesNeedingBinding
                 );
                 boilerPlates.push(boilerPlate);
-            }
+            });
         });
-
         let boilerPlatesAsObjects = boilerPlates.map(_ => _.toJson());
         let boilerPlatesAsJson = JSON.stringify(boilerPlatesAsObjects, null, 4);
         _fileSystem.get(this).writeFileSync(this.boilerPlateConfigFile, boilerPlatesAsJson);
@@ -296,7 +301,74 @@ export class BoilerPlatesManager {
             _fileSystem.get(this).writeFileSync(file, result);
         });
     }
+    /**
+     * Create an instance of {BoilerPlate} of an artifact into a specific destination folder with a given context
+     * @param {{template: any, location: string}} artifactTemplate
+     * @param {string} destination 
+     * @param {object} context 
+     */
+    createArtifactInstance(artifactTemplate, destination, context) {
+        let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(artifactTemplate.location, artifactTemplate.template.includedFiles);
 
+        filesToCreate.forEach( filePath => {
+            const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
+            const lastIndex = filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+            const filename = filePath.substring(lastIndex+1, filePath.length);
+            const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
+            let segments = [];
+
+            path.join(destination, filename).split(/(\\|\/)/).forEach(segment => segments.push(Handlebars.compile(segment)(context)));
+            let newFilePath = segments.join('');
+           
+            let template = Handlebars.compile(oldContent);
+            let newContent = template(context);
+            _fileSystem.get(this).writeFileSync(newFilePath, newContent);
+        });
+    }
+
+    // /**
+    //  * Create an instance of {BoilerPlate} of an artifact into a specific destination folder with a given context
+    //  * @param {string} artifactType 
+    //  * @param {string} artifactLanguage 
+    //  * @param {BoilerPlate} boilerPlate 
+    //  * @param {string} destination 
+    //  * @param {object} context 
+    //  */
+    // createArtifactInstance(artifactType, artifactLanguage, boilerPlate, destination, context) {
+    //     let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
+    //     let templatesAndLocation = [];
+    //     templateFiles.forEach(_ => {
+    //         const lastPathSeparatorMatch = _.match(/(\\|\/)/);
+    //         const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1]);
+    //         const template = {
+    //             'template': JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
+    //             'location': _.substring(0, lastIndex+1)
+    //         };
+    //         templatesAndLocation.push(template);
+    //     });
+    //     const template = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == artifactLanguage)[0];
+    //     if (template === undefined || template === null) {
+    //         this._logger.error(`Could not find template.json for artifact with language '${artifactLanguage}' and type '${artifactType}'`);
+    //         throw 'Artifact template not found';
+    //     }
+    //     let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(template.location, template.template.includedFiles);
+
+    //     filesToCreate.forEach( filePath => {
+    //         const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
+    //         const lastIndex = filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+    //         const filename = filePath.substring(lastIndex+1, filePath.length);
+    //         const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
+    //         let segments = [];
+
+    //         path.join(destination, filename).split(/(\\|\/)/).forEach(segment => segments.push(Handlebars.compile(segment)(context)));
+    //         let newFilePath = segments.join('');
+           
+    //         let template = Handlebars.compile(oldContent);
+    //         let newContent = template(context);
+    //         _fileSystem.get(this).writeFileSync(newFilePath, newContent);
+    //     });
+    // }
+    
     /**
      * Gets whether or not there are boiler plates installed
      * @returns {boolean} True if there are, false if not

@@ -6,6 +6,7 @@ const _language = new WeakMap();
 const _name = new WeakMap();
 const _description = new WeakMap();
 const _type = new WeakMap();
+const _dependencies = new WeakMap();
 const _location = new WeakMap();
 const _pathsNeedingBinding = new WeakMap();
 const _filesNeedingBinding = new WeakMap();
@@ -21,15 +22,17 @@ export class BoilerPlate {
      * @param {string} name 
      * @param {string} description 
      * @param {string} type
+     * @param {any[]} dependencies
      * @param {string} location 
      * @param {string[]} [pathsNeedingBinding]
      * @param {string[]} [filesNeedingBinding]
      */
-    constructor(language, name, description, type, location, pathsNeedingBinding, filesNeedingBinding) {
+    constructor(language, name, description, type, dependencies, location, pathsNeedingBinding, filesNeedingBinding) {
         _language.set(this, language);
         _name.set(this, name);
         _description.set(this, description);
         _type.set(this, type);
+        _dependencies.set(this, dependencies);
         _location.set(this, location);
         _pathsNeedingBinding.set(this, pathsNeedingBinding || []);
         _filesNeedingBinding.set(this, filesNeedingBinding || []);
@@ -58,7 +61,11 @@ export class BoilerPlate {
      * @returns {string} Type of {BoilerPlate}
      */
     get type() { return _type.get(this); }
-
+    /**
+     * Gets all the dependencies of the boilerplate
+     * @returns {any[]} List of dependencies
+     */
+    get dependencies() { return _dependencies.get(this); }
     /**
      * Get the location of the {BoilerPlate}
      * @returns {string} Location of {BoilerPlate}
@@ -87,6 +94,7 @@ export class BoilerPlate {
             language: this.language,
             description: this.description,
             type: this.type,
+            dependencies: this.dependencies,
             location: this.location,
             pathsNeedingBinding: this.pathsNeedingBinding,
             filesNeedingBinding: this.filesNeedingBinding

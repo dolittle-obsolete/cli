@@ -13,12 +13,18 @@ import { BoundedContextManager } from './boundedContexts/BoundedContextManager';
 import { BoilerPlatesManager } from './boilerPlates/BoilerPlatesManager';
 import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
+import { ArtifactsManager } from './artifacts/ArtifactsManager';
+import { InquirerManager } from './artifacts/InquirerManager';
+import path from 'path'
 
 const _configManager = new WeakMap();
 const _configParser = new WeakMap();
 const _applicationManager = new WeakMap();
+const _artifactsManager = new WeakMap();
 const _boundedContextManager = new WeakMap();
 const _boilerPlatesManager = new WeakMap();
+const _inquirerManager = new WeakMap();
+
 const _folders = new WeakMap();
 const _git = new WeakMap();
 const _logger = new WeakMap();
@@ -28,7 +34,6 @@ const _httpWrapper = new WeakMap();
  * Common global object
  */
 class global {
-
     /**
      * Perform initialization
      */
@@ -59,6 +64,9 @@ class global {
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
+        _inquirerManager.set(this, new InquirerManager(this.folders, fs, this.logger));
+        _artifactsManager.set(this, new ArtifactsManager(this.inquirerManager, this.boilerPlatesManager, this.boundedContextManager, this.folders, fs, this.logger));
+        
     }
 
     /**
@@ -93,6 +101,14 @@ class global {
         return _applicationManager.get(this);
     }
 
+    /** 
+     * Gets the {ArtifactsManager}
+     * @returns {ArtifactsManager}
+     */
+    get artifactsManager() {
+        return _artifactsManager.get(this);
+    }
+
     /**
      * Gets the {BoundedContextManager}
      * @returns {BoundedContextManager}
@@ -107,6 +123,13 @@ class global {
      */
     get boilerPlatesManager() {
         return _boilerPlatesManager.get(this);
+    }
+    /**
+     * Gets the {InquirerManager
+     * @returns {InquirerManager}}
+     */
+    get inquirerManager() {
+        return _inquirerManager.get(this);
     }
 
     /**
@@ -132,6 +155,44 @@ class global {
     get httpWrapper() {
         return _httpWrapper.get(this);
     }
+
+    get usagePrefix() {
+        return '\n\t ';
+    }
+    
+    /**
+     * Gets the full directory path
+     * @param {string} filePath
+     * @returns {string} directory path
+     */
+    getFileDirPath(filePath) {
+        return path.parse(filePath).dir;
+    }
+    /**
+     * Gets the filename without extension
+     * @param {string} filePath
+     * @returns {string} filename
+     */
+    getFileName(filePath) {
+        return path.parse(filePath).name;
+    }
+    /**
+     * Gets the filename with extension
+     * @param {string} filePath
+     * @returns {string} filename
+     */
+    getFileNameAndExtension(filePath) {
+        return path.parse(filePath).base;
+    }
+    /**
+     * Gets the directory name
+     * @param {string} filePath
+     * @returns {string} file dirname
+     */
+    getFileDir(filePath) {
+        return path.dirname(filePath);
+    }
+
 }
 
 export default new global();

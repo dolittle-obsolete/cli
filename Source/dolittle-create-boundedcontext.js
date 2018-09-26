@@ -6,10 +6,11 @@
 import args from 'args';
 import global from './global';
 
+const USAGE = 'dolittle create boundedcontext [name]';
 args
-    .example("dolittle create boundedcontext [name]", "Creates a bounded context with a given name");
+    .example(USAGE, "Creates a bounded context with a given name");
     
-args.parse(process.argv);
+args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
 
 if( !args.sub.length ) args.showHelp();
 
