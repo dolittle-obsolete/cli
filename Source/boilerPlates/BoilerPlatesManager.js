@@ -258,12 +258,12 @@ export class BoilerPlatesManager {
                     boilerPlateObject.pathsNeedingBinding = [];
                     boilerPlateObject.filesNeedingBinding = [];
                 }
-
                 let boilerPlate = new BoilerPlate(
                     boilerPlateObject.language || 'any',
                     boilerPlateObject.name,
                     boilerPlateObject.description,
                     boilerPlateObject.type,
+                    boilerPlateObject.dependencies,
                     boilerPlateObject.location,
                     boilerPlateObject.pathsNeedingBinding,
                     boilerPlateObject.filesNeedingBinding
