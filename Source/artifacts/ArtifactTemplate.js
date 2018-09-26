@@ -8,11 +8,12 @@
   */
 export class ArtifactTemplate
 {
-    constructor (name, type, description, language, includedFiles, location) {
+    constructor (name, type, description, language, dependencies, includedFiles, location) {
         this._name = name;
         this._type = type;
         this._description = description;
         this._language = language;
+        this._dependencies = dependencies;
         this._includedFiles = includedFiles;
         this._location = location;
     }
@@ -39,6 +40,12 @@ export class ArtifactTemplate
      */
     get language() {
         return this._language;
+    }
+    /**
+     * Gets the dependencies of the template
+     */
+    get dependencies() {
+        return this._dependencies;
     }
     /**
      * Gets the list of files that needs to be templated

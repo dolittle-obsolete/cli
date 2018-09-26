@@ -5,15 +5,7 @@
 import { Folders } from '../Folders';
 import { Logger } from 'winston';
 import fs from 'fs';
-import { QueryInquirer } from './QueryInquirer';
-import { QueryforInquirer } from './QueryforInquirer';
-import { CommandInquirer } from './CommandInquirer';
-import { AggregateRootInquirer } from './AggregateRootInquirer';
-import { EventInquirer } from './EventInquirer';
-import { ReadModelInquirer } from './ReadModelInquirer';
-import { EventProcessorInquirer } from './EventProcessorInquirer';
-import { CommandHandlerInquirer } from './CommandHandlerInquirer';
-
+import global from '../global';
 
 const inquirer = require('inquirer');
 
@@ -31,15 +23,6 @@ export class InquirerManager {
         _folders.set(this, folders);
         _fileSystem.set(this, fileSystem);
         this._logger = logger;
-
-        this._queryInquirer = new QueryInquirer(folders, fileSystem);
-        this._queryforInquirer = new QueryforInquirer(folders, fileSystem);
-        this._commandInquirer = new CommandInquirer(folders, fileSystem);
-        this._commandHandlerInquirer = new CommandHandlerInquirer(folders, fileSystem);
-        this._aggregateRootInquirer = new AggregateRootInquirer(folders, fileSystem);
-        this._eventInquirer = new EventInquirer(folders, fileSystem);
-        this._eventProcessorInquirer = new EventProcessorInquirer(folders, fileSystem);
-        this._readModelInquirer = new ReadModelInquirer(folders, fileSystem);
         
     }
     /**
@@ -62,22 +45,22 @@ export class InquirerManager {
         let questions = [];
 
         dependencies.forEach(dependency => {
+            if (dependency.type !== 'prompt')
+                context = this.generateDependency(dependency, location, context);
+        });
+        dependencies.forEach(dependency => {
             if (dependency.type === 'prompt')
-                questions.push(this.generatePrompt(dependency));
-            else {
-                this.generateDependency(dependency, context);
-            }
+                questions.push(...this.generatePrompt(dependency, context));
         });
 
         return inquirer.prompt(questions)
             .then(answers => {
                 answers.name = context.name;
                 dependencies.forEach(_ => {
-                    if (_.type !== 'prompt') {
-                        const field = _.name;
-                        //answers[field] = context[field];
+                    const field = _.name;
+                    if (_.type !== 'prompt' && answers[field] === undefined) {
+                        answers[field] = context[field];
                     }
-
                 })
                 return answers;
             });
@@ -85,119 +68,216 @@ export class InquirerManager {
     /**
      * 
      * @param {any} dependency 
+     * @param {string} location
      * @param {any} context 
      */
-    generateDependency(dependency, context) {
-        
+    generateDependency(dependency, location, context) {
+        if (dependency.type === 'discover') {
+            return this.discover(dependency, location, context);
+        }
+
+        throw `Cannot handle dependency type '${dependency.type}'`
+    }
+    /**
+     * 
+     * @param {any} dependency 
+     * @param {string} location 
+     * @param {any} context 
+     */
+    discover(dependency, location, context) {
+        if (dependency.discoverType === 'namespace') {
+            return this.discoverNamespace(dependency, location, context);
+        } 
+        else if (dependency.discoverType === 'multipleFiles') {
+            return this.discoverMultipleFiles(dependency, location, context);
+        }
+
+        throw `Cannot handle discoveryType '${dependency.discoverType}'`
     }
     /**
      * 
      * @param {any} dependency
+     * @param {string} location 
+     * @param {any} context 
+     */
+    discoverNamespace(dependency, location, context) {
+        const namespace = this.createNamespace(dependency, location);
+        context[dependency.name] = namespace;
+        return context;
+    }
+    /**
+     * 
+     * @param {any} dependency
+     * @param {string} location
+     * @param {any} context 
+     */
+    discoverMultipleFiles(dependency, location, context) {
+        
+        let filePaths = [];
+        if (dependency.fromFolders === undefined)
+            filePaths = _folders.get(this).searchRecursiveRegex(location, new RegExp(dependency.fileMatch));
+        else {
+            const folders = _folders.get(this).getNearestDirsSearchingUpwards(location, new RegExp(dependency.fromFolders));
+            folders.forEach(folder => filePaths.push(..._folders.get(this).searchRecursiveRegex(folder, new RegExp(dependency.fileMatch))));
+            console.log('filePaths: ', filePaths);
+        }
+        let results = [];
+        if (dependency.contentMatch === undefined || dependency.contentMatch === '') { 
+            results = filePaths;
+        }
+        else {
+            filePaths.forEach(filePath => {
+                let content = _fileSystem.get(this).readFileSync(filePath, 'utf8');
+                let theMatch = content.match(new RegExp(dependency.contentMatch));
+                if (theMatch !== null && theMatch.length > 0) {
+                    let namespace = '';
+                    if (dependency.withNamespace)
+                        namespace = this.createNamespace(dependency, location);
+
+                    let choice = dependency.withNamespace?  {name: namespace + '.' + theMatch[1], value: theMatch[1]}
+                        : {name: theMatch[1], value: theMatch[1]};
+                    results.push(choice);
+                }
+            });
+        }
+        context[dependency.name] = results;
+        return context;
+    }
+    /**
+     * 
+     * @param {any} dependency
+     * @param {any} context
      * @returns {any} question
      */
-    generatePrompt(dependency) {
-        if (dependency.promptType === "input") {
-            return this.generateInputPrompt(dependency.name, dependency.message);
+    generatePrompt(dependency, context) {
+        if (dependency.promptType === 'input') {
+            return this.generateInputPrompt(dependency);
         }
+        else if (dependency.promptType === 'rawlist' || dependency.promptType === 'list') {
+            return this.generateListPrompt(dependency, context);
+        }
+        else if (dependency.promptType === 'checkbox') {
+            return this.generateCheckboxPrompt(dependency, context);
+        }
+        
+        throw `Cannot handle promptType '${dependency.promptType}'`
+
     }
     /**
      * Generate an input prompt
-     * @param {string} name 
-     * @param {string} message
+     * @param {any} dependency
      */
-    generateInputPrompt(name, message) {
-        return {
+    generateInputPrompt(dependency) {
+        return [{
             type: 'input',
-            name: name,
-            message: message
-        };
+            name: dependency.name,
+            message: dependency.message
+        }];
     }
-    // /**
-    //  * Create a command
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForCommand(flags) {
-    //     return this._commandInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create a command handler
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForCommandHandler(flags) {
-    //     return this._commandHandlerInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create an aggregate root
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForAggregateRoot(flags) {
-    //     return this._aggregateRootInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create an event
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForEvent(flags) {
-    //     return this._eventInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create an event processor
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForEventProcessor(flags) {
-    //     return this._eventProcessorInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create a read model
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForReadModel(flags) {
-    //     return this._readModelInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create a query
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForQuery(flags) {
-    //     return this._queryInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
-    // /**
-    //  * Create a query a read model
-    //  * @param {any} flags
-    //  * @returns {Promise<any>} 
-    //  */
-    // promptForQueryfor(flags) {
-    //     return this._queryforInquirer.promptUser(flags)
-    //         .then(context => {
-    //             return context;
-    //         });
-    // }
+    /**
+     * Generate a list prompt
+     * @param {any} dependency
+     * @param {any} context 
+     */
+    generateListPrompt(dependency, context) {
+        let actualChoices = context[dependency.choices] || dependency.choices;
+        if (! dependency.customInput) {
+            return [
+                {
+                    type: dependency.promptType,
+                    name: dependency.name,
+                    message: dependency.message,
+                    choices: actualChoices,
+                    pagesize: dependency.pagesize || 10
+                }
+            ];
+        }
+        else {
+            actualChoices.push({name: dependency.customInput, value: dependency.customInput});
+            return [
+                {
+                    type: dependency.promptType,
+                    name: dependency.name,
+                    message: dependency.message,
+                    choices: actualChoices,
+                    pagesize: dependency.pagesize || 10
+                },
+                {
+                    type: 'input',
+                    name: dependency.name,
+                    message: dependency.customInput,
+                    when: function(answers) {
+                        return answers[dependency.name] === dependency.customInput;
+                    }
+                }
+            ];
+        }
+    }
+    generateCheckboxPrompt(dependency, context) {
+        let actualChoices = context[dependency.choices] || dependency.choices;
+        if (! dependency.customInput) {
+            return [
+                {
+                    type: 'checkbox',
+                    name: dependency.name,
+                    message: dependency.message,
+                    choices: actualChoices,
+                    pagesize: dependency.pagesize || 10
+                }
+            ];
+        }
+        else {
+            actualChoices.push({name: dependency.customInput, value: dependency.customInput});
+            return [
+                {
+                    type: 'checkbox',
+                    name: dependency.name,
+                    message: dependency.message,
+                    choices: actualChoices,
+                    pagesize: dependency.pagesize || 10
+                },
+                {
+                    type: 'input',
+                    name: dependency.name,
+                    message: dependency.customInput,
+                    when: function(answers) {
+                        return answers[dependency.name] === dependency.customInput;
+                    }
+                }
+            ];
+        }
+    }
+    /**
+     * Creates the namespace
+     * @param {any} dependency 
+     * @param {string} location
+     * @returns {string} the namespace 
+     */
+    createNamespace(dependency, location) {
+        const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, new RegExp(dependency.milestone));
+        let milestoneFileName = global.getFileName(milestonePath);
+        let milestoneFileDir = global.getFileDirPath(milestonePath)
+
+        let namespaceSegments = [];
+        let segmentPath = location;
+        let segment = global.getFileNameAndExtension(segmentPath);
+
+        while (segmentPath != milestoneFileDir) {
+            if (segment === '' || segmentPath === '/') {
+                this._logger.warning('Could not discover the namespace');
+                return '';
+            }
+            namespaceSegments.push(segment);
+            segmentPath = global.getFileDir(segmentPath);
+            segment = global.getFileName(segmentPath);
+        } 
+        namespaceSegments = namespaceSegments.reverse();
+        
+        let namespace = milestoneFileName;
+        namespaceSegments.forEach(element => {
+            namespace += '.' + element;
+        });
+
+        return namespace;
+    }
 }

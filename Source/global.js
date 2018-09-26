@@ -159,89 +159,35 @@ class global {
     get usagePrefix() {
         return '\n\t ';
     }
-
+    
     /**
-     * Gets the namespace based on the closest csprojPath and the cwd path
-     * @param {String} currentPath 
-     * @param {String} csprojPath 
-     * @returns {String}
+     * Gets the full directory path
+     * @param {string} filePath
+     * @returns {string} directory path
      */
-    createCSharpNamespace(currentPath, csprojPath) {
-        const csprojFileName = path.parse(this.getFileName(csprojPath)).name;
-        const csprojFileDir = this.getFileName(this.getFileDir(csprojPath));
-        let namespaceSegments = [];
-        
-        let segmentPath = currentPath;
-        let segment = this.getFileName(segmentPath);
-
-        while (segment != csprojFileDir) {
-            namespaceSegments.push(segment);
-            segmentPath = this.getFileDir(segmentPath);
-            segment = this.getFileName(segmentPath);
-        } 
-        namespaceSegments = namespaceSegments.reverse();
-        
-        let namespace = csprojFileName;
-        namespaceSegments.forEach(element => {
-            namespace += '.' + element;
-        });
-        return namespace;
-    }
-
-    /**
-     * Gets the path of the nearest .csproj file, searching upwards not recursively
-     */
-    getNearestBoundedContextConfig() {
-        let currentPath = process.cwd();
-        let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
-        while (lastPathSepIndex != -1 && currentPath != null && currentPath != '')
-        {
-            let results = _folders.get(this).searchFolder(currentPath, 'bounded-context.json'); 
-            if (results.length >= 1)
-                return results[0];
-            currentPath = currentPath.substr(0, lastPathSepIndex);
-            lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
-        }
-        return '';
+    getFileDirPath(filePath) {
+        return path.parse(filePath).dir;
     }
     /**
-     * Gets the path of the nearest .csproj file, searching upwards not recursively
+     * Gets the filename without extension
+     * @param {string} filePath
+     * @returns {string} filename
      */
-    getNearestCsprojFile(path) {
-        let currentPath = path;
-        let lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
-        while (lastPathSepIndex != -1 && currentPath != null && currentPath != '')
-        {
-            let results = _folders.get(this).searchFolder(currentPath, '.csproj'); 
-            if (results.length >= 1)
-                return results[0];
-            currentPath = currentPath.substr(0, lastPathSepIndex);
-            lastPathSepIndex = this.getLastPathSeparatorIndex(currentPath);
-        }
-        return '';
-    }
-
-    /**
-     * Get the index of the last path separator in the path
-     * @param {String} filePath 
-     * @returns {number} index
-     */
-    getLastPathSeparatorIndex(filePath) {
-        const lastPathSeparatorMatch = filePath.match(/(\\|\/)/);
-        if (lastPathSeparatorMatch === undefined || lastPathSeparatorMatch === null || lastPathSeparatorMatch.length == 0) 
-            return -1;
-        return filePath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
+    getFileName(filePath) {
+        return path.parse(filePath).name;
     }
     /**
-     * Gets the filename / last directory from the path
-     * @param {String} filePath 
+     * Gets the filename with extension
+     * @param {string} filePath
+     * @returns {string} filename
      */
-    getFileName(filePath){
-        return filePath.substring(this.getLastPathSeparatorIndex(filePath)+1, filePath.length);
+    getFileNameAndExtension(filePath) {
+        return path.parse(filePath).base;
     }
     /**
      * Gets the directory name
-     * @param {String} filePath 
+     * @param {string} filePath
+     * @returns {string} file dirname
      */
     getFileDir(filePath) {
         return path.dirname(filePath);

@@ -114,10 +114,15 @@ export class ArtifactsManager {
         let language = boundedContextConfig.backend.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
         let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
+        
+        // console.log('boundedContextConfig. ', boundedContextConfig);
+        // console.log('language. ', language);
+        // console.log('boilerPlate. ', boilerPlate);
+        // console.log('artifactTemplate. ', artifactTemplate);
 
-        _inquirerManager.get(this).promptUser(context.artifactName, context.destination, boilerPlate, artifactTemplate)
+        _inquirerManager.get(this).promptUser(context.artifactName, context.destination, boilerPlate, artifactTemplate.template)
             .then(templateContext => {
-                this._logger.info(`Creating an artifact of type '${context.artifactType}' with name '${context.artifactName}' and language '${context.language}'`);
+                this._logger.info(`Creating an artifact of type '${context.artifactType}' with name '${context.artifactName}' and language '${language}'`);
                 _boilerPlatesManager.get(this).createArtifactInstance(artifactTemplate, context.destination, templateContext);
             });
     }

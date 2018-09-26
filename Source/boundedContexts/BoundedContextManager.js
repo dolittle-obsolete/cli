@@ -83,15 +83,7 @@ export class BoundedContextManager {
      * @returns {string} the path of the bounded context or '' if it was not found
      */
     getNearestBoundedContextPath(startPath) {
-        let lastPathSepIndex = global.getLastPathSeparatorIndex(startPath);
-        while (lastPathSepIndex != -1 && startPath != null && startPath != '')
-        {
-            let results = _folders.get(this).searchFolder(startPath, BOUNDED_CONTEXT_FILE_NAME); 
-            if (results.length >= 1)
-                return results[0];
-            startPath = startPath.substr(0, lastPathSepIndex);
-            lastPathSepIndex = global.getLastPathSeparatorIndex(startPath);
-        }
-        return '';
+        let reg =  new RegExp("\\b"+BOUNDED_CONTEXT_FILE_NAME+"\\b");
+        return _folders.get(this).getNearestFileSearchingUpwards(startPath, reg);
     }
 }
