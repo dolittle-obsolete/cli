@@ -119,7 +119,6 @@ export class InquirerManager {
         else {
             const folders = _folders.get(this).getNearestDirsSearchingUpwards(location, new RegExp(dependency.fromFolders));
             folders.forEach(folder => filePaths.push(..._folders.get(this).searchRecursiveRegex(folder, new RegExp(dependency.fileMatch))));
-            console.log('filePaths: ', filePaths);
         }
         let results = [];
         if (dependency.contentMatch === undefined || dependency.contentMatch === '') { 
@@ -132,7 +131,7 @@ export class InquirerManager {
                 if (theMatch !== null && theMatch.length > 0) {
                     let namespace = '';
                     if (dependency.withNamespace)
-                        namespace = this.createNamespace(dependency, location);
+                        namespace = this.createNamespace(dependency, global.getFileDirPath(filePath));
 
                     let choice = dependency.withNamespace?  {name: namespace + '.' + theMatch[1], value: theMatch[1]}
                         : {name: theMatch[1], value: theMatch[1]};
