@@ -1,5 +1,5 @@
 ---
-title: Dolittle CLI
+title: CLI
 description: Learn about the Dolittle CLI
 keywords: Tools
 author: einari
