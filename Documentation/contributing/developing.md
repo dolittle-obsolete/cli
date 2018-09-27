@@ -2,7 +2,7 @@
 title: Developing
 description: Learn how to work on the CLI tool
 keywords: Tools
-author: einari
+author: einari, woksin
 ---
 
 In order to be able to [extend](extending) the CLI tool with new capabilities, its vital to know how to get it all running.
@@ -31,7 +31,6 @@ Then you need to change the files attributes so that it is an executable:
 $ chmod +x <file>
 ```
 
-The file should now be possible to run by typing `./<file.js>`.
 To hook this up, the [args](https://www.npmjs.com/package/args) node package is looking by convention from the commands being setup.
 
 
@@ -54,12 +53,13 @@ This is configured in the `packages.json` file:
     }
 }
 ```
-
-When you've got all this setup, you simply run `npm link` to get it linked.
-This will create a symbolic link for the tool that is very handy when developing.
-
 {{% notice info %}}
 By convention, the [args](https://www.npmjs.com/package/args) package used that handles all the commands and sub-commands is looking
 for everything to be in the same place as the root tool itself. That means you can't have sub-commands in sub folders. The JS files even
 has to follow the convention expected and be named as the expected binary; e.g. `dolittle-create.js`.
 {{% /notice %}}
+
+When you've got all this setup, you simply build the it with `npm run-script build` and then run `npm link` to get it linked.
+This will create a symbolic link for the tool that is very handy when developing.
+
+Then you run `npm install` to update the cli tool locally and then you're ready to go!
