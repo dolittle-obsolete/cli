@@ -50,7 +50,7 @@ export class BoundedContextManager {
         }
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType("csharp", "boundedContext")[0];
-        let destination = path.join(process.cwd(),name);
+        let destination = path.join(process.cwd(), name);
         _folders.get(this).makeFolderIfNotExists(destination);
         let context = {
             id: Guid.create(),

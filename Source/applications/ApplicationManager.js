@@ -7,8 +7,6 @@ import { Logger } from 'winston';
 import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import { ConfigManager } from '../configuration/ConfigManager';
 import { Guid } from '../Guid';
-import { Application } from './Application';
-import fs from 'fs';
 import path from 'path';
 
 const applicationFilename = "application.json";
@@ -58,9 +56,11 @@ export class ApplicationManager {
     }
 
     /**
-     * Check if an application has been setup
+     * Check if an application has been setup in the given folder.
+     * @param {string} folder path
+     * @returns {boolean} whether or not the application configuration is set up
      */
-    hasApplication() {
-        return _fileSystem.get(this).existsSync(path.join(process.cwd(),applicationFilename));
+    hasApplication(folder) {
+        return _fileSystem.get(this).existsSync(path.join(folder,applicationFilename));
     }
 }
