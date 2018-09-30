@@ -198,7 +198,22 @@ class global {
      * @param {string} name 
      */
     validateArgsNameInput(name) {
-        _logger.get()
+        if (name.includes(' ')) {
+            _logger.get(this).error('Name argument cannot contain spaces');
+            process.exit(1);
+        }
+        if (name.includes('-')) {
+            _logger.get(this).error('Name argument cannot contain "-"');
+            process.exit(1);
+        }
+        if (name !== path.basename(name)) {
+            _logger.get(this).error("Name argument cannot isn't a valid filename");
+            process.exit(1);
+        }
+        if (/^\.\.?$/.test(name)) {
+            _logger.get(this).error('Name argument cannot be "." or ".."');
+            process.exit(1);
+        }
     }
 
 }
