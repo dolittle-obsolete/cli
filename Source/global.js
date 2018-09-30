@@ -2,7 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import fs from 'fs';
+import fs from 'fs-extra';
 import winston from 'winston';
 import simpleGit from 'simple-git';
 import { Git } from 'simple-git';
@@ -58,7 +58,7 @@ class global {
         git.forFolder = (folder) => {
             return simpleGit(folder);
         };
-
+        
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
@@ -191,6 +191,14 @@ class global {
      */
     getFileDir(filePath) {
         return path.dirname(filePath);
+    }
+
+    /**
+     * Validate the name argument
+     * @param {string} name 
+     */
+    validateArgsNameInput(name) {
+        _logger.get()
     }
 
 }

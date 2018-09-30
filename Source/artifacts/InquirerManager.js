@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Folders } from '../Folders';
 import { Logger } from 'winston';
-import fs from 'fs';
+import fs from 'fs-extra';
 import global from '../global';
 
 const inquirer = require('inquirer');

@@ -7,7 +7,7 @@ import { Guid } from '../Guid';
 import { ApplicationManager } from '../applications/ApplicationManager';
 import { Logger } from 'winston';
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import { BoundedContext } from './BoundedContext';
 import global from '../global';
 

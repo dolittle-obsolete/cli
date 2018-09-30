@@ -6,7 +6,7 @@ import { ConfigManager } from '../configuration/ConfigManager';
 import { HttpWrapper } from '../HttpWrapper';
 import { Git } from 'simple-git';
 import { Folders } from '../Folders';
-import fs from 'fs';
+import fs from 'fs-extra';
 import { Logger } from 'winston';
 import path from 'path';
 import { BoilerPlate } from './BoilerPlate';

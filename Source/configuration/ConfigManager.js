@@ -5,7 +5,7 @@
 import { ConfigParser } from './ConfigParser';
 import { Config } from './Config';
 import { Logger } from 'winston';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 
 const _fileSystem = new WeakMap();

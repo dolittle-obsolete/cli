@@ -6,7 +6,7 @@ import { Folders } from '../Folders';
 import { Logger } from 'winston';
 import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import { InquirerManager } from './InquirerManager';
-import fs from 'fs';
+import fs from 'fs-extra';
 import global from '../global';
 import { BoilerPlate } from '../boilerPlates/BoilerPlate';
 import { BoundedContext } from '../boundedContexts/BoundedContext';
@@ -38,7 +38,6 @@ export class ArtifactsManager {
         _folders.set(this, folders);
         _fileSystem.set(this, fileSystem);
         this._logger = logger;
-        
         
     }
     /**
