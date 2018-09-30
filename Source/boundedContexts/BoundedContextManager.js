@@ -10,10 +10,23 @@ import path from 'path';
 import fs from 'fs-extra';
 import { BoundedContext } from './BoundedContext';
 import global from '../global';
+import { Folders } from '../Folders';
 
+/**
+ * @type {WeakMap<BoundedContextManager, BoilerPlatesManager>}
+ */
 const _boilerPlatesManager = new WeakMap();
+/**
+ * @type {WeakMap<BoundedContextManager, ApplicationManager>}
+ */
 const _applicationManager = new WeakMap();
+/**
+ * @type {WeakMap<BoundedContextManager, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<BoundedContextManager, fs>}
+ */
 const _fileSystem = new WeakMap();
 
 const BOUNDED_CONTEXT_FILE_NAME = 'bounded-context.json';
@@ -40,23 +53,28 @@ export class BoundedContextManager {
 
     /**
      * Creates a complete bounded context from boilerplate
-     * @param {string} name of the bounded context 
+     * @param {{name: string, destination: string}} context of the bounded context 
      */
-    create(name) {
-        this._logger.info(`Creating bounded context with name '${name}'`);
-        if( !_applicationManager.get(this).hasApplication() ) {
+    create(context) {
+        this._logger.info(`Creating bounded context with name '${context.name}'`);
+
+        let application = _applicationManager.get(this).getApplicationFrom(context.destination);
+
+        if( application === null ) {
             this._logger.error(`Missing application - use 'dolittle create application [name]' for a new application`);
             return;
         }
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType("csharp", "boundedContext")[0];
-        let destination = path.join(process.cwd(), name);
-        _folders.get(this).makeFolderIfNotExists(destination);
-        let context = {
+        let boundedContextPath = path.join(process.cwd(), context.name);
+        
+        _folders.get(this).makeFolderIfNotExists(boundedContextPath);
+        let templateContext = {
             id: Guid.create(),
-            name: name
+            name: context.name,
+            applicationId: application.id
         };
-        _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
+        _boilerPlatesManager.get(this).createInstance(boilerPlate, boundedContextPath, templateContext);
     }
     /**
      * Searches the file hierarchy for bounded-context.json and returns the BoundedContext

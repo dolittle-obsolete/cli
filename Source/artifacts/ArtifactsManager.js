@@ -10,11 +10,27 @@ import fs from 'fs-extra';
 import global from '../global';
 import { BoilerPlate } from '../boilerPlates/BoilerPlate';
 import { BoundedContext } from '../boundedContexts/BoundedContext';
+import { BoundedContextManager } from '../boundedContexts/BoundedContextManager';
 
+/**
+ * @type {WeakMap<ArtifactsManager, BoilerPlatesManager>}
+ */
 const _boilerPlatesManager = new WeakMap();
+/**
+ * @type {WeakMap<ArtifactsManager, BoundedContextManager>}
+ */
 const _boundedContextManager = new WeakMap();
+/**
+ * @type {WeakMap<ArtifactsManager, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<ArtifactsManager, fs>}
+ */
 const _fileSystem = new WeakMap();
+/**
+ * @type {WeakMap<ArtifactsManager, InquirerManager>}
+ */
 const _inquirerManager = new WeakMap();
 
 
@@ -92,13 +108,15 @@ export class ArtifactsManager {
         templateFiles.forEach(_ => {
             const lastPathSeparatorMatch = _.match(/(\\|\/)/);
             const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1]);
+            let location = global.getFileDirPath(_)
             const template = {
-                'template': JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
-                'location': _.substring(0, lastIndex+1)
+                template: JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
+                location: location
             };
             templatesAndLocation.push(template);
         });
         const artifactTemplate = templatesAndLocation.filter(template => template.template.type == artifactType && template.template.language == boilerPlate.language)[0];
+        
         if (artifactTemplate === undefined || artifactTemplate === null) 
             throw 'Artifact template not found';
 

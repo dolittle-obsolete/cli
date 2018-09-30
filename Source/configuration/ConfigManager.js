@@ -8,9 +8,21 @@ import { Logger } from 'winston';
 import fs from 'fs-extra';
 import path from 'path';
 
+/**
+ * @type {WeakMap<ConfigManager, fs>}
+ */
 const _fileSystem = new WeakMap();
+/**
+ * @type {WeakMap<ConfigManager, ConfigParser>}
+ */
 const _configParser = new WeakMap();
+/**
+ * @type {WeakMap<ConfigManager, string>}
+ */
 const _centralFolderLocation = new WeakMap();
+/**
+ * @type {WeakMap<ConfigManager, boolean>}
+ */
 const _isFirstRun = new WeakMap();
 
 const centralFolder = '~/.dolittle';
@@ -35,7 +47,21 @@ function makeSureCentralFolderExists(fileSystem) {
     if( !fileSystem.existsSync(this.centralFolderLocation)) {
         _isFirstRun.set(this, true);
         this._logger.info("Central Dolittle folder does not exist - creating it and setting up default configuration");
-        fileSystem.mkdir(this.centralFolderLocation);
+        try {
+            fileSystem.ensureDirSync(this.centralFolderLocation);
+        } catch(err)
+        {
+            try {
+                let shell = require('shelljs');
+                shell.mkdir('-p', this.centralFolderLocation);
+    
+            } catch(err)
+            {
+                this._logger.error('Could not create .dolittle folder at root: ', err);
+                this._logger.info('Try creating this directory manually: ', this.centralFolderLocation);
+                throw 'Could not create .dolittle directory'
+            }
+        }
         let config = new Config();
         fileSystem.writeFile(this.configFileLocation, JSON.stringify(config));
     } else {

@@ -24,14 +24,33 @@ const binaryFiles = [
     '.exe',
     '.ttf'
 ];
-
+/**
+ * @type {WeakMap<BoilerPlatesManager, ConfigManager>}
+ */
 const _configManager = new WeakMap();
+/**
+ * @type {WeakMap<BoilerPlatesManager, HttpWrapper>}
+ */
 const _httpWrapper = new WeakMap();
+/**
+ * @type {WeakMap<BoilerPlatesManager, Git>}
+ */
 const _git = new WeakMap();
+/**
+ * @type {WeakMap<BoilerPlatesManager, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<BoilerPlatesManager, fs>}
+ */
 const _fileSystem = new WeakMap();
+/**
+ * @type {WeakMap<BoilerPlatesManager, boolean>}
+ */
 const _hasBoilerPlates = new WeakMap();
-
+/**
+ * @type {WeakMap<BoilerPlatesManager, BoilerPlate[]>}
+ */
 const _boilerPlates = new WeakMap();
 
 /**

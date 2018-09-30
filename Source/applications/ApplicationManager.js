@@ -8,12 +8,25 @@ import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import { ConfigManager } from '../configuration/ConfigManager';
 import { Guid } from '../Guid';
 import path from 'path';
+import fs from 'fs-extra';
+import { Application } from './Application';
 
 const applicationFilename = "application.json";
-
+/**
+ * @type {WeakMap<ApplicationManager, BoilerPlatesManager>}
+ */
 const _boilerPlatesManager = new WeakMap();
+/**
+ * @type {WeakMap<ApplicationManager, ConfigManager>}
+ */
 const _configManager = new WeakMap();
+/**
+ * @type {WeakMap<ApplicationManager, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<ApplicationManager, fs>}
+ */
 const _fileSystem = new WeakMap();
 
 
@@ -54,13 +67,24 @@ export class ApplicationManager {
         
         _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
     }
-
+    /**
+     * Gets the application configuration from the given folder
+     * @param {string} folder path 
+     * @param {Application | null} application config or null if not found
+     */
+    getApplicationFrom(folder) {
+        if (! this.hasApplication(folder)) 
+            return null;
+        let applicationObj = JSON.parse(_fileSystem.get(this).readFileSync(path.join(folder, applicationFilename), 'utf8'));
+        return new Application(applicationObj.id, applicationObj.name);
+    }
     /**
      * Check if an application has been setup in the given folder.
      * @param {string} folder path
      * @returns {boolean} whether or not the application configuration is set up
      */
     hasApplication(folder) {
+        
         return _fileSystem.get(this).existsSync(path.join(folder,applicationFilename));
     }
 }

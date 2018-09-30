@@ -166,6 +166,7 @@ class global {
      * @returns {string} directory path
      */
     getFileDirPath(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).dir;
     }
     /**
@@ -174,6 +175,7 @@ class global {
      * @returns {string} filename
      */
     getFileName(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).name;
     }
     /**
@@ -182,6 +184,7 @@ class global {
      * @returns {string} filename
      */
     getFileNameAndExtension(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).base;
     }
     /**
@@ -190,6 +193,7 @@ class global {
      * @returns {string} file dirname
      */
     getFileDir(filePath) {
+        filePath = path.normalize(filePath);
         return path.dirname(filePath);
     }
 
@@ -200,19 +204,19 @@ class global {
     validateArgsNameInput(name) {
         if (name.includes(' ')) {
             _logger.get(this).error('Name argument cannot contain spaces');
-            process.exit(1);
+            throw 'Argument parsing error'
         }
         if (name.includes('-')) {
             _logger.get(this).error('Name argument cannot contain "-"');
-            process.exit(1);
+            throw 'Argument parsing error'
         }
         if (name !== path.basename(name)) {
             _logger.get(this).error("Name argument cannot isn't a valid filename");
-            process.exit(1);
+            throw 'Argument parsing error'
         }
         if (/^\.\.?$/.test(name)) {
             _logger.get(this).error('Name argument cannot be "." or ".."');
-            process.exit(1);
+            throw 'Argument parsing error'
         }
     }
 
