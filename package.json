@@ -65,6 +65,7 @@
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "inquirer": "^6.2.0",
+    "shelljs": "^0.8.2",
     "simple-git": "^1.96.0",
     "winston": "^3.1.0"
   }
