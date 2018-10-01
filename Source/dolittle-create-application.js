@@ -14,4 +14,5 @@ args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle cre
 
 if( !args.sub.length ) args.showHelp();
 
+global.validateArgsNameInput(args.sub[0]);
 global.applicationManager.create(args.sub[0]);

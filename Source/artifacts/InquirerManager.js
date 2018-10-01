@@ -4,12 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import { Folders } from '../Folders';
 import { Logger } from 'winston';
-import fs from 'fs';
+import fs from 'fs-extra';
 import global from '../global';
 
 const inquirer = require('inquirer');
-
+/**
+ * @type {WeakMap<InquirerManager, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<InquirerManager, fs>}
+ */
 const _fileSystem = new WeakMap();
 
 export class InquirerManager {
@@ -263,7 +268,7 @@ export class InquirerManager {
 
         while (segmentPath != milestoneFileDir) {
             if (segment === '' || segmentPath === '/') {
-                this._logger.warning('Could not discover the namespace');
+                this._logger.warn('Could not discover the namespace');
                 return '';
             }
             namespaceSegments.push(segment);

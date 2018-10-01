@@ -2,7 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import fs from 'fs';
+import fs from 'fs-extra';
 import winston from 'winston';
 import simpleGit from 'simple-git';
 import { Git } from 'simple-git';
@@ -58,7 +58,7 @@ class global {
         git.forFolder = (folder) => {
             return simpleGit(folder);
         };
-
+        
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
@@ -166,6 +166,7 @@ class global {
      * @returns {string} directory path
      */
     getFileDirPath(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).dir;
     }
     /**
@@ -174,6 +175,7 @@ class global {
      * @returns {string} filename
      */
     getFileName(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).name;
     }
     /**
@@ -182,6 +184,7 @@ class global {
      * @returns {string} filename
      */
     getFileNameAndExtension(filePath) {
+        filePath = path.normalize(filePath);
         return path.parse(filePath).base;
     }
     /**
@@ -190,7 +193,31 @@ class global {
      * @returns {string} file dirname
      */
     getFileDir(filePath) {
+        filePath = path.normalize(filePath);
         return path.dirname(filePath);
+    }
+
+    /**
+     * Validate the name argument
+     * @param {string} name 
+     */
+    validateArgsNameInput(name) {
+        if (name.includes(' ')) {
+            _logger.get(this).error('Name argument cannot contain spaces');
+            throw 'Argument parsing error'
+        }
+        if (name.includes('-')) {
+            _logger.get(this).error('Name argument cannot contain "-"');
+            throw 'Argument parsing error'
+        }
+        if (name !== path.basename(name)) {
+            _logger.get(this).error("Name argument cannot isn't a valid filename");
+            throw 'Argument parsing error'
+        }
+        if (/^\.\.?$/.test(name)) {
+            _logger.get(this).error('Name argument cannot be "." or ".."');
+            throw 'Argument parsing error'
+        }
     }
 
 }

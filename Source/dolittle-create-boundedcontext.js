@@ -14,4 +14,11 @@ args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle cre
 
 if( !args.sub.length ) args.showHelp();
 
-global.boundedContextManager.create(args.sub[0]);
+
+global.validateArgsNameInput(args.sub[0]);
+let context = {
+    name: args.sub[0],
+    destination: process.cwd()
+};
+
+global.boundedContextManager.create(context);

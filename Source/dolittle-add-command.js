@@ -14,6 +14,7 @@ args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add
 
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
+global.validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'command',

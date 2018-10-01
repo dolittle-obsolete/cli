@@ -5,6 +5,9 @@
 import fs from 'fs-extra';
 import path from 'path';
 
+/**
+ * @type {WeakMap<Folders, fs}
+ */
 const _fileSystem = new WeakMap();
 
 /**
@@ -27,19 +30,31 @@ export class Folders
      */
     copy(destination, source)
     {
+        destination = path.normalize(destination);
+        source = path.normalize(source);
         fs.copySync(source, destination);
     }
 
     /**
      * Create a folder if it does not exist
-     * @param {string} path Name of the folder to make sure exists
+     * @param {string} folderPath Name of the folder to make sure exists
      */
-    makeFolderIfNotExists(path)
+    makeFolderIfNotExists(folderPath)
     {
-        var dir = path;
-
-        if (!_fileSystem.get(this).existsSync(dir)){
-            _fileSystem.get(this).mkdirSync(dir);
+        folderPath = path.normalize(folderPath);
+        try {
+        _fileSystem.get(this).ensureDirSync(folderPath);
+        } catch(err)
+        {
+            try {
+                let shell = require('shelljs');
+                shell.mkdir('-p', folderPath);
+    
+            } catch(err)
+            {
+                this._logger.error('Could not create directory: ',folderPath);
+                throw 'Could not create directory';
+            }
         }
     }
 
@@ -48,6 +63,7 @@ export class Folders
      * @param {string} path 
      */
     getFoldersIn(folder) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -62,11 +78,12 @@ export class Folders
 
     /**
      * Get top level folders in a given path
-     * @param {string} path 
+     * @param {string} folder path 
      * @param {RegExp} regularExp
      * @returns {string[]} folder paths
      */
     getFoldersInRegex(folder, regularExp) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -86,6 +103,7 @@ export class Folders
      * @returns {string[]} Array of files
      */
     getFilesRecursivelyIn(folder) {
+        folder = path.normalize(folder);
         let self = this;
         let results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -109,6 +127,7 @@ export class Folders
      * @returns {string[]} Array of files
      */
     getArtifactTemplateFilesRecursivelyIn(folder, templateFileNames) {
+        folder = path.normalize(folder);
         let self = this;
         let results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -118,9 +137,7 @@ export class Folders
                 results = results.concat(self.getFoldersAndFilesRecursivelyIn(actualPath));
             }
             if (stat.isFile()) {
-                const lastPathSeparatorMatch = actualPath.match(/(\\|\/)/);
-                const lastIndex = actualPath.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1])
-                const filename = actualPath.substring(lastIndex+1, actualPath.length);
+                const filename = path.basename(actualPath);
                 if (templateFileNames.includes(filename)) {
                     results.push(actualPath);
                 }
@@ -135,6 +152,7 @@ export class Folders
      * @returns {string[]} Array of files and folders
      */
     getFoldersAndFilesRecursivelyIn(folder) {
+        folder = path.normalize(folder);
         let self = this;
         let results = [];
         _fileSystem.get(this).readdirSync(folder).forEach(function (dirInner) {
@@ -155,6 +173,7 @@ export class Folders
      * @param {string} pattern Pattern of files to look for
      */
     searchFolder(folder, pattern) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
 
@@ -174,6 +193,7 @@ export class Folders
      * @param {RegExp} regularExp The regex pattern of files to look for
      */
     searchFolderRegex(folder, regularExp) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
 
@@ -195,6 +215,7 @@ export class Folders
      * @returns {string[]} The paths of the matching files
      */
     searchRecursive(folder, pattern) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
 
@@ -219,6 +240,7 @@ export class Folders
      * @returns {string[]} the paths of the matching files 
      */
     searchRecursiveRegex(folder, regularExp) {
+        folder = path.normalize(folder);
         let self = this;
         var results = [];
 
@@ -243,8 +265,9 @@ export class Folders
      * @returns {string[]} paths
      */
     getNearestDirsSearchingUpwards(folder, regularExp) {
+        folder = path.normalize(folder);
         let results = [];
-        while (folder !== null && folder !== '') {
+        while (this.isNotEmptyFolder(folder)) {
             let folders = this.getFoldersInRegex(folder, regularExp);
             if (folders.length > 0)
                 results.push(...folders);
@@ -261,7 +284,8 @@ export class Folders
      * @returns {string} path
      */
     getNearestFileSearchingUpwards(folder, regularExp) {
-        while (folder !== null && folder !== '')
+        folder = path.normalize(folder);
+        while (this.isNotEmptyFolder(folder))
         {
             let results = this.searchFolderRegex(folder, regularExp); 
             if (results.length >= 1)
@@ -269,6 +293,10 @@ export class Folders
             folder = path.join(folder, '../');
         }
         return '';
+    }
+
+    isNotEmptyFolder(folder) {
+        return folder !== null && folder !== '' && folder !== path.sep; 
     }
     
 }

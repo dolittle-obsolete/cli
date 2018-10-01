@@ -14,7 +14,7 @@ export class Application {
     /**
      * Initializes a new instance of {Application}
      * @param {string} id Unique identifier for application
-     * @param {stirng} name Name of application
+     * @param {string} name Name of application
      */
     constructor(id, name) {
         _id.set(this, id);
