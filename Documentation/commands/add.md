@@ -45,7 +45,7 @@ $ dolittle add event [Name of the event]
 Creates an event artifact in the current working directory with the given argument as name. 
 #### eventprocessor
 ```shell
-$ dolittle add event processor [Name of the event processor]
+$ dolittle add eventprocessor [Name of the event processor]
 ```
 Creates an event processor artifact in the current working directory with the given argument as name. The cli tool will find all event artifacts by searching recursively downwards, looking for files matching a configured pattern and by matching the content with a configured pattern. It will then list all of those events and give the developer the choice to create processors for each of the events automatically. 
 #### readmodel
