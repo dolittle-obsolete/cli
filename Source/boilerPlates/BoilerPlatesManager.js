@@ -12,6 +12,7 @@ import path from 'path';
 import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
 import global from '../global';
+import { Guid } from '../Guid';
 
 const boilerPlateFolder = 'boiler-plates';
 
@@ -78,6 +79,7 @@ export class BoilerPlatesManager {
 
         this._logger = logger;
         this.readBoilerPlates();
+        this.setupHandlebars();
     }
 
     /**
@@ -162,6 +164,14 @@ export class BoilerPlatesManager {
         }
 
         _hasBoilerPlates.set(this, _boilerPlates.get(this).length == 0 ? false: true);
+    }
+    /**
+     * Sets up the handlebars system with custom helpers
+     */
+    setupHandlebars() {
+        Handlebars.registerHelper('createGuid', () => {
+            return Guid.create();
+        });
     }
 
     /**
