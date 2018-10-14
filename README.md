@@ -1,4 +1,5 @@
 # cli
+[![Wallaby.js](https://img.shields.io/badge/wallaby.js-configured-green.svg)](https://wallabyjs.com)
 
 Command Line Interface for working with the Dolittle Platform
 
