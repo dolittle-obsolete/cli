@@ -191,18 +191,19 @@ export class BoilerPlatesManager {
 
     /**
      * Update any existing boiler plates on disk
+     * @returns {Promise<number>} number of updated folders
      */
     async updateBoilerPlatesOnDisk() {
         return new Promise(async resolve => {
             let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
             let updateCount = folders.length;
-            if( updateCount == 0 ) resolve();
 
+            if (updateCount === 0) resolve(0);
             folders.forEach(folder => {
                 this._logger.info(`Update boiler plate in '${folder}'`);
                 _git.get(this).forFolder(folder).pull().exec(() => {
-                    if (--updateCount == 0) resolve();
-                })
+                    if (--updateCount === 0) resolve(folders.length);
+                });
             });
         });
     }
@@ -214,7 +215,8 @@ export class BoilerPlatesManager {
     async update() {
         this._logger.info('Updating all boiler plates');
         let promise = new Promise(async resolve => {
-            await this.updateBoilerPlatesOnDisk();
+            let clonedNewRepos = false;
+            const updatedCount = await this.updateBoilerPlatesOnDisk();
             let names = await this.getAvailableBoilerPlates();
             
             let cloneCount = 0;
@@ -222,7 +224,7 @@ export class BoilerPlatesManager {
                 let folderName = path.join(this.boilerPlateLocation, name);
                 
                 if (!_fileSystem.get(this).existsSync(folderName)) {
-                    
+                    clonedNewRepos = true;
                     let url = `https://github.com/dolittle-boilerplates/${name}.git`;
                     this._logger.info(`Getting boilerplate not on disk from '${url}'`);
                     
@@ -239,9 +241,12 @@ export class BoilerPlatesManager {
                                 resolve();
                             }
                         });
-                        
                 }
             });
+            if (!clonedNewRepos && updatedCount > 0) {
+                this.updateConfiguration();
+                resolve();
+            }
         });
         return promise;
     }
@@ -250,6 +255,7 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     async updateConfiguration() {
+        this._logger.info(`Updating the ${this.boilerPlateConfigFile} configuration`)
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
