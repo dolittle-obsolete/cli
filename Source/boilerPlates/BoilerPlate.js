@@ -76,13 +76,13 @@ export class BoilerPlate {
      * Get the paths that need binding - relative within the content of the location of the {BoilerPlate}
      * @returns {string[]} Paths
      */
-    get pathsNeedingBinding() { return _pathsNeedingBinding.get(this); }
+    get pathsNeedingBinding() {return _pathsNeedingBinding.get(this); }
 
     /**
      * Gets the files that need binding - relative within the content of the location of the {BoilerPlate}
      * @returns {string[]} Files
      */
-    get filesNeedingBinding() { return _filesNeedingBinding.get(this); }
+    get filesNeedingBinding() {return _filesNeedingBinding.get(this); }
 
     /**
      * Convert to a JSON object
@@ -98,6 +98,6 @@ export class BoilerPlate {
             location: this.location,
             pathsNeedingBinding: this.pathsNeedingBinding,
             filesNeedingBinding: this.filesNeedingBinding
-        }
+        };
     }
 }

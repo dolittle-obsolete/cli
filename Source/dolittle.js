@@ -22,11 +22,11 @@ args
 args.parse(process.argv);    
 let showHelpIfNeeded = () => {
     if( !args.sub.length ) args.showHelp();
-}
+};
 
 if ( !updating && 
     (global.configManager.isFirstRun || !global.boilerPlatesManager.hasBoilerPlates)
-    ) {
+) {
     if( global.configManager.isFirstRun ) global.logger.info('This is the first time you run this tool, hang on tight while we get it ready');
     else global.logger.info('There are no boiler plates, hang on tight while we get it ready');
     global.boilerPlatesManager.update().then(() => {

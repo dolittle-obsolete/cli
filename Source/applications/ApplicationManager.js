@@ -2,16 +2,18 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { Folders } from '../Folders';
-import { Logger } from 'winston';
-import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
-import { ConfigManager } from '../configuration/ConfigManager';
-import { Guid } from '../Guid';
+/* eslint-disable no-unused-vars */
+import Folders from '../Folders';
+import Logger from 'winston';
+import BoilerPlatesManager from '../boilerPlates/BoilerPlatesManager';
+import ConfigManager from '../configuration/ConfigManager';
+import Guid from '../Guid';
 import path from 'path';
 import fs from 'fs-extra';
-import { Application } from './Application';
+import Application from './Application';
+/* eslint-enable no-unused-vars */
 
-const applicationFilename = "application.json";
+const applicationFilename = 'application.json';
 /**
  * @type {WeakMap<ApplicationManager, BoilerPlatesManager>}
  */
@@ -58,7 +60,7 @@ export class ApplicationManager {
     create(name) {
         this._logger.info(`Creating application with name '${name}'`);
 
-        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType("application")[0];
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('application')[0];
         let context = {
             id: Guid.create(),
             name: name

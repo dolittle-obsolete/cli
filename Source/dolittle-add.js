@@ -5,7 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
 
-const USAGE = 'dolittle add [command] [args]'
+const USAGE = 'dolittle add [command] [args]';
 args
     .command('command', 'A command')
     .command('commandhandler', 'A command handler')
@@ -13,7 +13,7 @@ args
     .command('eventprocessor', 'An event processor')
     .command('readmodel', 'A read model')
     .command('aggregateroot', 'An aggregate root')
-    .command('query', "A query")
+    .command('query', 'A query')
     .command('queryfor', 'A query for a specific read model');
 
     

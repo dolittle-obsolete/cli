@@ -2,15 +2,17 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { BoilerPlatesManager } from '../boilerPlates/BoilerPlatesManager';
-import { Guid } from '../Guid';
-import { ApplicationManager } from '../applications/ApplicationManager';
-import { Logger } from 'winston';
+
+/* eslint-disable no-unused-vars */
+import BoilerPlatesManager from '../boilerPlates/BoilerPlatesManager';
+import Guid from '../Guid';
+import ApplicationManager from '../applications/ApplicationManager';
+import Logger from 'winston';
 import path from 'path';
 import fs from 'fs-extra';
 import { BoundedContext } from './BoundedContext';
-import global from '../global';
 import { Folders } from '../Folders';
+/* eslint-enable no-unused-vars */
 
 /**
  * @type {WeakMap<BoundedContextManager, BoilerPlatesManager>}
@@ -61,11 +63,11 @@ export class BoundedContextManager {
         let application = _applicationManager.get(this).getApplicationFrom(context.destination);
 
         if( application === null ) {
-            this._logger.error(`Missing application - use 'dolittle create application [name]' for a new application`);
+            this._logger.error('Missing application - use \'dolittle create application [name]\' for a new application');
             return;
         }
 
-        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType("csharp", "boundedContext")[0];
+        let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType('csharp', 'boundedContext')[0];
         let boundedContextPath = path.join(process.cwd(), context.name);
         
         _folders.get(this).makeFolderIfNotExists(boundedContextPath);
@@ -83,9 +85,9 @@ export class BoundedContextManager {
      */
     getNearestBoundedContextConfig(startPath) {
         const boundedContextConfigPath = this.getNearestBoundedContextPath(startPath);
-        if (boundedContextConfigPath === "") {
+        if (boundedContextConfigPath === '') {
             this._logger.error(`${BOUNDED_CONTEXT_FILE_NAME} was not found. Cannot create artifacts. Run dolittle create boundedcontext to create a new bounded context from scratch`);
-            throw "Bounded context configuration not found"
+            throw 'Bounded context configuration not found';
         }
         this._logger.info(`Found bounded context configuration at path '${boundedContextConfigPath}'`);
 
@@ -101,7 +103,7 @@ export class BoundedContextManager {
      * @returns {string} the path of the bounded context or '' if it was not found
      */
     getNearestBoundedContextPath(startPath) {
-        let reg =  new RegExp("\\b"+BOUNDED_CONTEXT_FILE_NAME+"\\b");
+        let reg =  new RegExp('\\b'+BOUNDED_CONTEXT_FILE_NAME+'\\b');
         return _folders.get(this).getNearestFileSearchingUpwards(startPath, reg);
     }
 }

@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+/* eslint-disable no-unused-vars */
 import { ConfigManager } from '../configuration/ConfigManager';
 import { HttpWrapper } from '../HttpWrapper';
 import { Git } from 'simple-git';
@@ -13,6 +14,7 @@ import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
 import global from '../global';
 import { Guid } from '../Guid';
+/* eslint-enable no-unused-vars */
 
 const boilerPlateFolder = 'boiler-plates';
 
@@ -95,7 +97,7 @@ export class BoilerPlatesManager {
      * @returns {string} Path to the config file
      */
     get boilerPlateConfigFile() {
-        return path.join(_configManager.get(this).centralFolderLocation, "boiler-plates.json");
+        return path.join(_configManager.get(this).centralFolderLocation, 'boiler-plates.json');
     }
 
     /**
@@ -178,7 +180,7 @@ export class BoilerPlatesManager {
      * Get available boiler plates from GitHub
      */
     async getAvailableBoilerPlates() {
-        let uri = "https://api.github.com/orgs/dolittle-boilerplates/repos";
+        let uri = 'https://api.github.com/orgs/dolittle-boilerplates/repos';
         return new Promise(resolve => {
             _httpWrapper.get(this).getJson(uri).then(json => {
                 let result = JSON.parse(json);
@@ -255,7 +257,7 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     async updateConfiguration() {
-        this._logger.info(`Updating the ${this.boilerPlateConfigFile} configuration`)
+        this._logger.info(`Updating the ${this.boilerPlateConfigFile} configuration`);
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
@@ -333,7 +335,7 @@ export class BoilerPlatesManager {
         
         boilerPlate.filesNeedingBinding.forEach(_ => {
             let file = path.join(destination, _);
-            let content = _fileSystem.get(this).readFileSync(file, 'utf8')
+            let content = _fileSystem.get(this).readFileSync(file, 'utf8');
             let template = Handlebars.compile(content);
             let result = template(context);
             _fileSystem.get(this).writeFileSync(file, result);

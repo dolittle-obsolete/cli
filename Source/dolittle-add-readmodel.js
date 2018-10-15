@@ -8,7 +8,7 @@ import global from './global';
 
 const USAGE = 'dolittle add readmodel [name]';
 args
-    .example(USAGE, "Creates a read model in the current folder");
+    .example(USAGE, 'Creates a read model in the current folder');
 
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add readmodel'});
 if (! args.sub.length || args.sub.length < 1) args.showHelp();

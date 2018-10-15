@@ -12,6 +12,6 @@ describe('when asking for all boiler plates', () => {
         result = context.boilerPlatesManager.boilerPlates;
     })();
 
-    it("should return same number of boiler plates", () => result.length.should.equal(context.boilerPlates.length));
-    it("should return the expected boiler plates", () => result.forEach((_, index) => _.should.deep.include(context.boilerPlates[index])));
+    it('should return same number of boiler plates', () => result.length.should.equal(context.boilerPlates.length));
+    it('should return the expected boiler plates', () => result.forEach((_, index) => _.should.deep.include(context.boilerPlates[index])));
 });

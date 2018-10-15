@@ -6,8 +6,6 @@
 import args from 'args';
 
 args
-    .example("dolittle cluster add [name] [url]", "Adds a cluster to the configuration")
-    ;
+    .example('dolittle cluster add [name] [url]', 'Adds a cluster to the configuration');
     
-const flags = args.parse(process.argv);
 if (args.sub.length == 0) args.showHelp();

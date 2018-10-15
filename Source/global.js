@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+/* eslint-disable no-unused-vars */
 import fs from 'fs-extra';
 import winston from 'winston';
 import simpleGit from 'simple-git';
@@ -15,19 +16,52 @@ import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
 import { ArtifactsManager } from './artifacts/ArtifactsManager';
 import { InquirerManager } from './artifacts/InquirerManager';
-import path from 'path'
+import path from 'path';
+/* eslint-enable no-unused-vars */
 
+/**
+ * @type {WeakMap<global, ConfigManager>}
+ */
 const _configManager = new WeakMap();
+/**
+ * @type {WeakMap<global, ConfigParser>}
+ */
 const _configParser = new WeakMap();
+/**
+ * @type {WeakMap<global, ApplicationManager>}
+ */
 const _applicationManager = new WeakMap();
+/**
+ * @type {WeakMap<global, ArtifactsManager>}
+ */
 const _artifactsManager = new WeakMap();
+/**
+ * @type {WeakMap<global, BoundedContextManager>}
+ */
 const _boundedContextManager = new WeakMap();
+/**
+ * @type {WeakMap<global, BoilerPlatesManager>}
+ */
 const _boilerPlatesManager = new WeakMap();
+/**
+ * @type {WeakMap<global, InquirerManager>}
+ */
 const _inquirerManager = new WeakMap();
-
+/**
+ * @type {WeakMap<global, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<global, Git>}
+ */
 const _git = new WeakMap();
+/**
+ * @type {WeakMap<global, winston>}
+ */
 const _logger = new WeakMap();
+/**
+ * @type {WeakMap<global, HttpWrapper>}
+ */
 const _httpWrapper = new WeakMap();
 
 /**
@@ -38,6 +72,7 @@ class global {
      * Perform initialization
      */
     constructor() {
+        
         _logger.set(this, winston.createLogger({
             level: 'info',
             format: winston.format.combine(
@@ -61,7 +96,7 @@ class global {
         
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
-        _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
+        _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
         _inquirerManager.set(this, new InquirerManager(this.folders, fs, this.logger));
@@ -75,6 +110,7 @@ class global {
      */
     get configManager() {
         return _configManager.get(this);
+        
     }
 
     /**
@@ -141,10 +177,10 @@ class global {
     }
 
     /**
-     * Gets the {Logger}
-     * @returns {Logger}
+     * Gets the {winston} logger
+     * @returns {winston}
      */
-    get logger() { 
+    get logger() {
         return _logger.get(this);
     }
 
@@ -204,19 +240,19 @@ class global {
     validateArgsNameInput(name) {
         if (name.includes(' ')) {
             _logger.get(this).error('Name argument cannot contain spaces');
-            throw 'Argument parsing error'
+            throw 'Argument parsing error';
         }
         if (name.includes('-')) {
             _logger.get(this).error('Name argument cannot contain "-"');
-            throw 'Argument parsing error'
+            throw 'Argument parsing error';
         }
         if (name !== path.basename(name)) {
-            _logger.get(this).error("Name argument cannot isn't a valid filename");
-            throw 'Argument parsing error'
+            _logger.get(this).error('Name argument cannot isn\'t a valid filename');
+            throw 'Argument parsing error';
         }
         if (/^\.\.?$/.test(name)) {
             _logger.get(this).error('Name argument cannot be "." or ".."');
-            throw 'Argument parsing error'
+            throw 'Argument parsing error';
         }
     }
 

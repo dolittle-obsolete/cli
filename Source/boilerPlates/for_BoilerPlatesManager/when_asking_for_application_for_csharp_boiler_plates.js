@@ -15,6 +15,6 @@ describe('when asking for application for csharp boiler plates', () => {
         result = context.boilerPlatesManager.boilerPlatesByLanguageAndType('csharp','application');
     })();
 
-    it("should return exact number of boiler plates", () => result.length.should.equal(1));
-    it("should return the expected boiler plates", () => result.forEach((_, index) => _.should.deep.include(expected[index])));
+    it('should return exact number of boiler plates', () => result.length.should.equal(1));
+    it('should return the expected boiler plates', () => result.forEach((_, index) => _.should.deep.include(expected[index])));
 });

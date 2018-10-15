@@ -12,7 +12,7 @@ describe('when creating instance with paths needing binding where paths are sepa
         file: 'somefile'
     };
     let expectedResult = `/Somwhere/On/${bindingContext.the}/Harddrive/${bindingContext.file}.txt`;
-    let destination = "";
+    let destination = '';
     let boilerPlate = {
         pathsNeedingBinding: [
             fileNeedingBinding

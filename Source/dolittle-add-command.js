@@ -8,7 +8,7 @@ import global from './global';
 
 const USAGE = 'dolittle add command [name]';
 args
-    .example(USAGE, "Creates a command in the current folder");
+    .example(USAGE, 'Creates a command in the current folder');
  
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add command'});
 

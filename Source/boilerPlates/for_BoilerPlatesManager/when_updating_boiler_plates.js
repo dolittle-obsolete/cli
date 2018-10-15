@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { a_boiler_plates_manager } from './given/a_boiler_plates_manager';
 
-const first_boiler_plate = "first_boiler_plate";
-const second_boiler_plate = "second_boiler_plate";
+const first_boiler_plate = 'first_boiler_plate';
+const second_boiler_plate = 'second_boiler_plate';
 
-describe("when updating boiler plates", () => {
+describe('when updating boiler plates', () => {
     let context = new a_boiler_plates_manager();
     let updateBoilerPlatesOnDisk = null;
     let getAvailableBoilerPlates = null;

@@ -9,7 +9,7 @@ import global from './global';
 const USAGE = 'dolittle add aggregateroot [name]';
 
 args
-   .example(USAGE, "Creates an aggregate root in the current folder");
+    .example(USAGE, 'Creates an aggregate root in the current folder');
 
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add aggregateroot'});
 

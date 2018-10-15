@@ -8,7 +8,7 @@ import global from './global';
 
 const USAGE = 'dolittle add eventprocessor [name]';
 args
-    .example(USAGE, "Creates an event processor in the current folder");
+    .example(USAGE, 'Creates an event processor in the current folder');
  
 args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add eventprocessor'});
 

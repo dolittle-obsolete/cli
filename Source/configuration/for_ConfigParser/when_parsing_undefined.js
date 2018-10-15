@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { ConfigParser } from '../ConfigParser';
 
-describe("when parsing undefined", () => {
+describe('when parsing undefined', () => {
     let reader = null;
     let result = null;
 
@@ -13,7 +13,7 @@ describe("when parsing undefined", () => {
         result = reader.parse();
     })();
 
-    it("should return an instance", () => expect(result).to.not.be.undefined);
-    it("should not hold any clusters", () => result.clusters.length.should.equal(0));
+    it('should return an instance', () => expect(result).to.not.be.undefined);
+    it('should not hold any clusters', () => result.clusters.length.should.equal(0));
 
 });

@@ -16,6 +16,6 @@ describe('when asking for boundedcontext boiler plates', () => {
         result = context.boilerPlatesManager.boilerPlatesByType('boundedContext');
     })();
 
-    it("should return exact number of boiler plates", () => result.length.should.equal(2));
-    it("should return the expected boiler plates", () => result.forEach((_, index) => _.should.deep.include(expected[index])));
+    it('should return exact number of boiler plates', () => result.length.should.equal(2));
+    it('should return the expected boiler plates', () => result.forEach((_, index) => _.should.deep.include(expected[index])));
 });
