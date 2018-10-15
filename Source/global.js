@@ -72,7 +72,6 @@ class global {
      * Perform initialization
      */
     constructor() {
-        
         _logger.set(this, winston.createLogger({
             level: 'info',
             format: winston.format.combine(

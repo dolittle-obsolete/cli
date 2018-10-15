@@ -68,7 +68,7 @@ export class BoilerPlatesManager {
      * @param {Git} git
      * @param {Folders} folders
      * @param {fs} fileSystem
-     * @param {Logger} logger;
+     * @param {Logger} logger
      */
     constructor(configManager, httpWrapper, git, folders, fileSystem, logger) {
         _configManager.set(this, configManager);
