@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { a_boiler_plates_manager } from './given/a_boiler_plates_manager';
 
 describe('when creating instance with paths needing binding where paths are separated with forward slash', () => {
@@ -12,7 +13,7 @@ describe('when creating instance with paths needing binding where paths are sepa
         file: 'somefile'
     };
     let expectedResult = `/Somwhere/On/${bindingContext.the}/Harddrive/${bindingContext.file}.txt`;
-    let destination = "";
+    let destination = '';
     let boilerPlate = {
         pathsNeedingBinding: [
             fileNeedingBinding

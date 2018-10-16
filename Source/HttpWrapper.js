@@ -27,17 +27,17 @@ export class HttpWrapper {
                 host: host,
                 path: path,
                 headers: {
-                    "Content-Type": mimeType,
-                    "User-Agent": "request"
+                    'Content-Type': mimeType,
+                    'User-Agent': 'request'
                 }
             };
 
             https.get(options, function (res) {
-                res.on("data", function (chunk) {
+                res.on('data', function (chunk) {
                     if (stream) {
                         stream.write(chunk);
                     }
-                }).on("end", function () {
+                }).on('end', function () {
                     if (stream) {
                         stream.end();
                     }
@@ -56,12 +56,12 @@ export class HttpWrapper {
      */
     getText(source, mimetype) {
         let promise = new Promise((resolve, reject) => {
-            if (!mimetype) mimetype = "text";
+            if (!mimetype) mimetype = 'text';
 
             let stream = new streams.PassThrough();
-            let text = "";
-            stream.on("data", (chunk) => text += chunk);
-            stream.on("end", () => resolve(text));
+            let text = '';
+            stream.on('data', (chunk) => text += chunk);
+            stream.on('end', () => resolve(text));
 
             this.get(source, mimetype, stream);
         });
@@ -74,7 +74,7 @@ export class HttpWrapper {
      * @returns {Promise} A promise that can be continued with the result
      */
     getHtml(source) {
-        return this.getText(source, "text/html");
+        return this.getText(source, 'text/html');
     }
 
     /**
@@ -83,6 +83,6 @@ export class HttpWrapper {
      * @returns {Promise} A promise that can be continued with the result
      */
     getJson(source) {
-        return this.getText(source, "application/json");
+        return this.getText(source, 'application/json');
     }
 }

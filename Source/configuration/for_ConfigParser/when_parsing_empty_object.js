@@ -2,9 +2,10 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { ConfigParser } from '../ConfigParser';
 
-describe("when parsing empty object", () => {
+describe('when parsing empty object', () => {
     let reader = null;
     let result = null;
 
@@ -13,6 +14,6 @@ describe("when parsing empty object", () => {
         result = reader.parse({});
     })();
 
-    it("should return an instance", () => expect(result).to.not.be.undefined);
-    it("should not hold any clusters", () => result.clusters.length.should.equal(0));
+    it('should return an instance', () => expect(result).to.not.be.undefined);
+    it('should not hold any clusters', () => result.clusters.length.should.equal(0));
 });

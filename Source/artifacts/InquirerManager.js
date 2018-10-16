@@ -2,10 +2,13 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { Folders } from '../Folders';
-import { Logger } from 'winston';
+
+/* eslint-disable no-unused-vars */
+import {Folders} from '../Folders';
+import {Logger} from 'winston';
 import fs from 'fs-extra';
-import global from '../global';
+import { getFileDirPath, getFileName, getFileNameAndExtension, getFileDir } from '../helpers';
+/* eslint-enable no-unused-vars */
 
 const inquirer = require('inquirer');
 /**
@@ -66,7 +69,7 @@ export class InquirerManager {
                     if (_.type !== 'prompt' && answers[field] === undefined) {
                         answers[field] = context[field];
                     }
-                })
+                });
                 return answers;
             });
     }
@@ -81,7 +84,7 @@ export class InquirerManager {
             return this.discover(dependency, location, context);
         }
 
-        throw `Cannot handle dependency type '${dependency.type}'`
+        throw `Cannot handle dependency type '${dependency.type}'`;
     }
     /**
      * 
@@ -97,7 +100,7 @@ export class InquirerManager {
             return this.discoverMultipleFiles(dependency, location, context);
         }
 
-        throw `Cannot handle discoveryType '${dependency.discoverType}'`
+        throw `Cannot handle discoveryType '${dependency.discoverType}'`;
     }
     /**
      * 
@@ -136,7 +139,7 @@ export class InquirerManager {
                 if (theMatch !== null && theMatch.length > 0) {
                     let namespace = '';
                     if (dependency.withNamespace)
-                        namespace = this.createNamespace(dependency, global.getFileDirPath(filePath));
+                        namespace = this.createNamespace(dependency, getFileDirPath(filePath));
 
                     let choice = dependency.withNamespace?  {name: namespace + '.' + theMatch[1], value: theMatch[1]}
                         : {name: theMatch[1], value: theMatch[1]};
@@ -164,7 +167,7 @@ export class InquirerManager {
             return this.generateCheckboxPrompt(dependency, context);
         }
         
-        throw `Cannot handle promptType '${dependency.promptType}'`
+        throw `Cannot handle promptType '${dependency.promptType}'`;
 
     }
     /**
@@ -259,12 +262,12 @@ export class InquirerManager {
      */
     createNamespace(dependency, location) {
         const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, new RegExp(dependency.milestone));
-        let milestoneFileName = global.getFileName(milestonePath);
-        let milestoneFileDir = global.getFileDirPath(milestonePath)
+        let milestoneFileName = getFileName(milestonePath);
+        let milestoneFileDir = getFileDirPath(milestonePath);
 
         let namespaceSegments = [];
         let segmentPath = location;
-        let segment = global.getFileNameAndExtension(segmentPath);
+        let segment = getFileNameAndExtension(segmentPath);
 
         while (segmentPath != milestoneFileDir) {
             if (segment === '' || segmentPath === '/') {
@@ -272,8 +275,8 @@ export class InquirerManager {
                 return '';
             }
             namespaceSegments.push(segment);
-            segmentPath = global.getFileDir(segmentPath);
-            segment = global.getFileName(segmentPath);
+            segmentPath = getFileDir(segmentPath);
+            segment = getFileName(segmentPath);
         } 
         namespaceSegments = namespaceSegments.reverse();
         

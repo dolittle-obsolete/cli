@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+/* eslint-disable no-unused-vars */
 import fs from 'fs-extra';
 import winston from 'winston';
 import simpleGit from 'simple-git';
@@ -15,25 +16,58 @@ import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
 import { ArtifactsManager } from './artifacts/ArtifactsManager';
 import { InquirerManager } from './artifacts/InquirerManager';
-import path from 'path'
+import path from 'path';
+/* eslint-enable no-unused-vars */
 
+/**
+ * @type {WeakMap<globals, ConfigManager>}
+ */
 const _configManager = new WeakMap();
+/**
+ * @type {WeakMap<globals, ConfigParser>}
+ */
 const _configParser = new WeakMap();
+/**
+ * @type {WeakMap<globals, ApplicationManager>}
+ */
 const _applicationManager = new WeakMap();
+/**
+ * @type {WeakMap<globals, ArtifactsManager>}
+ */
 const _artifactsManager = new WeakMap();
+/**
+ * @type {WeakMap<globals, BoundedContextManager>}
+ */
 const _boundedContextManager = new WeakMap();
+/**
+ * @type {WeakMap<globals, BoilerPlatesManager>}
+ */
 const _boilerPlatesManager = new WeakMap();
+/**
+ * @type {WeakMap<globals, InquirerManager>}
+ */
 const _inquirerManager = new WeakMap();
-
+/**
+ * @type {WeakMap<globals, Folders>}
+ */
 const _folders = new WeakMap();
+/**
+ * @type {WeakMap<globals, Git>}
+ */
 const _git = new WeakMap();
+/**
+ * @type {WeakMap<globals, winston>}
+ */
 const _logger = new WeakMap();
+/**
+ * @type {WeakMap<globals, HttpWrapper>}
+ */
 const _httpWrapper = new WeakMap();
 
 /**
- * Common global object
+ * Common globals object
  */
-class global {
+class globals {
     /**
      * Perform initialization
      */
@@ -61,7 +95,7 @@ class global {
         
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
-        _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, this.git, this.folders, fs, this.logger));
+        _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
         _inquirerManager.set(this, new InquirerManager(this.folders, fs, this.logger));
@@ -75,6 +109,7 @@ class global {
      */
     get configManager() {
         return _configManager.get(this);
+        
     }
 
     /**
@@ -141,10 +176,10 @@ class global {
     }
 
     /**
-     * Gets the {Logger}
-     * @returns {Logger}
+     * Gets the {winston} logger
+     * @returns {winston}
      */
-    get logger() { 
+    get logger() {
         return _logger.get(this);
     }
 
@@ -156,70 +191,6 @@ class global {
         return _httpWrapper.get(this);
     }
 
-    get usagePrefix() {
-        return '\n\t ';
-    }
-    
-    /**
-     * Gets the full directory path
-     * @param {string} filePath
-     * @returns {string} directory path
-     */
-    getFileDirPath(filePath) {
-        filePath = path.normalize(filePath);
-        return path.parse(filePath).dir;
-    }
-    /**
-     * Gets the filename without extension
-     * @param {string} filePath
-     * @returns {string} filename
-     */
-    getFileName(filePath) {
-        filePath = path.normalize(filePath);
-        return path.parse(filePath).name;
-    }
-    /**
-     * Gets the filename with extension
-     * @param {string} filePath
-     * @returns {string} filename
-     */
-    getFileNameAndExtension(filePath) {
-        filePath = path.normalize(filePath);
-        return path.parse(filePath).base;
-    }
-    /**
-     * Gets the directory name
-     * @param {string} filePath
-     * @returns {string} file dirname
-     */
-    getFileDir(filePath) {
-        filePath = path.normalize(filePath);
-        return path.dirname(filePath);
-    }
-
-    /**
-     * Validate the name argument
-     * @param {string} name 
-     */
-    validateArgsNameInput(name) {
-        if (name.includes(' ')) {
-            _logger.get(this).error('Name argument cannot contain spaces');
-            throw 'Argument parsing error'
-        }
-        if (name.includes('-')) {
-            _logger.get(this).error('Name argument cannot contain "-"');
-            throw 'Argument parsing error'
-        }
-        if (name !== path.basename(name)) {
-            _logger.get(this).error("Name argument cannot isn't a valid filename");
-            throw 'Argument parsing error'
-        }
-        if (/^\.\.?$/.test(name)) {
-            _logger.get(this).error('Name argument cannot be "." or ".."');
-            throw 'Argument parsing error'
-        }
-    }
-
 }
 
-export default new global();
+export default new globals();

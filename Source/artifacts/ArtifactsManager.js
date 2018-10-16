@@ -2,15 +2,18 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { Folders } from '../Folders';
-import { Logger } from 'winston';
-import { BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
-import { InquirerManager } from './InquirerManager';
+
+/* eslint-disable no-unused-vars */
+import {Folders} from '../Folders';
+import {Logger} from 'winston';
+import {BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
+import {InquirerManager} from './InquirerManager';
 import fs from 'fs-extra';
-import global from '../global';
-import { BoilerPlate } from '../boilerPlates/BoilerPlate';
-import { BoundedContext } from '../boundedContexts/BoundedContext';
-import { BoundedContextManager } from '../boundedContexts/BoundedContextManager';
+import {BoilerPlate} from '../boilerPlates/BoilerPlate';
+import {BoundedContext} from '../boundedContexts/BoundedContext';
+import {BoundedContextManager} from '../boundedContexts/BoundedContextManager';
+import { getFileDirPath } from '../helpers';
+/* eslint-enable no-unused-vars */
 
 /**
  * @type {WeakMap<ArtifactsManager, BoilerPlatesManager>}
@@ -74,7 +77,7 @@ export class ArtifactsManager {
     _validateBoundedContext(boundedContext) {
         if ( !(boundedContext.backend && boundedContext.backend.language && boundedContext.backend.language !== '')) {
             this._logger.error('The bounded-context.json configuration is missing "language"');
-            throw "Bounded Context configuration missing language";
+            throw 'Bounded Context configuration missing language';
         }
     }
     /**
@@ -86,12 +89,12 @@ export class ArtifactsManager {
         const type = 'artifacts';
         let boilerPlates = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType(language, type);
         if (boilerPlates === null || boilerPlates.length === 0) {
-            this._logger.error(`Could not find a boilerplate.json configuration for language: ${language} and type: ${type}`)
-            throw "Could not find boilerplate for given language and type";
+            this._logger.error(`Could not find a boilerplate.json configuration for language: ${language} and type: ${type}`);
+            throw 'Could not find boilerplate for given language and type';
         }
         if (boilerPlates.length > 1) {
-            this._logger.error(`Found more than one boilerplate.json configuration for language: ${language} and type: ${type}`)
-            throw "Found multiple boilerplates";
+            this._logger.error(`Found more than one boilerplate.json configuration for language: ${language} and type: ${type}`);
+            throw 'Found multiple boilerplates';
         }
         return boilerPlates[0];
     }
@@ -106,9 +109,7 @@ export class ArtifactsManager {
         let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
         let templatesAndLocation = [];
         templateFiles.forEach(_ => {
-            const lastPathSeparatorMatch = _.match(/(\\|\/)/);
-            const lastIndex = _.lastIndexOf(lastPathSeparatorMatch[lastPathSeparatorMatch.length-1]);
-            let location = global.getFileDirPath(_)
+            let location = getFileDirPath(_);
             const template = {
                 template: JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
                 location: location

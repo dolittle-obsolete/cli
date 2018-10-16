@@ -8,12 +8,13 @@ export class Config
 {
     /**
      * Array of all the configured clusters
-     * @type cluster[]
+     * @type {Cluster[]}
      */
     clusters = []
 
     /**
      * Current cluster being used
+     * @type {Cluster}
      */
     current = null
 }

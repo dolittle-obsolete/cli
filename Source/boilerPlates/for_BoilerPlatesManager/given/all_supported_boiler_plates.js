@@ -2,43 +2,44 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { BoilerPlatesManager } from '../../BoilerPlatesManager';
 import { a_boiler_plates_manager } from './a_boiler_plates_manager';
 
 const boilerPlates = [
     {
-        language:"csharp",
-        name:"C# Application",
-        description:"some description",
-        type:"application",
-        location:"/somewhere/on/the/disk",
+        language:'csharp',
+        name:'C# Application',
+        description:'some description',
+        type:'application',
+        location:'/somewhere/on/the/disk',
         pathsNeedingBinding:[],
         filesNeedingBinding:[]
     },
     {
-        language:"csharp",
-        name:"C# BoundedContext",
-        description:"some description",
-        type:"boundedContext",
-        location:"/somewhere/on/the/disk",
+        language:'csharp',
+        name:'C# BoundedContext',
+        description:'some description',
+        type:'boundedContext',
+        location:'/somewhere/on/the/disk',
         pathsNeedingBinding:[],
         filesNeedingBinding:[]
     },
     {
-        language:"javascript",
-        name:"Javascript Application",
-        description:"some description",
-        type:"application",
-        location:"/somewhere/on/the/disk",
+        language:'javascript',
+        name:'Javascript Application',
+        description:'some description',
+        type:'application',
+        location:'/somewhere/on/the/disk',
         pathsNeedingBinding:[],
         filesNeedingBinding:[]
     },
     {
-        language:"javascript",
-        name:"Javacript BoundedContext",
-        description:"some description",
-        type:"boundedContext",
-        location:"/somewhere/on/the/disk",
+        language:'javascript',
+        name:'Javacript BoundedContext',
+        description:'some description',
+        type:'boundedContext',
+        location:'/somewhere/on/the/disk',
         pathsNeedingBinding:[],
         filesNeedingBinding:[]
     }

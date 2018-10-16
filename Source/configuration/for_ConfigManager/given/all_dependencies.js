@@ -6,7 +6,7 @@ export class all_dependencies {
     constructor() {
         this.configParser = {
             parse: sinon.stub()
-        }
+        };
         this.fs = {
             existsSync: sinon.stub().returns(false),
             mkdir: sinon.stub(),

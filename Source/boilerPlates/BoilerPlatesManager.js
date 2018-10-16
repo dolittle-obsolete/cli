@@ -2,6 +2,8 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
+/* eslint-disable no-unused-vars */
 import { ConfigManager } from '../configuration/ConfigManager';
 import { HttpWrapper } from '../HttpWrapper';
 import { Git } from 'simple-git';
@@ -11,8 +13,9 @@ import { Logger } from 'winston';
 import path from 'path';
 import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
-import global from '../global';
 import { Guid } from '../Guid';
+import { getFileNameAndExtension } from '../helpers';
+/* eslint-enable no-unused-vars */
 
 const boilerPlateFolder = 'boiler-plates';
 
@@ -66,7 +69,7 @@ export class BoilerPlatesManager {
      * @param {Git} git
      * @param {Folders} folders
      * @param {fs} fileSystem
-     * @param {Logger} logger;
+     * @param {Logger} logger
      */
     constructor(configManager, httpWrapper, git, folders, fileSystem, logger) {
         _configManager.set(this, configManager);
@@ -95,7 +98,7 @@ export class BoilerPlatesManager {
      * @returns {string} Path to the config file
      */
     get boilerPlateConfigFile() {
-        return path.join(_configManager.get(this).centralFolderLocation, "boiler-plates.json");
+        return path.join(_configManager.get(this).centralFolderLocation, 'boiler-plates.json');
     }
 
     /**
@@ -178,7 +181,7 @@ export class BoilerPlatesManager {
      * Get available boiler plates from GitHub
      */
     async getAvailableBoilerPlates() {
-        let uri = "https://api.github.com/orgs/dolittle-boilerplates/repos";
+        let uri = 'https://api.github.com/orgs/dolittle-boilerplates/repos';
         return new Promise(resolve => {
             _httpWrapper.get(this).getJson(uri).then(json => {
                 let result = JSON.parse(json);
@@ -255,7 +258,7 @@ export class BoilerPlatesManager {
      * Update configuration file on disk
      */
     async updateConfiguration() {
-        this._logger.info(`Updating the ${this.boilerPlateConfigFile} configuration`)
+        this._logger.info(`Updating the ${this.boilerPlateConfigFile} configuration`);
         let self = this;
         let folders = _folders.get(this).getFoldersIn(this.boilerPlateLocation);
         let boilerPlates = [];
@@ -333,7 +336,7 @@ export class BoilerPlatesManager {
         
         boilerPlate.filesNeedingBinding.forEach(_ => {
             let file = path.join(destination, _);
-            let content = _fileSystem.get(this).readFileSync(file, 'utf8')
+            let content = _fileSystem.get(this).readFileSync(file, 'utf8');
             let template = Handlebars.compile(content);
             let result = template(context);
             _fileSystem.get(this).writeFileSync(file, result);
@@ -347,9 +350,9 @@ export class BoilerPlatesManager {
      */
     createArtifactInstance(artifactTemplate, destination, context) {
         let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(artifactTemplate.location, artifactTemplate.template.includedFiles);
-
+        
         filesToCreate.forEach( filePath => {
-            const filename = global.getFileNameAndExtension(filePath);
+            const filename = getFileNameAndExtension(filePath);
             const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
             let segments = [];
 

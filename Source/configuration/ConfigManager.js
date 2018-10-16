@@ -2,11 +2,13 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { ConfigParser } from './ConfigParser';
-import { Config } from './Config';
-import { Logger } from 'winston';
+/* eslint-disable no-unused-vars */
+import {ConfigParser} from './ConfigParser';
+import {Config} from './Config';
+import {Logger} from 'winston';
 import fs from 'fs-extra';
 import path from 'path';
+/* eslint-enable no-unused-vars */
 
 /**
  * @type {WeakMap<ConfigManager, fs>}
@@ -26,7 +28,7 @@ const _centralFolderLocation = new WeakMap();
 const _isFirstRun = new WeakMap();
 
 const centralFolder = '~/.dolittle';
-const configFile = "config.json";
+const configFile = 'config.json';
 
 /**
  * Expand the given filepaths possible reference to home folder
@@ -46,7 +48,7 @@ function expandPath(filepath) {
 function makeSureCentralFolderExists(fileSystem) {
     if( !fileSystem.existsSync(this.centralFolderLocation)) {
         _isFirstRun.set(this, true);
-        this._logger.info("Central Dolittle folder does not exist - creating it and setting up default configuration");
+        this._logger.info('Central Dolittle folder does not exist - creating it and setting up default configuration');
         try {
             fileSystem.ensureDirSync(this.centralFolderLocation);
         } catch(err)
@@ -59,7 +61,7 @@ function makeSureCentralFolderExists(fileSystem) {
             {
                 this._logger.error('Could not create .dolittle folder at root: ', err);
                 this._logger.info('Try creating this directory manually: ', this.centralFolderLocation);
-                throw 'Could not create .dolittle directory'
+                throw 'Could not create .dolittle directory';
             }
         }
         let config = new Config();
@@ -67,7 +69,7 @@ function makeSureCentralFolderExists(fileSystem) {
     } else {
         _isFirstRun.set(this, false);
     }
-};
+}
 
 /**
  * Represents a manager for dealing with configurations

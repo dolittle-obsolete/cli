@@ -43,7 +43,7 @@ export class Folders
     {
         folderPath = path.normalize(folderPath);
         try {
-        _fileSystem.get(this).ensureDirSync(folderPath);
+            _fileSystem.get(this).ensureDirSync(folderPath);
         } catch(err)
         {
             try {
@@ -186,7 +186,7 @@ export class Folders
         });
 
         return results;
-    };
+    }
     /**
      * Search for a specific file pattern within a folder with regex
      * @param {string} folder Folder to search from
@@ -207,7 +207,7 @@ export class Folders
         });
 
         return results;
-    };
+    }
     /**
      * Search for a specific file pattern within a folder, recursively
      * @param {string} folder Folder to search from
@@ -232,7 +232,7 @@ export class Folders
         });
 
         return results;
-    };
+    }
     /**
      * Search for a specific file with regular expression, recursively
      * @param {string} folder to search from
