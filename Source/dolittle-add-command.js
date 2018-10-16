@@ -4,24 +4,24 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import global from './global';
+import globals from './globals';
 
 const USAGE = 'dolittle add command [name]';
 args
     .example(USAGE, 'Creates a command in the current folder');
  
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add command'});
+args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle add command'});
 
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-global.validateArgsNameInput(args.sub[0]);
+globals.validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'command',
     destination: process.cwd()
 };
 
-global.artifactsManager.createArtifact(context);
+globals.artifactsManager.createArtifact(context);
 
 // let flags = {name: args.sub[0]}; 
-// global.artifactsManager.createCommand(flags);
+// globals.artifactsManager.createCommand(flags);

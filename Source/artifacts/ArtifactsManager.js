@@ -8,7 +8,7 @@ import {Logger} from 'winston';
 import {BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
 import {InquirerManager} from './InquirerManager';
 import fs from 'fs-extra';
-import global from '../global';
+import globals from '../globals';
 import {BoilerPlate} from '../boilerPlates/BoilerPlate';
 import {BoundedContext} from '../boundedContexts/BoundedContext';
 import {BoundedContextManager} from '../boundedContexts/BoundedContextManager';
@@ -108,7 +108,7 @@ export class ArtifactsManager {
         let templateFiles = _folders.get(this).searchRecursive(boilerPlate.location, 'template.json');
         let templatesAndLocation = [];
         templateFiles.forEach(_ => {
-            let location = global.getFileDirPath(_);
+            let location = globals.getFileDirPath(_);
             const template = {
                 template: JSON.parse(_fileSystem.get(this).readFileSync(_, 'utf8')),
                 location: location

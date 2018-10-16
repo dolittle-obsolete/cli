@@ -6,7 +6,7 @@
 import {Folders} from '../Folders';
 import {Logger} from 'winston';
 import fs from 'fs-extra';
-import global from '../global';
+import globals from '../globals';
 /* eslint-enable no-unused-vars */
 
 const inquirer = require('inquirer');
@@ -138,7 +138,7 @@ export class InquirerManager {
                 if (theMatch !== null && theMatch.length > 0) {
                     let namespace = '';
                     if (dependency.withNamespace)
-                        namespace = this.createNamespace(dependency, global.getFileDirPath(filePath));
+                        namespace = this.createNamespace(dependency, globals.getFileDirPath(filePath));
 
                     let choice = dependency.withNamespace?  {name: namespace + '.' + theMatch[1], value: theMatch[1]}
                         : {name: theMatch[1], value: theMatch[1]};
@@ -261,12 +261,12 @@ export class InquirerManager {
      */
     createNamespace(dependency, location) {
         const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, new RegExp(dependency.milestone));
-        let milestoneFileName = global.getFileName(milestonePath);
-        let milestoneFileDir = global.getFileDirPath(milestonePath);
+        let milestoneFileName = globals.getFileName(milestonePath);
+        let milestoneFileDir = globals.getFileDirPath(milestonePath);
 
         let namespaceSegments = [];
         let segmentPath = location;
-        let segment = global.getFileNameAndExtension(segmentPath);
+        let segment = globals.getFileNameAndExtension(segmentPath);
 
         while (segmentPath != milestoneFileDir) {
             if (segment === '' || segmentPath === '/') {
@@ -274,8 +274,8 @@ export class InquirerManager {
                 return '';
             }
             namespaceSegments.push(segment);
-            segmentPath = global.getFileDir(segmentPath);
-            segment = global.getFileName(segmentPath);
+            segmentPath = globals.getFileDir(segmentPath);
+            segment = globals.getFileName(segmentPath);
         } 
         namespaceSegments = namespaceSegments.reverse();
         

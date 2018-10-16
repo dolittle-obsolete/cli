@@ -4,23 +4,23 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import global from './global';
+import globals from './globals';
 
 const USAGE = 'dolittle add readmodel [name]';
 args
     .example(USAGE, 'Creates a read model in the current folder');
 
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add readmodel'});
+args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle add readmodel'});
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-global.validateArgsNameInput(args.sub[0]);
+globals.validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'readModel',
     destination: process.cwd()
 };
 
-global.artifactsManager.createArtifact(context);
+globals.artifactsManager.createArtifact(context);
 
 // let flags = {name: args.sub[0]}; 
-// global.artifactsManager.createReadModel(flags);
+// globals.artifactsManager.createReadModel(flags);

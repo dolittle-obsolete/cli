@@ -12,7 +12,7 @@ import { Logger } from 'winston';
 import path from 'path';
 import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
-import global from '../global';
+import globals from '../globals';
 import { Guid } from '../Guid';
 /* eslint-enable no-unused-vars */
 
@@ -351,7 +351,7 @@ export class BoilerPlatesManager {
         let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(artifactTemplate.location, artifactTemplate.template.includedFiles);
 
         filesToCreate.forEach( filePath => {
-            const filename = global.getFileNameAndExtension(filePath);
+            const filename = globals.getFileNameAndExtension(filePath);
             const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
             let segments = [];
 

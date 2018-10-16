@@ -20,54 +20,54 @@ import path from 'path';
 /* eslint-enable no-unused-vars */
 
 /**
- * @type {WeakMap<global, ConfigManager>}
+ * @type {WeakMap<globals, ConfigManager>}
  */
 const _configManager = new WeakMap();
 /**
- * @type {WeakMap<global, ConfigParser>}
+ * @type {WeakMap<globals, ConfigParser>}
  */
 const _configParser = new WeakMap();
 /**
- * @type {WeakMap<global, ApplicationManager>}
+ * @type {WeakMap<globals, ApplicationManager>}
  */
 const _applicationManager = new WeakMap();
 /**
- * @type {WeakMap<global, ArtifactsManager>}
+ * @type {WeakMap<globals, ArtifactsManager>}
  */
 const _artifactsManager = new WeakMap();
 /**
- * @type {WeakMap<global, BoundedContextManager>}
+ * @type {WeakMap<globals, BoundedContextManager>}
  */
 const _boundedContextManager = new WeakMap();
 /**
- * @type {WeakMap<global, BoilerPlatesManager>}
+ * @type {WeakMap<globals, BoilerPlatesManager>}
  */
 const _boilerPlatesManager = new WeakMap();
 /**
- * @type {WeakMap<global, InquirerManager>}
+ * @type {WeakMap<globals, InquirerManager>}
  */
 const _inquirerManager = new WeakMap();
 /**
- * @type {WeakMap<global, Folders>}
+ * @type {WeakMap<globals, Folders>}
  */
 const _folders = new WeakMap();
 /**
- * @type {WeakMap<global, Git>}
+ * @type {WeakMap<globals, Git>}
  */
 const _git = new WeakMap();
 /**
- * @type {WeakMap<global, winston>}
+ * @type {WeakMap<globals, winston>}
  */
 const _logger = new WeakMap();
 /**
- * @type {WeakMap<global, HttpWrapper>}
+ * @type {WeakMap<globals, HttpWrapper>}
  */
 const _httpWrapper = new WeakMap();
 
 /**
- * Common global object
+ * Common globals object
  */
-class global {
+class globals {
     /**
      * Perform initialization
      */
@@ -257,4 +257,4 @@ class global {
 
 }
 
-export default new global();
+export default new globals();

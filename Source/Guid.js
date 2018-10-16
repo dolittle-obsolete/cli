@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 /**
- * Represents a globally unique identifier
+ * Represents a globalsly unique identifier
  */
 export class Guid {
 

@@ -4,24 +4,24 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import global from './global';
+import globals from './globals';
 
 const USAGE = 'dolittle add queryfor [name]';
 args
     .example(USAGE, 'Creates a query for a read model in the current folder');
 
 
-args.parse(process.argv, {value: global.usagePrefix + USAGE, name: 'dolittle add queryfor'});
+args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle add queryfor'});
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
-global.validateArgsNameInput(args.sub[0]);
+globals.validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'queryFor',
     destination: process.cwd()
 };
 
-global.artifactsManager.createArtifact(context);
+globals.artifactsManager.createArtifact(context);
 
 // let flags = {name: args.sub[0]}; 
-// global.artifactsManager.createQueryFor(flags);
+// globals.artifactsManager.createQueryFor(flags);
