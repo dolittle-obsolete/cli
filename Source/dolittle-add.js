@@ -5,7 +5,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import globals from './globals';
+import { usagePrefix } from './helpers';
 
 const USAGE = 'dolittle add [command] [args]';
 args
@@ -19,6 +19,6 @@ args
     .command('queryfor', 'A query for a specific read model');
 
     
-args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle add'});
+args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add'});
 
 if( !args.sub.length ) args.showHelp();

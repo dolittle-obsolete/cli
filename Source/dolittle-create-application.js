@@ -6,14 +6,15 @@
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
 import globals from './globals';
+import { usagePrefix, validateArgsNameInput } from './helpers';
 
 const USAGE = 'dolittle create application [name]';
 args
     .example(USAGE, 'Creates an application with a given name');
     
-args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle create application'});
+args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create application'});
 
 if( !args.sub.length ) args.showHelp();
 
-globals.validateArgsNameInput(args.sub[0]);
+validateArgsNameInput(args.sub[0]);
 globals.applicationManager.create(args.sub[0]);

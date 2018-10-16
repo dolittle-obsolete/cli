@@ -3,10 +3,12 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+/**
+ * The usage prefix used in commands info
+ * @returns {string} the usage prefix
+ */
+export const usagePrefix = '\n\t ';
 
-export function usagePrefix() {
-    return '\n\t ';
-}
 
 /**
  * Gets the full directory path

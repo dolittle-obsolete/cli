@@ -6,17 +6,18 @@
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
 import globals from './globals';
+import { usagePrefix, validateArgsNameInput} from './helpers';
 
 const USAGE = 'dolittle create boundedcontext [name]';
 args
     .example(USAGE, 'Creates a bounded context with a given name');
     
-args.parse(process.argv, {value: globals.usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
+args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
 
 if( !args.sub.length ) args.showHelp();
 
 
-globals.validateArgsNameInput(args.sub[0]);
+validateArgsNameInput(args.sub[0]);
 let context = {
     name: args.sub[0],
     destination: process.cwd()
