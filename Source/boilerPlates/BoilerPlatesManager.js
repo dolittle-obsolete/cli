@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 /* eslint-disable no-unused-vars */
 import { ConfigManager } from '../configuration/ConfigManager';
 import { HttpWrapper } from '../HttpWrapper';
@@ -12,8 +13,8 @@ import { Logger } from 'winston';
 import path from 'path';
 import { BoilerPlate } from './BoilerPlate';
 import Handlebars from 'handlebars';
-import globals from '../globals';
 import { Guid } from '../Guid';
+import { getFileNameAndExtension } from '../helpers';
 /* eslint-enable no-unused-vars */
 
 const boilerPlateFolder = 'boiler-plates';
@@ -349,9 +350,9 @@ export class BoilerPlatesManager {
      */
     createArtifactInstance(artifactTemplate, destination, context) {
         let filesToCreate = _folders.get(this).getArtifactTemplateFilesRecursivelyIn(artifactTemplate.location, artifactTemplate.template.includedFiles);
-
+        
         filesToCreate.forEach( filePath => {
-            const filename = globals.getFileNameAndExtension(filePath);
+            const filename = getFileNameAndExtension(filePath);
             const oldContent = _fileSystem.get(this).readFileSync(filePath, 'utf8');
             let segments = [];
 

@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { all_supported_boiler_plates } from './given/all_supported_boiler_plates';
 
 describe('when getting available boiler plates', () => {

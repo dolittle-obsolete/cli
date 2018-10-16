@@ -2,6 +2,7 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
+
 /* eslint-disable no-unused-vars */
 import { Backend } from './Backend';
 import { InteractionLayer } from './InteractionLayer';

@@ -2,6 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import { a_config_manager } from './given/a_config_manager';
 
 describe('when creating without central folder not existing', () => {

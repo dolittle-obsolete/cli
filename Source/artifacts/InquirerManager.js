@@ -2,11 +2,12 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 /* eslint-disable no-unused-vars */
 import {Folders} from '../Folders';
 import {Logger} from 'winston';
 import fs from 'fs-extra';
-import globals from '../globals';
+import { getFileDirPath, getFileName, getFileNameAndExtension, getFileDir } from '../helpers';
 /* eslint-enable no-unused-vars */
 
 const inquirer = require('inquirer');
@@ -138,7 +139,7 @@ export class InquirerManager {
                 if (theMatch !== null && theMatch.length > 0) {
                     let namespace = '';
                     if (dependency.withNamespace)
-                        namespace = this.createNamespace(dependency, globals.getFileDirPath(filePath));
+                        namespace = this.createNamespace(dependency, getFileDirPath(filePath));
 
                     let choice = dependency.withNamespace?  {name: namespace + '.' + theMatch[1], value: theMatch[1]}
                         : {name: theMatch[1], value: theMatch[1]};
@@ -261,12 +262,12 @@ export class InquirerManager {
      */
     createNamespace(dependency, location) {
         const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, new RegExp(dependency.milestone));
-        let milestoneFileName = globals.getFileName(milestonePath);
-        let milestoneFileDir = globals.getFileDirPath(milestonePath);
+        let milestoneFileName = getFileName(milestonePath);
+        let milestoneFileDir = getFileDirPath(milestonePath);
 
         let namespaceSegments = [];
         let segmentPath = location;
-        let segment = globals.getFileNameAndExtension(segmentPath);
+        let segment = getFileNameAndExtension(segmentPath);
 
         while (segmentPath != milestoneFileDir) {
             if (segment === '' || segmentPath === '/') {
@@ -274,8 +275,8 @@ export class InquirerManager {
                 return '';
             }
             namespaceSegments.push(segment);
-            segmentPath = globals.getFileDir(segmentPath);
-            segment = globals.getFileName(segmentPath);
+            segmentPath = getFileDir(segmentPath);
+            segment = getFileName(segmentPath);
         } 
         namespaceSegments = namespaceSegments.reverse();
         
