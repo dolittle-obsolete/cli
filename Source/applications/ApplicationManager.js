@@ -3,14 +3,14 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable no-unused-vars */
-import Folders from '../Folders';
-import Logger from 'winston';
-import BoilerPlatesManager from '../boilerPlates/BoilerPlatesManager';
-import ConfigManager from '../configuration/ConfigManager';
-import Guid from '../Guid';
+import {Folders} from '../Folders';
+import {Logger} from 'winston';
+import {BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
+import {ConfigManager} from '../configuration/ConfigManager';
+import {Guid} from '../Guid';
 import path from 'path';
 import fs from 'fs-extra';
-import Application from './Application';
+import {Application} from './Application';
 /* eslint-enable no-unused-vars */
 
 const applicationFilename = 'application.json';

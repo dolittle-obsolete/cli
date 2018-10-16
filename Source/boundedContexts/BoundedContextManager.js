@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 /* eslint-disable no-unused-vars */
-import BoilerPlatesManager from '../boilerPlates/BoilerPlatesManager';
-import Guid from '../Guid';
-import ApplicationManager from '../applications/ApplicationManager';
-import Logger from 'winston';
+import { BoilerPlatesManager } from '../boilerPlates/BoilerPlatesManager';
+import { Guid }from '../Guid';
+import { ApplicationManager } from '../applications/ApplicationManager';
+import {Logger} from 'winston';
 import path from 'path';
 import fs from 'fs-extra';
 import { BoundedContext } from './BoundedContext';

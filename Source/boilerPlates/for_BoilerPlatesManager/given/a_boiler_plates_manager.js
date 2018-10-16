@@ -6,7 +6,7 @@ import { BoilerPlatesManager } from '../../BoilerPlatesManager';
 
 export class a_boiler_plates_manager {
 
-
+    
     constructor() {
         this.configManager = {
             centralFolderLocation: ''

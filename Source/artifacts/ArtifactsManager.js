@@ -3,15 +3,15 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable no-unused-vars */
-import Folders from '../Folders';
-import Logger from 'winston';
-import BoilerPlatesManager from '../boilerPlates/BoilerPlatesManager';
-import InquirerManager from './InquirerManager';
+import {Folders} from '../Folders';
+import {Logger} from 'winston';
+import {BoilerPlatesManager} from '../boilerPlates/BoilerPlatesManager';
+import {InquirerManager} from './InquirerManager';
 import fs from 'fs-extra';
 import global from '../global';
-import BoilerPlate from '../boilerPlates/BoilerPlate';
-import BoundedContext from '../boundedContexts/BoundedContext';
-import BoundedContextManager from '../boundedContexts/BoundedContextManager';
+import {BoilerPlate} from '../boilerPlates/BoilerPlate';
+import {BoundedContext} from '../boundedContexts/BoundedContext';
+import {BoundedContextManager} from '../boundedContexts/BoundedContextManager';
 /* eslint-enable no-unused-vars */
 
 /**

@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable no-unused-vars */
-import Folders from '../Folders';
-import Logger from 'winston';
+import {Folders} from '../Folders';
+import {Logger} from 'winston';
 import fs from 'fs-extra';
 import global from '../global';
 /* eslint-enable no-unused-vars */
