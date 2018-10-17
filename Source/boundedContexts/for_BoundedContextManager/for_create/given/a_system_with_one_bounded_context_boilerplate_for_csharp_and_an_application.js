@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { BoundedContextManager } from '../../../BoundedContextManager';
-import { Application } from '../../../../applications/Application';
 import { all } from './all';
 export class a_system_with_one_bounded_context_boilerplate_for_csharp_and_an_application extends all {
     constructor() {
