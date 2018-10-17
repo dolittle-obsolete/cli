@@ -19,7 +19,7 @@ export class a_boiler_plates_manager {
             makeFolderIfNotExists: sinon.stub()
         };
         this.fileSystem = {
-            existsSync: sinon.stub()
+            existsSync: sinon.stub().returns(false)
         };
 
         this.boilerPlatesManager = new BoilerPlatesManager(
