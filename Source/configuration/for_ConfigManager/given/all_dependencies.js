@@ -9,7 +9,7 @@ export class all_dependencies {
         };
         this.fs = {
             existsSync: sinon.stub().returns(false),
-            mkdir: sinon.stub(),
+            ensureDirSync: sinon.stub(),
             writeFile: sinon.stub()
         };
     }
