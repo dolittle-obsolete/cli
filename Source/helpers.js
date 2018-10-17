@@ -40,16 +40,6 @@ export function getFileNameAndExtension(filePath) {
     filePath = path.normalize(filePath);
     return path.parse(filePath).base;
 }
-/**
- * Gets the directory name
- * @param {string} filePath
- * @returns {string} file dirname
- */
-export function getFileDir(filePath) {
-    const path = require('path');
-    filePath = path.normalize(filePath);
-    return path.dirname(filePath);
-}
 
 /**
  * Validate the name argument
@@ -66,7 +56,7 @@ export function validateArgsNameInput(name) {
     if (name !== path.basename(name)) {
         throw 'Argument parsing error. Invalid name';
     }
-    if (/^\.\.?$/.test(name)) {
+    if (/^\.*?$/.test(name)) {
         throw 'Argument parsing error. Invalid name';
     }
 }
