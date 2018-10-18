@@ -16,7 +16,6 @@ import { HttpWrapper } from './HttpWrapper';
 import { Folders } from './Folders';
 import { ArtifactsManager } from './artifacts/ArtifactsManager';
 import { InquirerManager } from './artifacts/InquirerManager';
-import path from 'path';
 /* eslint-enable no-unused-vars */
 
 /**
