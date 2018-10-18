@@ -2,15 +2,11 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-export class all_dependencies {
+
+export class a_bounded_context_json_with_nothing {
     constructor() {
-        this.configParser = {
-            parse: sinon.stub()
-        };
-        this.fs = {
-            existsSync: sinon.stub().returns(false),
-            ensureDirSync: sinon.stub(),
-            writeFile: sinon.stub()
-        };
+        this.boundedContextJson = 
+            `{
+              }`;
     }
 }

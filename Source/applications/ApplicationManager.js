@@ -56,19 +56,18 @@ export class ApplicationManager {
 
     /**
      * Create an application
-     * @param {string} name 
+     * @param {{name: string, destination: string}} context
      */
-    create(name) {
-        this._logger.info(`Creating application with name '${name}'`);
+    create(context) {
+        this._logger.info(`Creating application with name '${context.name}'`);
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByType('application')[0];
-        let context = {
+        let templateContext = {
             id: Guid.create(),
-            name: name
+            name: context.name
         };
-        let destination = process.cwd();
         
-        _boilerPlatesManager.get(this).createInstance(boilerPlate, destination, context);
+        _boilerPlatesManager.get(this).createInstance(boilerPlate, context.destination, templateContext);
     }
     /**
      * Gets the application configuration from the given folder

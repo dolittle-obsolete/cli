@@ -17,4 +17,9 @@ args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create app
 if( !args.sub.length ) args.showHelp();
 
 validateArgsNameInput(args.sub[0]);
-globals.applicationManager.create(args.sub[0]);
+let context = {
+    name: args.sub[0],
+    destination: process.cwd()
+};
+
+globals.applicationManager.create(context);

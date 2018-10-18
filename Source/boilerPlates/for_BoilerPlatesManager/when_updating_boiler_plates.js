@@ -39,5 +39,4 @@ describe('when updating boiler plates', () => {
     //it('should', context.git.clone.should.be.called);
     //it('should update configuration', updateConfiguration.should.be.called);
     //it('should resolve', resolve.should.be.called);
-    it('should', true.should.be.true);
 });
