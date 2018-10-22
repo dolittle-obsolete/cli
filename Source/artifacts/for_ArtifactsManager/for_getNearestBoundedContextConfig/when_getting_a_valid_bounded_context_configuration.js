@@ -14,6 +14,6 @@ describe('when getting a valid bounded context configuration', () => {
     it('should get a bounded context with the correct application', () => boundedContext.application.should.equal(context.application));
     it('should get a bounded context with the correct bounded context id', () => boundedContext.boundedContext.should.equal(context.boundedContext));
     it('should get a bounded context with the correct bounded context name', () => boundedContext.boundedContextName.should.equal(context.boundedContextName));
-    it('should get a bounded context with the correct backend', () => boundedContext.backend.should.equal(context.boundedContextBackend));
+    it('should get a bounded context with the correct core', () => boundedContext.core.should.equal(context.boundedContextCore));
     it('should get a bounded context with the correct interaction', () => expect(boundedContext.interaction).to.be.undefined);
 });

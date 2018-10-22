@@ -15,12 +15,12 @@ describe('when parsing a bounded context json with everything', () => {
 
 
     (beforeEach => {
-        result = new BoundedContext(boundedContextObj.application, boundedContextObj.boundedContext, boundedContextObj.boundedContextName, boundedContextObj.backend, boundedContextObj.interaction);
+        result = new BoundedContext(boundedContextObj.application, boundedContextObj.boundedContext, boundedContextObj.boundedContextName, boundedContextObj.core, boundedContextObj.interaction);
     })();
     it('should create a bounded context with the correct application id', () => result.application.should.equal(context.application));
     it('should create a bounded context with the correct bounded context id', () => result.boundedContext.should.equal(context.boundedContext));
     it('should create a bounded context with the correct bounded context name', () => result.boundedContextName.should.equal(context.boundedContextName));
-    it('should create a bounded context with the correct backend language', () => result.backend.language.should.equal(context.backendLanguage));
+    it('should create a bounded context with the correct core language', () => result.core.language.should.equal(context.coreLanguage));
     it('should create a bounded context without an interaction layer array', () => expect(result.interaction).to.be.undefined);
     
 });
