@@ -1,5 +1,5 @@
 ---
-title: Commands
+title: CLI Commands
 description: Learn about the different CLI commands
 keywords: Tools
 author: einari, woksin
