@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 /* eslint-disable no-unused-vars */
-import { Backend } from './Backend';
+import { Core } from './Core';
 import { InteractionLayer } from './InteractionLayer';
 /* eslint-enable no-unused-vars */
 
@@ -18,14 +18,14 @@ export class BoundedContext
       * @param {string} application 
       * @param {string} boundedContext 
       * @param {string} boundedContextName 
-      * @param {Backend} backend 
+      * @param {Core} core 
       * @param {InteractionLayer[]} interaction 
       */
-    constructor (application, boundedContext, boundedContextName, backend, interaction) {
+    constructor (application, boundedContext, boundedContextName, core, interaction) {
         this._application = application;
         this._boundedContext = boundedContext;
         this._boundedContextName = boundedContextName;
-        this._backend = backend;
+        this._core = core;
         this._interaction = interaction;
     }
     /**
@@ -50,11 +50,11 @@ export class BoundedContext
         return this._boundedContextName;
     }
     /**
-      * Gets the backend configuration 
-      * @returns {Backend}
+      * Gets the core configuration 
+      * @returns {Core}
       */
-    get backend() {
-        return this._backend;
+    get core() {
+        return this._core;
     }
     /**
       * Gets the list interaction layers

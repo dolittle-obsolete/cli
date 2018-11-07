@@ -1,5 +1,5 @@
 import { a_system_that_can_find_an_artifact_template_for_csharp } from './given/a_system_that_can_find_an_artifact_template_for_csharp';
-describe('when_creating_an_artifact_with_a_backend_in_csharp', () => {
+describe('when_creating_an_artifact_with_a_core_in_csharp', () => {
     let context = new a_system_that_can_find_an_artifact_template_for_csharp();
     const path = require('path');
 

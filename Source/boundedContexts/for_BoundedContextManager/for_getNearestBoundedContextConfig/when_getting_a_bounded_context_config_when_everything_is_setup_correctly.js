@@ -23,5 +23,5 @@ describe('when getting a bounded context config when everything is setup correct
     it('should get a bounded context configuration with the correct application', () => result.application.should.equal(context.application));
     it('should get a bounded context configuration with the correct boundedContext', () => result.boundedContext.should.equal(context.boundedContext));
     it('should get a bounded context configuration with the correct boundedContextName', () => result.boundedContextName.should.equal(context.boundedContextName));
-    it('should get a bounded context configuration with the correct backend language', () => result.backend.language.should.equal(context.boundedContextBackendLanguage));
+    it('should get a bounded context configuration with the correct core language', () => result.core.language.should.equal(context.boundedContextCoreLanguage));
 });

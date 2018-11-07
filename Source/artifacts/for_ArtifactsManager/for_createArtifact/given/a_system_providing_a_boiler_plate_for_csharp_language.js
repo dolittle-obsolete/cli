@@ -2,11 +2,11 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { a_system_that_finds_a_bounded_context_config_where_backend_language_is_csharp } from '../../given/a_system_that_finds_a_bounded_context_config_where_backend_language_is_csharp';
+import { a_system_that_finds_a_bounded_context_config_where_core_language_is_csharp } from '../../given/a_system_that_finds_a_bounded_context_config_where_core_language_is_csharp';
 import { ArtifactsManager } from '../../../ArtifactsManager';
 import { BoilerPlate } from '../../../../boilerPlates/BoilerPlate';
 
-export class a_system_providing_a_boiler_plate_for_csharp_language extends a_system_that_finds_a_bounded_context_config_where_backend_language_is_csharp {
+export class a_system_providing_a_boiler_plate_for_csharp_language extends a_system_that_finds_a_bounded_context_config_where_core_language_is_csharp {
     constructor() {
         super();
         this.boilerPlateLanguage = 'csharp';

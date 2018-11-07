@@ -4,12 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 /**
-  * Represents a Bounded Context's backend configuration
+  * Represents a Bounded Context's core configuration
   */
-export class Backend
+export class Core
 {
     /**
-      * Instantiates an instance of Backend
+      * Instantiates an instance of Core
       * @param {string} language 
       * @param {string} entryPoint 
       */

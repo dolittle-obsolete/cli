@@ -14,15 +14,15 @@ export class all extends a_bounded_context_manager {
         this.application = '9825572e-ea61-4ee4-86b8-dbc3f46919f6';
         this.boundedContext = '61e6035e-2a63-465c-a149-4f2ac6824dac';
         this.boundedContextName = 'BC';
-        this.boundedContextBackendLanguage = 'csharp';
+        this.boundedContextCoreLanguage = 'csharp';
         this.boundedContextJson = 
         `
         {
             "application": "${this.application}",
             "boundedContext": "${this.boundedContext}",
             "boundedContextName": "${this.boundedContextName}",
-            "backend": {
-              "language": "${this.boundedContextBackendLanguage}"
+            "core": {
+              "language": "${this.boundedContextCoreLanguage}"
             }
           }
         `;
