@@ -94,7 +94,7 @@ export class BoundedContextManager {
 
         let boundedContextObj = JSON.parse(_fileSystem.get(this).readFileSync(boundedContextConfigPath, 'utf8'));
         let boundedContext = new BoundedContext(boundedContextObj.application, boundedContextObj.boundedContext, boundedContextObj.boundedContextName,
-            boundedContextObj.backend, boundedContextObj.interaction);
+            boundedContextObj.core, boundedContextObj.interaction);
         
         return boundedContext;
     }

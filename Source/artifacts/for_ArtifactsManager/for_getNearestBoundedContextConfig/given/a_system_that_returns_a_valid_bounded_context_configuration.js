@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { BoundedContext } from '../../../../boundedContexts/BoundedContext';
 import { an_artifacts_manager } from '../../given/an_artifacts_manager';
-import { Backend } from '../../../../boundedContexts/Backend';
+import { Core } from '../../../../boundedContexts/Core';
 import { ArtifactsManager } from '../../../ArtifactsManager';
 
 export class a_system_that_returns_a_valid_bounded_context_configuration extends an_artifacts_manager {
@@ -13,11 +13,11 @@ export class a_system_that_returns_a_valid_bounded_context_configuration extends
         this.application = 'e29795b6-b501-4d6f-b93c-4c25bab6969d';
         this.boundedContext = 'cde734bc-927f-4feb-a431-02abfc59de79';
         this.boundedContextName = 'BC';
-        this.boundedContextBackendLanguage = 'csharp'
-        this.boundedContextBackend = new Backend(this.boundedContextBackendLanguage);
+        this.boundedContextCoreLanguage = 'csharp'
+        this.boundedContextCore = new Core(this.boundedContextCoreLanguage);
         this.boundedContextManager = {
             getNearestBoundedContextConfig: sinon.stub().returns(
-                new BoundedContext(this.application, this.boundedContext, this.boundedContextName, this.boundedContextBackend)
+                new BoundedContext(this.application, this.boundedContext, this.boundedContextName, this.boundedContextCore)
             )
         };
         

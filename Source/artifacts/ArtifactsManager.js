@@ -75,7 +75,7 @@ export class ArtifactsManager {
      * @param {BoundedContext} boundedContext 
      */
     _validateBoundedContext(boundedContext) {
-        if ( !(boundedContext.backend && boundedContext.backend.language && boundedContext.backend.language !== '')) {
+        if ( !(boundedContext.core && boundedContext.core.language && boundedContext.core.language !== '')) {
             this._logger.error('The bounded-context.json configuration is missing "language"');
             throw 'Bounded Context configuration missing language';
         }
@@ -129,7 +129,7 @@ export class ArtifactsManager {
      */
     createArtifact(context) {
         let boundedContextConfig = this._getNearestBoundedContextConfig(context.destination);
-        let language = boundedContextConfig.backend.language;
+        let language = boundedContextConfig.core.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
         let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
 
