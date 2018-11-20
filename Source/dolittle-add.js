@@ -11,6 +11,10 @@ const USAGE = 'dolittle add [command] [args]';
 args
     .command('command', 'A command')
     .command('commandhandler', 'A command handler')
+    .command('concept', 'A concept')
+    .command('intconcept', 'A concept as int')
+    .command('guidconcept', 'A concept as Guid')
+    .command('stringconcept', 'A concept as string')
     .command('event', 'An event')
     .command('eventprocessor', 'An event processor')
     .command('readmodel', 'A read model')
