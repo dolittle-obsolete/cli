@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.40",
+  "version": "2.0.0-alpha2.41",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -28,7 +28,11 @@
     "dolittle-add-query": "bin/dolittle-add-query.js",
     "dolittle-add-queryfor": "bin/dolittle-add-queryfor.js",
     "dolittle-add-eventprocessor": "bin/dolittle-add-eventprocessor.js",
-    "dolittle-add-commandhandler": "bin/dolittle-add-commandhandler.js"
+    "dolittle-add-commandhandler": "bin/dolittle-add-commandhandler.js",
+    "dolittle-add-concept": "bin/dolittle-add-concept.js",
+    "dolittle-add-intconcept": "bin/dolittle-add-intconcept.js",
+    "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
+    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js"
   },
   "files": [
     "bin"
