@@ -71,6 +71,7 @@
   "dependencies": {
     "args": "^5.0.0",
     "babel-runtime": "^6.26.0",
+    "dockerode": "^2.5.7",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "inquirer": "^6.2.0",
