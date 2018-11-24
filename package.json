@@ -32,7 +32,9 @@
     "dolittle-add-concept": "bin/dolittle-add-concept.js",
     "dolittle-add-intconcept": "bin/dolittle-add-intconcept.js",
     "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
-    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js"
+    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js",
+    "dolittle-run": "bin/dolittle-run.js",
+    "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedContext.js"
   },
   "files": [
     "bin"
