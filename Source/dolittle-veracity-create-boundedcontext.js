@@ -23,7 +23,7 @@ if( !args.sub.length ) args.showHelp();
 
 validateArgsNameInput(args.sub[0]);
 let context = {
-    name: 'something', //args.sub[0],
+    name: args.sub[0],
     destination: process.cwd()
 };
 
@@ -42,6 +42,8 @@ if( application === null ) {
         applicationId: application.id
     };
     globals.boilerPlatesManager.createInstance(boilerPlate, boundedContextPath, templateContext);
+
+    process.chdir(context.name);
 
     glob('./Core/*.csproj', (err, matches) => {
         if (matches.length) {
