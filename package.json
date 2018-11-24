@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.42",
+  "version": "2.0.0-alpha2.43",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -34,6 +34,8 @@
     "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
     "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js",
     "dolittle-run": "bin/dolittle-run.js",
+    "dolittle-veracity": "bin/dolittle-veracity.js",
+    "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
     "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedContext.js"
   },
   "files": [
