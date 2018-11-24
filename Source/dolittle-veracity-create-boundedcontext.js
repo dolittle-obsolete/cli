@@ -9,6 +9,9 @@ import globals from './globals';
 import { usagePrefix, validateArgsNameInput} from './helpers';
 import path from 'path';
 import { Guid }from './Guid';
+import { spawn } from 'child_process';
+import glob from 'glob';
+import fs from 'fs';
 
 const USAGE = 'dolittle veracity create boundedcontext [name]';
 args
@@ -39,4 +42,28 @@ if( application === null ) {
         applicationId: application.id
     };
     globals.boilerPlatesManager.createInstance(boilerPlate, boundedContextPath, templateContext);
+
+    glob('./Core/*.csproj', (err, matches) => {
+        if (matches.length) {
+            globals.logger.info('.NET Core project found - restoring packages');
+
+            let dotnet = spawn('dotnet', ['restore'], {
+                cwd: 'Core'
+            });
+            dotnet.stdout.on('data', (data) => console.log(data.toString()));
+            dotnet.stderr.on('data', (data) => console.log(data.toString()));
+        } 
+    });
+
+    let packageJsonFile = path.join(process.cwd(),'Web','package.js');
+    if( fs.existsSync(packageJsonFile)) {
+        globals.logger.info('Web found - restoring packages');
+        
+        let webpack = spawn('yarn', [], {
+            cwd: './Web'
+        });
+
+        webpack.stdout.on('data', (data) => console.log(data.toString()));
+        webpack.stderr.on('data', (data) => console.log(data.toString()));
+    }
 }
