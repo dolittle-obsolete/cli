@@ -65,7 +65,10 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     let webpackWatch = () => {
         globals.logger.info('Starting webpack watcher');
-        let webpack = spawn('webpack', [
+        let isWindows = process.platform == 'win32';
+        let webpackPath = isWindows?path.join(process.env.APPDATA,'npm','webpack.cmd'):'webpack';
+
+        let webpack = spawn(webpackPath, [
             '--config', webpackFile,
             '--mode', 'development',
             '--watch',
@@ -103,10 +106,10 @@ if (!fs.existsSync('./bounded-context.json')) {
 
         let nodeModules = path.join(process.cwd(),'Web','node_modules');
         if( !fs.existsSync(nodeModules)) {
-            let yarn = exec('yarn', { cwd: './Web' });
-            yarn.stdout.on('data', (data) => console.log(data.toString()));
-            yarn.stderr.on('data', (data) => console.log(data.toString()));
-            yarn.on('exit', () => webpackWatch());
+            let npmInstall = exec('npm install', { cwd: './Web' });
+            npmInstall.stdout.on('data', (data) => console.log(data.toString()));
+            npmInstall.stderr.on('data', (data) => console.log(data.toString()));
+            npmInstall.on('exit', () => webpackWatch());
         } else {
             webpackWatch();
         }
