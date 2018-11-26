@@ -77,11 +77,11 @@ if (application === null) {
     if (fs.existsSync(packageJsonFile)) {
         globals.logger.info('Web found - restoring packages');
 
-        let webpack = spawn('yarn', [], {
+        let npmInstall = spawn('npm', ['install'], {
             cwd: './Web'
         });
 
-        webpack.stdout.on('data', (data) => console.log(data.toString()));
-        webpack.stderr.on('data', (data) => console.log(data.toString()));
+        npmInstall.stdout.on('data', (data) => console.log(data.toString()));
+        npmInstall.stderr.on('data', (data) => console.log(data.toString()));
     }
 }
