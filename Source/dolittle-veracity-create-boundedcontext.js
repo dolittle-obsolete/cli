@@ -44,14 +44,13 @@ if (application === null) {
     globals.boilerPlatesManager.createInstance(boilerPlate, boundedContextPath, templateContext);
 
     process.chdir(context.name);
-    console.log(`Current dir : ${process.cwd()}`);
-
+    
     let addPackage = (reference, version, done) => {
         let dotnetAddPackage = exec(`dotnet add package ${reference} -v ${version}`, {
             cwd: 'Core'
         });
-        dotnetAddPackage.stdout.on('data', (data) => console.log(data.toString()));
-        dotnetAddPackage.stderr.on('data', (data) => console.log(data.toString()));
+        dotnetAddPackage.stdout.on('data', (data) => process.stdout.write(data.toString()));
+        dotnetAddPackage.stderr.on('data', (data) => process.stderr.write(data.toString()));
         dotnetAddPackage.on('exit', () => {
             done();
         });
@@ -66,8 +65,8 @@ if (application === null) {
                     let dotnet = spawn('dotnet', ['restore'], {
                         cwd: 'Core'
                     });
-                    dotnet.stdout.on('data', (data) => console.log(data.toString()));
-                    dotnet.stderr.on('data', (data) => console.log(data.toString()));
+                    dotnet.stdout.on('data', (data) => process.stdout.write(data.toString()));
+                    dotnet.stderr.on('data', (data) => process.stderr.write(data.toString()));
                 });
             });
         }
@@ -81,7 +80,7 @@ if (application === null) {
             cwd: './Web'
         });
 
-        npmInstall.stdout.on('data', (data) => console.log(data.toString()));
-        npmInstall.stderr.on('data', (data) => console.log(data.toString()));
+        npmInstall.stdout.on('data', (data) => process.stdout.write(data.toString()));
+        npmInstall.stderr.on('data', (data) => process.stderr.write(data.toString()));
     }
 }
