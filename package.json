@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.52",
+  "version": "2.0.0-alpha2.54",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -20,6 +20,7 @@
     "dolittle-create": "bin/dolittle-create.js",
     "dolittle-create-application": "bin/dolittle-create-application.js",
     "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js",
+    "dolittle-deploy": "bin/dolittle-deploy.js",
     "dolittle-add": "bin/dolittle-add.js",
     "dolittle-add-command": "bin/dolittle-add-command.js",
     "dolittle-add-event": "bin/dolittle-add-event.js",

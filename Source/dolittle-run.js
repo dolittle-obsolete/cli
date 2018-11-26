@@ -63,8 +63,8 @@ if (!fs.existsSync('./bounded-context.json')) {
         let dotnet = spawn('dotnet', ['watch','run'], {
             cwd: 'Core'
         });
-        dotnet.stdout.on('data', (data) => console.log(data.toString()));
-        dotnet.stderr.on('data', (data) => console.log(data.toString()));
+        dotnet.stdout.on('data', (data) => process.stdout.write(data.toString()));
+        dotnet.stderr.on('data', (data) => process.stderr.write(data.toString()));
     };
 
     let webpackWatch = () => {
@@ -80,8 +80,8 @@ if (!fs.existsSync('./bounded-context.json')) {
             cwd: './Web'
         });
 
-        webpack.stdout.on('data', (data) => console.log(data.toString()));
-        webpack.stderr.on('data', (data) => console.log(data.toString()));
+        webpack.stdout.on('data', (data) => process.stdout.write(data.toString()));
+        webpack.stderr.on('data', (data) => process.stderr.write(data.toString()));
     };
 
     glob('./Core/*.csproj', (err, matches) => {
@@ -95,8 +95,8 @@ if (!fs.existsSync('./bounded-context.json')) {
                 let dotnetRestore = exec('dotnet restore', {
                     cwd: 'Core'
                 });
-                dotnetRestore.stdout.on('data', (data) => console.log(data.toString()));
-                dotnetRestore.stderr.on('data', (data) => console.log(data.toString()));
+                dotnetRestore.stdout.on('data', (data) => process.stdout.write(data.toString()));
+                dotnetRestore.stderr.on('data', (data) => process.stderr.write(data.toString()));
                 dotnetRestore.on('exit', () => dotnetWatch());
             } else {
                 dotnetWatch();
@@ -111,14 +111,11 @@ if (!fs.existsSync('./bounded-context.json')) {
         let nodeModules = path.join(process.cwd(),'Web','node_modules');
         if( !fs.existsSync(nodeModules)) {
             let npmInstall = exec('npm install', { cwd: './Web' });
-            npmInstall.stdout.on('data', (data) => console.log(data.toString()));
-            npmInstall.stderr.on('data', (data) => console.log(data.toString()));
+            npmInstall.stdout.on('data', (data) => process.stdout.write(data.toString()));
+            npmInstall.stderr.on('data', (data) => process.stderr.write(data.toString()));
             npmInstall.on('exit', () => webpackWatch());
         } else {
             webpackWatch();
         }
-
-        
-        
     }
 }
