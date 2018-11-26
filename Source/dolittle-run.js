@@ -20,12 +20,19 @@ if (!fs.existsSync('./bounded-context.json')) {
     let docker = new Docker({ socketPath: '/var/run/docker.sock' });
     let isMongoRunning = false;
     docker.listContainers((err, containers) => {
-        containers.forEach(container => {
-            if (container.Labels.hasOwnProperty(dolittleMongoLabel)) {
-                globals.logger.info('Mongo is already running');
-                isMongoRunning = true;
-            }
-        });
+        if( err ) {
+            globals.logger.error(err)
+            return;
+        }
+
+        if( containers != null ) {
+            containers.forEach(container => {
+                if (container.Labels.hasOwnProperty(dolittleMongoLabel)) {
+                    globals.logger.info('Mongo is already running');
+                    isMongoRunning = true;
+                }
+            });
+        }
 
         if (!isMongoRunning) {
             globals.logger.info('Starting a MongoDB Docker Container');
