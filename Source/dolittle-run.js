@@ -12,12 +12,16 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 
+let isWindows = process.platform == 'win32';
+
 if (!fs.existsSync('./bounded-context.json')) {
     globals.logger.error('Missing "bounded-context.json" file - run "dolittle run" from a folder that holds this file');
 } else {
     const dolittleMongoLabel = 'dolittle-mongo';
 
-    let docker = new Docker({ socketPath: '/var/run/docker.sock' });
+    let socketPath = isWindows?'npipe:////./pipe/docker_engine': '/var/run/docker.sock';
+
+    let docker = new Docker({ socketPath: socketPath });
     let isMongoRunning = false;
     docker.listContainers((err, containers) => {
         if( err ) {
@@ -65,7 +69,7 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     let webpackWatch = () => {
         globals.logger.info('Starting webpack watcher');
-        let isWindows = process.platform == 'win32';
+        
         let webpackPath = isWindows?path.join(process.env.APPDATA,'npm','webpack.cmd'):'webpack';
 
         let webpack = spawn(webpackPath, [
