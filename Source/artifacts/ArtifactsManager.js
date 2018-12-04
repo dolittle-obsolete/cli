@@ -127,18 +127,36 @@ export class ArtifactsManager {
     }
     /**
      * Creates an artifact of the given type at the given destination with the given name 
-     * @param {{artifactName: string, artifactType: string, area: string}} context 
+     * @param {{artifactName: string, artifactType: string, area: string, path: string}} context 
      */
     createArtifact(context) {
-        const cwd = process.cwd();
-        let boundedContextConfig = this._getNearestBoundedContextConfig(cwd);
-        const language = boundedContextConfig.core.language;
+        let boundedContextConfig = null;
+        let language = '';
+        let destination = '';
+        let artifactName = '';
+        
+        if (context.path !== undefined) {
+            const path = require('path');
+            if (!path.isAbsolute(context.path)) {
+                throw `Given path ${context.path} is not an absolute path`;
+            }
+            destination = context.path;
+            artifactName = context.artifactName;
+
+            boundedContextConfig = this._getNearestBoundedContextConfig(destination);
+            language = boundedContextConfig.core.language;
+        } else {
+            const cwd = process.cwd();
+            boundedContextConfig = this._getNearestBoundedContextConfig(cwd);
+            language = boundedContextConfig.core.language;
+            
+            let destinationResult = determineDestination(context.area, language, context.artifactName, cwd, _boundedContextManager.get(this).getNearestBoundedContextPath(cwd), _dolittleConfig.get(this));
+            destination = destinationResult.destination;
+            artifactName = destinationResult.name;
+        }
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
         let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
-        let destinationResult = determineDestination(context.area, language, context.artifactName, cwd, _boundedContextManager.get(this).getNearestBoundedContextPath(cwd), _dolittleConfig.get(this));
-        const destination = destinationResult.destination;
-        const artifactName = destinationResult.name;
-        
+
         _fileSystem.get(this).ensureDirSync(destination);
         _inquirerManager.get(this).promptUser(artifactName, destination, boilerPlate, artifactTemplate.template)
             .then(templateContext => {
