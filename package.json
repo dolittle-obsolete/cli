@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "2.0.0-alpha2.42",
+  "version": "2.0.0-alpha2.58",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -20,6 +20,7 @@
     "dolittle-create": "bin/dolittle-create.js",
     "dolittle-create-application": "bin/dolittle-create-application.js",
     "dolittle-create-boundedcontext": "bin/dolittle-create-boundedContext.js",
+    "dolittle-deploy": "bin/dolittle-deploy.js",
     "dolittle-add": "bin/dolittle-add.js",
     "dolittle-add-command": "bin/dolittle-add-command.js",
     "dolittle-add-event": "bin/dolittle-add-event.js",
@@ -32,13 +33,18 @@
     "dolittle-add-concept": "bin/dolittle-add-concept.js",
     "dolittle-add-intconcept": "bin/dolittle-add-intconcept.js",
     "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
-    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js"
+    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js",
+    "dolittle-run": "bin/dolittle-run.js",
+    "dolittle-veracity": "bin/dolittle-veracity.js",
+    "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
+    "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedContext.js"
   },
   "files": [
     "bin"
   ],
   "scripts": {
     "start": "node bin/dolittle.js",
+    "prepublish": "npm run build",
     "build": "babel Source -d bin --source-maps inline --ignore **/for_*"
   },
   "devDependencies": {
@@ -67,6 +73,7 @@
   "dependencies": {
     "args": "^5.0.0",
     "babel-runtime": "^6.26.0",
+    "dockerode": "^2.5.7",
     "fs-extra": "^7.0.0",
     "handlebars": "^4.0.12",
     "inquirer": "^6.2.0",
