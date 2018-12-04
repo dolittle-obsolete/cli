@@ -130,15 +130,15 @@ export class ArtifactsManager {
      * @param {{artifactName: string, artifactType: string, area: string}} context 
      */
     createArtifact(context) {
-        let cwd = process.cwd();
+        const cwd = process.cwd();
         let boundedContextConfig = this._getNearestBoundedContextConfig(cwd);
-        let language = boundedContextConfig.core.language;
+        const language = boundedContextConfig.core.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
         let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
-
         let destinationResult = determineDestination(context.area, language, context.artifactName, cwd, _boundedContextManager.get(this).getNearestBoundedContextPath(cwd), _dolittleConfig.get(this));
-        let destination = destinationResult.destination;
-        let artifactName = destinationResult.name;
+        const destination = destinationResult.destination;
+        const artifactName = destinationResult.name;
+        
         _fileSystem.get(this).ensureDirSync(destination);
         _inquirerManager.get(this).promptUser(artifactName, destination, boilerPlate, artifactTemplate.template)
             .then(templateContext => {
