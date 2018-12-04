@@ -19,10 +19,7 @@ validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'readModel',
-    destination: process.cwd()
+    area: 'read'
 };
 
 globals.artifactsManager.createArtifact(context);
-
-// let flags = {name: args.sub[0]}; 
-// globals.artifactsManager.createReadModel(flags);

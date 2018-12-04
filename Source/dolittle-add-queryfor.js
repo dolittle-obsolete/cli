@@ -20,7 +20,7 @@ validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'queryFor',
-    destination: process.cwd()
+    area: 'read'
 };
 
 globals.artifactsManager.createArtifact(context);

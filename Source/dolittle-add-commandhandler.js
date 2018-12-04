@@ -20,7 +20,7 @@ validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'commandHandler',
-    destination: process.cwd()
+    area: 'domain'
 };
 
 globals.artifactsManager.createArtifact(context);

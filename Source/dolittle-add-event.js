@@ -20,7 +20,7 @@ validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'event',
-    destination: process.cwd()
+    area: 'events'
 };
 
 globals.artifactsManager.createArtifact(context);
