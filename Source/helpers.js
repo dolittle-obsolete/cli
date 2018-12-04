@@ -93,12 +93,12 @@ export function determineDestination(area, language, name, cwd, boundedContextPa
     const boundedContextRoot = path.dirname(boundedContextPath);
     const regExp = new RegExp(
         `(${boundedContextRoot})` + // Match first part of path (root of bounded-context) 
-        `(?:\\${path.sep}[^${path.sep}]+)` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
+        `(?:\\${path.sep}[^${path.sep}]+)?` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
         `(\\${path.sep}?.*)` // Match all the segments after the area
         
     );
-
     const newDestination = cwd.replace(regExp, '$1' + path.sep + areaName + '$2');
+
     let splittedName = name.split('.');
     const featurePath = path.sep + splittedName.slice(0, -1).join(path.sep);
     return {destination: newDestination + featurePath, name: splittedName[splittedName.length - 1]};
