@@ -12,15 +12,19 @@ const USAGE = 'dolittle add stringconcept [name]';
 args
     .example(USAGE, 'Creates a concept as string in the current folder');
  
-args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add stringconcept'});
+args.option('path', 'Override the destination path of the artifact');
+
+let flags = args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add stringconcept'});
 
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
+
 
 validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'conceptAsString',
-    area: 'concepts'
+    area: 'concepts',
+    path: flags.path
 };
 
 globals.artifactsManager.createArtifact(context);
