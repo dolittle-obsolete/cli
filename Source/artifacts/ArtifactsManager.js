@@ -12,7 +12,7 @@ import fs from 'fs-extra';
 import {BoilerPlate} from '../boilerPlates/BoilerPlate';
 import {BoundedContext} from '../boundedContexts/BoundedContext';
 import {BoundedContextManager} from '../boundedContexts/BoundedContextManager';
-import { getFileDirPath } from '../helpers';
+import { getFileDirPath, determineDestination } from '../helpers';
 /* eslint-enable no-unused-vars */
 
 /**
@@ -36,6 +36,7 @@ const _fileSystem = new WeakMap();
  */
 const _inquirerManager = new WeakMap();
 
+const _dolittleConfig = new WeakMap();
 
 /**
  * Represents a manager for artifacts
@@ -50,13 +51,14 @@ export class ArtifactsManager {
      * @param {fs} fileSystem
      * @param {Logger} logger
      */
-    constructor(inquirerManager, boilerPlatesManager, boundedContextManager, folders, fileSystem, logger) {
+    constructor(inquirerManager, boilerPlatesManager, boundedContextManager, folders, fileSystem, logger, dolittleConfig) {
         _inquirerManager.set(this, inquirerManager);
         _boilerPlatesManager.set(this, boilerPlatesManager);
         _boundedContextManager.set(this, boundedContextManager);
         _folders.set(this, folders);
         _fileSystem.set(this, fileSystem);
         this._logger = logger;
+        _dolittleConfig.set(this, dolittleConfig);
         
     }
     /**
@@ -125,18 +127,23 @@ export class ArtifactsManager {
     }
     /**
      * Creates an artifact of the given type at the given destination with the given name 
-     * @param {{artifactName: string, destination: string, artifactType: string}} context 
+     * @param {{artifactName: string, artifactType: string, area: string}} context 
      */
     createArtifact(context) {
-        let boundedContextConfig = this._getNearestBoundedContextConfig(context.destination);
+        let cwd = process.cwd();
+        let boundedContextConfig = this._getNearestBoundedContextConfig(cwd);
         let language = boundedContextConfig.core.language;
         let boilerPlate = this._getArtifactsBoilerPlateByLanguage(language);
         let artifactTemplate = this._getArtifactTemplateByBoilerplate(boilerPlate, context.artifactType);
 
-        _inquirerManager.get(this).promptUser(context.artifactName, context.destination, boilerPlate, artifactTemplate.template)
+        let destinationResult = determineDestination(context.area, language, context.artifactName, cwd, _boundedContextManager.get(this).getNearestBoundedContextPath(cwd), _dolittleConfig.get(this));
+        let destination = destinationResult.destination;
+        let artifactName = destinationResult.name;
+        _fileSystem.get(this).ensureDirSync(destination);
+        _inquirerManager.get(this).promptUser(artifactName, destination, boilerPlate, artifactTemplate.template)
             .then(templateContext => {
-                this._logger.info(`Creating an artifact of type '${context.artifactType}' with name '${context.artifactName}' and language '${language}'`);
-                _boilerPlatesManager.get(this).createArtifactInstance(artifactTemplate, context.destination, templateContext);
+                this._logger.info(`Creating an artifact of type '${context.artifactType}' with name '${artifactName}' and language '${language}'`);
+                _boilerPlatesManager.get(this).createArtifactInstance(artifactTemplate, destination, templateContext);
             });
     }
 }

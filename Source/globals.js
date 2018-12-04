@@ -62,7 +62,10 @@ const _logger = new WeakMap();
  * @type {WeakMap<globals, HttpWrapper>}
  */
 const _httpWrapper = new WeakMap();
-
+/**
+ * @type {WeakMap<globals, any>}
+ */
+const _dolittleConfig = new WeakMap();
 /**
  * Common globals object
  */
@@ -92,13 +95,21 @@ class globals {
             return simpleGit(folder);
         };
         
+        _dolittleConfig.set(this, require('rc')('dolittle', {
+            csharp: {
+                concepts: 'Concepts',
+                domain: 'Domain',
+                events: 'Events',
+                read: 'Read'
+            }
+        }));
         _git.set(this, git);
         _folders.set(this, new Folders(fs));
         _boilerPlatesManager.set(this, new BoilerPlatesManager(this.configManager, this.httpWrapper, git, this.folders, fs, this.logger));
         _applicationManager.set(this, new ApplicationManager(this.boilerPlatesManager, this.configManager, this.folders,  fs, this.logger));
         _boundedContextManager.set(this, new BoundedContextManager(this.boilerPlatesManager, this.applicationManager, this.folders, fs, this.logger));
         _inquirerManager.set(this, new InquirerManager(this.folders, fs, this.logger));
-        _artifactsManager.set(this, new ArtifactsManager(this.inquirerManager, this.boilerPlatesManager, this.boundedContextManager, this.folders, fs, this.logger));
+        _artifactsManager.set(this, new ArtifactsManager(this.inquirerManager, this.boilerPlatesManager, this.boundedContextManager, this.folders, fs, this.logger, this.dolittleConfig));
         
     }
 
@@ -188,6 +199,13 @@ class globals {
      */
     get httpWrapper() {
         return _httpWrapper.get(this);
+    }
+    /**
+     * Gets the dolittle rc config
+     * @returns {any}
+     */
+    get dolittleConfig() {
+        return _dolittleConfig.get(this);
     }
 
 }
