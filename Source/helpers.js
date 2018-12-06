@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-
 /**
  * The usage prefix used in commands info
  * @returns {string} the usage prefix
@@ -92,9 +91,9 @@ export function determineDestination(area, language, name, cwd, boundedContextPa
         throw `No configuration for area ${area} for language ${language}`;
     const boundedContextRoot = path.dirname(boundedContextPath);
     const regExp = new RegExp(
-        `(${boundedContextRoot})` + // Match first part of path (root of bounded-context) 
-        `(?:\\${path.sep}[^${path.sep}]+)?` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
-        `(\\${path.sep}?.*)` // Match all the segments after the area
+        `(${escapeRegex(boundedContextRoot)})` + // Match first part of path (root of bounded-context) 
+        `(?:${escapeRegex(path.sep)}[^${escapeRegex(path.sep)}]+)?` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
+        `(${escapeRegex(path.sep)}?.*)` // Match all the segments after the area
         
     );
     const newDestination = cwd.replace(regExp, '$1' + path.sep + areaName + '$2');
@@ -102,4 +101,8 @@ export function determineDestination(area, language, name, cwd, boundedContextPa
     let splittedName = name.split('.');
     const featurePath = path.sep + splittedName.slice(0, -1).join(path.sep);
     return {destination: newDestination + featurePath, name: splittedName[splittedName.length - 1]};
+}
+
+function escapeRegex(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
