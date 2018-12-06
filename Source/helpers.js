@@ -96,7 +96,6 @@ export function determineDestination(area, language, name, cwd, boundedContextPa
         `(${escapeRegex(path.sep)}?.*)` // Match all the segments after the area
         
     );
-    console.log(regExp)
     const newDestination = cwd.replace(regExp, '$1' + path.sep + areaName + '$2');
 
     let splittedName = name.split('.');
@@ -106,8 +105,4 @@ export function determineDestination(area, language, name, cwd, boundedContextPa
 
 function escapeRegex(s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-<<<<<<< HEAD
 }
-=======
-};
->>>>>>> f5b8fe13a5c4e130643b35c2a0ffa99ee7553c2c
