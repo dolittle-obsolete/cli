@@ -12,7 +12,9 @@ const USAGE = 'dolittle add eventprocessor [name]';
 args
     .example(USAGE, 'Creates an event processor in the current folder');
  
-args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add eventprocessor'});
+args.option('path', 'Override the destination path of the artifact');
+
+let flags = args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add eventprocessor'});
 
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
@@ -20,7 +22,8 @@ validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'eventProcessor',
-    destination: process.cwd()
+    area: 'read',
+    path: flags.path
 };
 
 globals.artifactsManager.createArtifact(context);

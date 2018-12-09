@@ -63,8 +63,9 @@ export class BoundedContextManager {
         let application = _applicationManager.get(this).getApplicationFrom(context.destination);
 
         if( application === null ) {
-            this._logger.error('Missing application - use \'dolittle create application [name]\' for a new application');
-            return;
+            const errorMsg = 'Missing application - use \'dolittle create application [name]\' for a new application';
+            this._logger.error(errorMsg);
+            throw errorMsg;
         }
 
         let boilerPlate = _boilerPlatesManager.get(this).boilerPlatesByLanguageAndType('csharp', 'boundedContext')[0];

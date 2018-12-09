@@ -69,3 +69,40 @@ export function validateArgsNameInput(name) {
         throw 'Argument parsing error. Invalid name';
     }
 }
+/**
+ *
+ *
+ * @param {string} area
+ * @param {string} language
+ * @param {string} name
+ * @param {string} cwd
+ * @param {string} boundedContextPath
+ * @param {any} dolittleConfig
+ * 
+ * @returns {{destination: string, name: string}}
+ */
+export function determineDestination(area, language, name, cwd, boundedContextPath, dolittleConfig){
+    const path = require('path');
+    let config = dolittleConfig[language];
+    if (config === undefined || config === null)
+        throw `No configuration for language ${language}`;
+    const areaName = config[area];
+    if (areaName === undefined || areaName === null)
+        throw `No configuration for area ${area} for language ${language}`;
+    const boundedContextRoot = path.dirname(boundedContextPath);
+    const regExp = new RegExp(
+        `(${escapeRegex(boundedContextRoot)})` + // Match first part of path (root of bounded-context) 
+        `(?:${escapeRegex(path.sep)}[^${escapeRegex(path.sep)}]+)?` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
+        `(${escapeRegex(path.sep)}?.*)` // Match all the segments after the area
+        
+    );
+    const newDestination = cwd.replace(regExp, '$1' + path.sep + areaName + '$2');
+
+    let splittedName = name.split('.');
+    const featurePath = path.sep + splittedName.slice(0, -1).join(path.sep);
+    return {destination: newDestination + featurePath, name: splittedName[splittedName.length - 1]};
+}
+
+function escapeRegex(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}

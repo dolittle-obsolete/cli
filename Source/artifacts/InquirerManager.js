@@ -261,19 +261,19 @@ export class InquirerManager {
      * @returns {string} the namespace 
      */
     createNamespace(dependency, location) {
-        const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, new RegExp(dependency.milestone));
-        let milestoneFileName = getFileName(milestonePath);
-        let milestoneFileDir = getFileDirPath(milestonePath);
+        let milestoneRegexp = new RegExp(dependency.milestone);
+        const milestonePath = _folders.get(this).getNearestFileSearchingUpwards(location, milestoneRegexp);
+        if (milestonePath === null || milestonePath === '') {
+            this._logger.warn('Could not discover the namespace');
+            return '';
+        }
+        const milestoneFileName = getFileName(milestonePath);
 
         let namespaceSegments = [];
         let segmentPath = location;
         let segment = getFileNameAndExtension(segmentPath);
-
-        while (segmentPath != milestoneFileDir) {
-            if (segment === '' || segmentPath === '/') {
-                this._logger.warn('Could not discover the namespace');
-                return '';
-            }
+       
+        while (_folders.get(this).searchFolderRegex(segmentPath, milestoneRegexp).length === 0) {
             namespaceSegments.push(segment);
             segmentPath = getFileDir(segmentPath);
             segment = getFileName(segmentPath);

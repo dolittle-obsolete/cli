@@ -12,15 +12,17 @@ const USAGE = 'dolittle add queryfor [name]';
 args
     .example(USAGE, 'Creates a query for a read model in the current folder');
 
+args.option('path', 'Override the destination path of the artifact');
 
-args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add queryfor'});
+let flags = args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add queryfor'});
 if (! args.sub.length || args.sub.length < 1) args.showHelp();
 
 validateArgsNameInput(args.sub[0]);
 let context = {
     artifactName: args.sub[0], 
     artifactType: 'queryFor',
-    destination: process.cwd()
+    area: 'read',
+    path: flags.path
 };
 
 globals.artifactsManager.createArtifact(context);
