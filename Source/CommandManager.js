@@ -83,7 +83,7 @@ export class CommandManager {
      */
     createApplication(context, destinationPath) {
         this.#logger.info(`Creating application`);
-        this.#applicationsManager.createApplication(context, destinationPath);
+        return this.#applicationsManager.createApplication(context, destinationPath);
     }
     /**
      * Handles the 'dolittle create boundedcontext' command
@@ -96,7 +96,7 @@ export class CommandManager {
     createBoundedContext(context, application, destinationPath) {
         this.#logger.info(`Creating bounded context`);
         context['applicationId'] = application.id; // Hard coded, for now
-        this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationPath); // Language is hardcoded, for now
+        return this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationPath); // Language is hardcoded, for now
     }
     /**
      * Creates an artifact of the given type at the given destination with the given name 
