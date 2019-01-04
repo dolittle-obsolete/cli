@@ -24,7 +24,7 @@ args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create bou
 
 showHelpIfNeeded(args, dependencies.length);
 
-globals.commandManager.createBoundedContext(contextFromArgs(args.sub, dependencies), application, destinationPath);
+globals.commandManager.createBoundedContext(contextFromArgs(args.sub, dependencies), application, dependencies, destinationPath);
 
 
 

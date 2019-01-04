@@ -19,4 +19,4 @@ args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create app
 showHelpIfNeeded(args, dependencies.length);
 
 const destinationPath = process.cwd();
-globals.commandManager.createApplication(contextFromArgs(args.sub, dependencies), destinationPath);
+globals.commandManager.createApplication(contextFromArgs(args.sub, dependencies), dependencies, destinationPath);

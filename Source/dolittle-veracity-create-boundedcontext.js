@@ -32,7 +32,7 @@ showHelpIfNeeded(args, dependencies.length);
 
 let context = contextFromArgs(args.sub, dependencies);
 
-if (!globals.commandManager.createBoundedContext(context, application, destinationPath)) {
+if (!globals.commandManager.createBoundedContext(context, application, dependencies, destinationPath)) {
     logger.error('Failed to create bounded context');
     process.exit(1);
 }

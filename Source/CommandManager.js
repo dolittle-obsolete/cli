@@ -14,14 +14,17 @@ export class CommandManager {
     #applicationsManager;
     #boundedContextsManager;
     #artifactsManager;
-    #inquirerManager;
+    #dependenciesManager;
+    #inquirer;
     #logger;
     #dolittleConfig;
-    constructor(applicationsManager, boundedContextsManager, artifactsManager, inquirerManager, logger, dolittleConfig) {
+
+    constructor(applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, inquirer, logger, dolittleConfig) {
         this.#applicationsManager = applicationsManager;
         this.#boundedContextsManager = boundedContextsManager;
         this.#artifactsManager = artifactsManager;
-        this.#inquirerManager = inquirerManager;
+        this.#dependenciesManager = dependenciesManager;
+        this.#inquirer = inquirer;
         this.#logger = logger;
         this.#dolittleConfig = dolittleConfig;
      
@@ -60,7 +63,7 @@ export class CommandManager {
          */
         let destinationAndName = helpers.determineDestination(artifactTemplate.area, artifactTemplate.language, context['name'], cwd, boundedContext.path, this.#dolittleConfig);
         context['name'] = destinationAndName.name;
-        this.addArtifact(context, artifactTemplate, destinationAndName.destination);
+        this.addArtifact(context, artifactTemplate, dependencies, destinationAndName.destination);
     }
 
     /**
@@ -68,53 +71,58 @@ export class CommandManager {
      *
      * @param {any} context
      * @param {ArtifactTemplate} artifactTemplate
+     * @param {Dependency[]} dependencies
      * @param {string} destinationFolder
      * @memberof CommandManager
      */
-    addArtifact(context, artifactTemplate, destinationFolder) {
+    addArtifact(context, artifactTemplate, dependencies, destinationFolder) {
         this.#logger.info(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
+        context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, artifactTemplate.language, context);
+        this.#inquirer.promptUser(context, dependencies, destinationFolder, artifactTemplate.language)
+            .then(templateContext => {
+                this.#artifactsManager.createArtifact(context, artifactTemplate.language, artifactTemplate, destinationFolder);
+            });
     }
     /**
      * Handles the 'dolittle create application' command
      *
      * @param {any} context CLI arguments given in context of the dependencies
-     * @param {string} destinationPath The path where the application should be created
+     * @param {any} dependencies 
+     * @param {string} destinationFolder The folder where the application should be created
      * @memberof CommandManager
      */
-    createApplication(context, destinationPath) {
+    createApplication(context, dependencies, destinationFolder) {
         this.#logger.info(`Creating application`);
-        return this.#applicationsManager.createApplication(context, destinationPath);
+
+        context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, 'any', context);
+        return this.#applicationsManager.createApplication(context, destinationFolder);
     }
     /**
      * Handles the 'dolittle create boundedcontext' command
      *
      * @param {any} context CLI arguments given in context of the dependencies
      * @param {Application} application
-     * @param {string} destinationPath The path where the application should be created
+     * @param {Dependency[]} dependencies
+     * @param {string} destinationFolder The path where the application should be created
      * @memberof CommandManager
      */
-    createBoundedContext(context, application, destinationPath) {
+    createBoundedContext(context, application, dependencies, destinationFolder) {
         this.#logger.info(`Creating bounded context`);
         context['applicationId'] = application.id; // Hard coded, for now
-        return this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationPath); // Language is hardcoded, for now
+        context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, 'csharp', context);
+        return this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationFolder); // Language is hardcoded, for now
     }
+    
     /**
-     * Creates an artifact of the given type at the given destination with the given name 
-     * @param {} context 
-     * @param {BoundedContext} boundedContext
-     * @param {Dpendency[]} dependencies
-     * @param {string} artifactType
-     * @param {string} dir
+     * Resolves all dependencies that shouldn't be prompted, adds the resolved value to the context and returns the context object
+     * @param {Dependency[]} dependencies
+     * @param {string} destinationPath
+     * @param {string} language
+     * @param {any} context
+     * @returns {any}
      */
-    createArtifact(context, boundedContext, dependencies, artifactType, dir) {
-        let boilerplate = common.artifacts.boilerPlateByLanguage(boundedContext.core.language);
-        let artifactTemplate = common.artifacts.templateByBoilerplate(boilerplate, artifactType);
-        let destination = determineDestination(artifactTemplate.area, boundedContext.core.language, context.name, dir, 
-            boundedContext.path, _dolittleConfig.get(this));
-
-        _inquirerManager.get(this).promptUser(context, dependencies, destination, boilerplate)
-            .then(templateContext => {
-                common.artifacts.createArtifact(templateContext, artifactType, boundedContext.core.language, destination);
-            });
+    #resolveNonPrompDependencies(dependencies, destinationPath, language, context) {
+        dependencies.filter(_ => _.type === 'discover' && !_.userInputType).forEach(dep => context[dep.name] = this.#dependenciesManager.discover(dep, destinationPath, language));
+        return context;
     }
 }
