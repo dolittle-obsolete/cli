@@ -44,12 +44,29 @@ export function requireBoundedContext(boundedContextsManager, folder, logger) {
     }
     return boundedContext;
 }
+
+/**
+ * Gets the artifact template for given artifacttype with language and logs error if not found
+ *
+ * @export
+ * @param {ArtifactsManager} artifactsManager
+ * @param {string} language
+ * @param {string} artifactType
+ */
+export function requireArtifactTemplate(artifactsManager, language, artifactType, logger) {
+    let artifactTemplate = artifactsManager.getArtifactTemplate(language, artifactType);
+    if (!artifactTemplate) {
+        logger.error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`);
+        return null;
+    }
+    return artifactTemplate;
+}
 /**
  * Show command help if needed
  *
  * @export
  * @param {import('args')} args
- * @param {*} numDependencies
+ * @param {int} numDependencies
  */
 export function showHelpIfNeeded(args, numDependencies) {
     if (numDependencies > 0 && (! args.sub.length || args.sub.length !== numDependencies)) args.showHelp();

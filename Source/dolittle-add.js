@@ -7,7 +7,7 @@
 import args from 'args';
 import { usagePrefix } from './helpers';
 
-const USAGE = 'dolittle add [command] [args]';
+const USAGE = 'dolittle add [command]';
 args
     .command('command', 'A command')
     .command('commandhandler', 'A command handler')
