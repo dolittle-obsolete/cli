@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {logger, dependenciesManager, applicationsManager, boundedContextsManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
+import {logger, dependenciesManager, folders, applicationsManager, boundedContextsManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
 import { Inquirer } from './Inquirer';
 import { CommandManager } from './CommandManager';
 
@@ -18,7 +18,7 @@ class globals {
      */
     constructor() {
         this.#inquirer = new Inquirer(dependenciesManager, logger);
-        this.#commandManager = new CommandManager(applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
+        this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
     }
     /**
      * Gets the {InquirerManager

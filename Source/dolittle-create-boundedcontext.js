@@ -16,15 +16,15 @@ if (application === null) process.exit(1);
 
 let dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
 
-const USAGE = 'dolittle create boundedcontext ' + createUsageArgumentText(dependencies);
+const USAGE = 'dolittle create boundedcontext ' + createUsageArgumentText(dependencies.argument);
 args
     .example(USAGE, 'Creates a bounded context with a given name');
     
 args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create boundedcontext'});
 
-showHelpIfNeeded(args, dependencies.length);
+showHelpIfNeeded(args, dependencies.argument.length);
 
-globals.commandManager.createBoundedContext(contextFromArgs(args.sub, dependencies), application, dependencies, destinationPath);
+globals.commandManager.createBoundedContext(contextFromArgs(args.sub, dependencies.argument), application, dependencies.rest, destinationPath);
 
 
 

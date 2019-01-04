@@ -10,13 +10,13 @@ import {applicationsManager} from '@dolittle/tooling.common';
 import globals from './globals';
 
 let dependencies = getApplicationArgumentDependencies(applicationsManager, 'any');
-const USAGE = 'dolittle create application ' + createUsageArgumentText(dependencies);
+const USAGE = 'dolittle create application ' + createUsageArgumentText(dependencies.argument);
 args
     .example(USAGE, 'Creates an application with a given name');
     
 args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create application'});
 
-showHelpIfNeeded(args, dependencies.length);
+showHelpIfNeeded(args, dependencies.argument.length);
 
 const destinationPath = process.cwd();
-globals.commandManager.createApplication(contextFromArgs(args.sub, dependencies), dependencies, destinationPath);
+globals.commandManager.createApplication(contextFromArgs(args.sub, dependencies.argument), dependencies.rest, destinationPath);

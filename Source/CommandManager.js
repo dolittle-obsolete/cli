@@ -11,6 +11,7 @@ import { usagePrefix } from '../bin/helpers';
  * Represents a manager for artifacts
  */
 export class CommandManager {
+    #folders;
     #applicationsManager;
     #boundedContextsManager;
     #artifactsManager;
@@ -19,7 +20,9 @@ export class CommandManager {
     #logger;
     #dolittleConfig;
 
-    constructor(applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, inquirer, logger, dolittleConfig) {
+    constructor(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, inquirer, logger, dolittleConfig) {
+        
+        this.#folders = folders;
         this.#applicationsManager = applicationsManager;
         this.#boundedContextsManager = boundedContextsManager;
         this.#artifactsManager = artifactsManager;
@@ -46,16 +49,16 @@ export class CommandManager {
         if (!artifactTemplate) process.exit(1);
         
         let dependencies = getArtifactArgumentDependencies(this.#artifactsManager, artifactType, boundedContext);
-        const USAGE = createUsageTextForArtifact(dependencies, artifactType);
+        const USAGE = createUsageTextForArtifact(dependencies.argument, artifactType);
 
         args
             .example(USAGE, description);
         args.parse(process.argv, {value: usagePrefix + USAGE, name: `dolittle add ${commandName}`});
 
-        showHelpIfNeeded(args, dependencies.length);
+        showHelpIfNeeded(args, dependencies.argument.length);
 
         
-        let context = contextFromArgs(args.sub, dependencies);
+        let context = contextFromArgs(args.sub, dependencies.argument);
 
         // Lets assume context has 'name' and determine the destintation folder based upon a '.' seperated name and the dolittlerc configuration
         /**
@@ -63,7 +66,7 @@ export class CommandManager {
          */
         let destinationAndName = helpers.determineDestination(artifactTemplate.area, artifactTemplate.language, context['name'], cwd, boundedContext.path, this.#dolittleConfig);
         context['name'] = destinationAndName.name;
-        this.addArtifact(context, artifactTemplate, dependencies, destinationAndName.destination);
+        this.addArtifact(context, artifactTemplate, dependencies.rest, destinationAndName.destination);
     }
 
     /**
@@ -77,10 +80,11 @@ export class CommandManager {
      */
     addArtifact(context, artifactTemplate, dependencies, destinationFolder) {
         this.#logger.info(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
+        this.#folders.makeFolderIfNotExists(destinationFolder);
         context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, artifactTemplate.language, context);
         this.#inquirer.promptUser(context, dependencies, destinationFolder, artifactTemplate.language)
             .then(templateContext => {
-                this.#artifactsManager.createArtifact(context, artifactTemplate.language, artifactTemplate, destinationFolder);
+                this.#artifactsManager.createArtifact(templateContext, artifactTemplate.language, artifactTemplate, destinationFolder);
             });
     }
     /**

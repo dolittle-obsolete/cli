@@ -28,11 +28,11 @@ if (application === null) {
 
 let dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
 
-showHelpIfNeeded(args, dependencies.length);
+showHelpIfNeeded(args, dependencies.argument.length);
 
-let context = contextFromArgs(args.sub, dependencies);
+let context = contextFromArgs(args.sub, dependencies.argument);
 
-if (!globals.commandManager.createBoundedContext(context, application, dependencies, destinationPath)) {
+if (!globals.commandManager.createBoundedContext(context, application, dependencies.rest, destinationPath)) {
     logger.error('Failed to create bounded context');
     process.exit(1);
 }

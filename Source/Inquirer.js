@@ -30,22 +30,25 @@ export class Inquirer {
      * 
      * @returns {Promise<any>}
      */
-    async promptUser(context, dependencies, destinationPath, language) {
+    promptUser(context, dependencies, destinationPath, language) {
+        dependencies.forEach(_ => console.log(_.name));
         dependencies = dependencies.filter(dep => {
             if (dep.userInputType !== undefined) return dep.userInputType !== 'argument';
             else return true;
         });
         
         let questions = this.#createQuestions(dependencies, destinationPath, language);
-        
-        let answers = await inquirer.prompt(questions);
-
-        Object.keys(answers).forEach(name => {
-            console.log(answers[name]);
-            context[name] = answers[name];
-        })
-        
-        return context;
+        console.log('questions:');
+        console.log(questions);
+        return inquirer.prompt(questions)
+            .then(answers => {
+                Object.keys(answers).forEach(name => {
+                    console.log(answers[name]);
+                    context[name] = answers[name];
+                });
+                
+                return context;
+            });
     }
 
     /**
@@ -63,25 +66,25 @@ export class Inquirer {
             if (dep.type === 'discover') {
                 if (dep.userInputType) {
                     let discoveryResult = this.#dependencyManager.discover(dep, destinationPath, language);
-                    console.log('discoveryResult: ');
-                    console.log(discoveryResult);
                     
                     let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                         [discoveryResult]
                         : discoveryResult.length === 0?
                             []
                             : discoveryResult[0]['namespace'] !== undefined? 
-                                discoveryResult.map(item => {
-                                    return {
-                                            name: `${item.namespace}.${item.value}`, 
-                                            value: item.value };
-                                    }) 
+                                discoveryResult.map(item => new Object(
+                                    {
+                                        name: `${item.namespace}.${item.value}`, 
+                                        value: item.value 
+                                    }))
                                 : discoveryResult;
-                    questions.push(this.#createPrompt(dep, choices))
+                    console.log('choices:')
+                    console.log(choices);
+                    questions.push(...this.#createPrompt(dep, choices))
                     }
                 }
             else if(dep.type === 'userInput') {
-                questions.push(this.#createPrompt(dep));
+                questions.push(...this.#createPrompt(dep));
             } 
             else {
                 this.#logger.error(`Found an invalid 'type' on dependency: '${dep.type}'`);
@@ -104,6 +107,7 @@ export class Inquirer {
         let items = dependency.choices !== undefined? 
                 dependency.choices.concat(choices)
                 : choices;
+        if (dependency.customInput) items.push(dependency.customInput);
         if (inputType === 'chooseOne') {
             
             return this.#createListPrompt(dependency, dependency.promptMessage || 'Input', items);

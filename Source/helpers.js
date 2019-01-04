@@ -132,37 +132,52 @@ export function validateArgsNameInput(name) {
     }
 }
 /**
- * Gets all userinput dependencies with 'type': "argument" for applications
+ * Gets all dependencies
  *
  * @export
  * @param {ApplicationsManager} applicationsManager
  * @param {string} [language='any']
- * @returns {Dependency[]}
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
  */
 export function getApplicationArgumentDependencies(applicationsManager, language = 'any') {
-    return applicationsManager.getDependencies(language).filter(_ => _.userInputType !== undefined && _.userInputType === 'argument');
+    let obj = {argument: [], rest: []};
+    applicationsManager.getDependencies(language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
 }
 /**
- * Gets all userinput dependencies with 'type': "argument" for bounded contexts
+ * Gets all dependencies
  *
  * @export
  * @param {BoundedContextsManager} boundedContextsManager
  * @param {string} [language='any']
- * @returns {Dependency[]}
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
  */
 export function getBoundedContextsArgumentDependencies(boundedContextsManager, language = 'any') {
-    return boundedContextsManager.getDependencies(language).filter(_ => _.userInputType !== undefined && _.userInputType === 'argument');
+    let obj = {argument: [], rest: []};
+    boundedContextsManager.getDependencies(language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
 }
 
 /**
- * Gets all userinput dependencies with 'type': "argument" for artifacts
+ * Gets all dependencies
  *
  * @export
  * @param {ArtifactsManager} artifactsManager
  * @param {string} artifactType
  * @param {BoundedContext} boundedContext
- * @returns {Dependency[]}
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
  */
 export function getArtifactArgumentDependencies(artifactsManager, artifactType, boundedContext) {
-    return artifactsManager.getDependencies(artifactType, boundedContext.core.language).filter(_ => _.userInputType !== undefined && _.userInputType === 'argument');
+    let obj = {argument: [], rest: []};
+    artifactsManager.getDependencies(artifactType, boundedContext.core.language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
 }
