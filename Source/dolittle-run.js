@@ -5,7 +5,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import globals from './globals';
+import {logger} from '@dolittle/tooling.common';
 import { spawn, exec } from 'child_process';
 import Docker from 'dockerode';
 import fs from 'fs';
@@ -15,7 +15,7 @@ import glob from 'glob';
 let isWindows = process.platform == 'win32';
 
 if (!fs.existsSync('./bounded-context.json')) {
-    globals.logger.error('Missing "bounded-context.json" file - run "dolittle run" from a folder that holds this file');
+    logger.error('Missing "bounded-context.json" file - run "dolittle run" from a folder that holds this file');
 } else {
     const dolittleMongoLabel = 'dolittle-mongo';
 
@@ -25,21 +25,21 @@ if (!fs.existsSync('./bounded-context.json')) {
     let isMongoRunning = false;
     docker.listContainers((err, containers) => {
         if( err ) {
-            globals.logger.error(err)
+            logger.error(err);
             return;
         }
 
         if( containers != null ) {
             containers.forEach(container => {
                 if (container.Labels.hasOwnProperty(dolittleMongoLabel)) {
-                    globals.logger.info('Mongo is already running');
+                    logger.info('Mongo is already running');
                     isMongoRunning = true;
                 }
             });
         }
 
         if (!isMongoRunning) {
-            globals.logger.info('Starting a MongoDB Docker Container');
+            logger.info('Starting a MongoDB Docker Container');
 
             docker.run('mongo', [], [process.stdout, process.stderr], {
                 Labels: {
@@ -59,7 +59,7 @@ if (!fs.existsSync('./bounded-context.json')) {
     });
 
     let dotnetWatch = () => {
-        globals.logger.info('Starting .NET watcher');
+        logger.info('Starting .NET watcher');
         let dotnet = spawn('dotnet', ['watch','run'], {
             cwd: 'Core'
         });
@@ -68,7 +68,7 @@ if (!fs.existsSync('./bounded-context.json')) {
     };
 
     let webpackWatch = () => {
-        globals.logger.info('Starting webpack watcher');
+        logger.info('Starting webpack watcher');
         
         let webpackPath = isWindows?path.join(process.env.APPDATA,'npm','webpack.cmd'):'webpack';
 
@@ -86,12 +86,12 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     glob('./Core/*.csproj', (err, matches) => {
         if (matches.length) {
-            globals.logger.info('.NET Core project found');
+            logger.info('.NET Core project found');
 
             let projectJson = path.join('Core','obj','project.assets.json');
 
             if( !fs.existsSync(projectJson)) {
-                globals.logger.info('.NET Restore has not ran yet - running it');
+                logger.info('.NET Restore has not ran yet - running it');
                 let dotnetRestore = exec('dotnet restore', {
                     cwd: 'Core'
                 });
@@ -106,7 +106,7 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     let webpackFile = path.join(process.cwd(),'Web','webpack.config.js');
     if( fs.existsSync(webpackFile)) {
-        globals.logger.info('Web project found');
+        logger.info('Web project found');
 
         let nodeModules = path.join(process.cwd(),'Web','node_modules');
         if( !fs.existsSync(nodeModules)) {
