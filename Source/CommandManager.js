@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {InquirerManager} from './artifacts/InquirerManager';
-import { BoundedContext } from '@dolittle/tooling.common';
+import { Application, BoundedContext } from '@dolittle/tooling.common';
 import {  determineDestination } from './helpers';
 
 /**
@@ -45,6 +45,19 @@ export class CommandManager {
     createApplication(context, destinationPath) {
         this.#logger.info(`Creating application`);
         this.#applicationsManager.createApplication(context, destinationPath);
+    }
+    /**
+     * Handles the 'dolittle create boundedcontext' command
+     *
+     * @param {any} context CLI arguments given in context of the dependencies
+     * @param {Application} application
+     * @param {string} destinationPath The path where the application should be created
+     * @memberof CommandManager
+     */
+    createBoundedContext(context, application, destinationPath) {
+        this.#logger.info(`Creating bounded context`);
+        context['applicationId'] = application.id; // Hard coded, for now
+        this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationPath); // Language is hardcoded, for now
     }
     /**
      * Creates an artifact of the given type at the given destination with the given name 
