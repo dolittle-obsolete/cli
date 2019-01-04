@@ -72,7 +72,6 @@ export class CommandManager {
      * @memberof CommandManager
      */
     addArtifact(context, artifactTemplate, destinationFolder) {
-        this.#logger.info(context);
         this.#logger.info(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
     }
     /**
