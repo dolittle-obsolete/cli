@@ -31,19 +31,15 @@ export class Inquirer {
      * @returns {Promise<any>}
      */
     promptUser(context, dependencies, destinationPath, language) {
-        dependencies.forEach(_ => console.log(_.name));
         dependencies = dependencies.filter(dep => {
             if (dep.userInputType !== undefined) return dep.userInputType !== 'argument';
             else return true;
         });
         
         let questions = this.#createQuestions(dependencies, destinationPath, language);
-        console.log('questions:');
-        console.log(questions);
         return inquirer.prompt(questions)
             .then(answers => {
                 Object.keys(answers).forEach(name => {
-                    console.log(answers[name]);
                     context[name] = answers[name];
                 });
                 
@@ -78,8 +74,6 @@ export class Inquirer {
                                         value: item.value 
                                     }))
                                 : discoveryResult;
-                    console.log('choices:')
-                    console.log(choices);
                     questions.push(...this.#createPrompt(dep, choices))
                     }
                 }
