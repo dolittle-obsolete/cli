@@ -5,7 +5,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-import globals from './globals';
+
+import {configManager, boilerPlatesManager, logger} from '@dolittle/tooling.common';
 
 // * First run - configure default bounded-context language. Store in config file in ~/.dolittle
 // * 
@@ -16,7 +17,7 @@ let updating = false;
 args
     .command('update', 'Update all artifacts', () => {
         updating = true;
-        globals.boilerPlatesManager.update().then(() => {
+        boilerPlatesManager.update().then(() => {
             return;
         });
     })
@@ -33,11 +34,11 @@ let showHelpIfNeeded = () => {
 };
 
 if ( !updating && 
-    (globals.configManager.isFirstRun || !globals.boilerPlatesManager.hasBoilerPlates)
+    (configManager.isFirstRun || !boilerPlatesManager.hasBoilerPlates)
 ) {
-    if( globals.configManager.isFirstRun ) globals.logger.info('This is the first time you run this tool, hang on tight while we get it ready');
-    else globals.logger.info('There are no boiler plates, hang on tight while we get it ready');
-    globals.boilerPlatesManager.update().then(() => {
+    if( configManager.isFirstRun ) logger.info('This is the first time you run this tool, hang on tight while we get it ready');
+    else logger.info('There are no boiler plates, hang on tight while we get it ready');
+    boilerPlatesManager.update().then(() => {
         console.log('\n');
         showHelpIfNeeded();
     });
