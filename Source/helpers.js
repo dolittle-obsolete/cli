@@ -2,13 +2,48 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import {ApplicationsManager, ArtifactsManager, BoundedContext, BoundedContextsManager, Dependency} from '@dolittle/tooling.common';
+import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, BoundedContextsManager, Dependency} from '@dolittle/tooling.common';
 /**
  * The usage prefix used in commands info
  * @returns {string} the usage prefix
  */
 export const usagePrefix = '\n\t ';
 
+/**
+ * Gets the application from the given folder and logs error if not found
+ *
+ * @export
+ * @param {ApplicationsManager} applicationsManager
+ * @param {string} folder The folder where the application configuration should be
+ * @param {import('winston').Logger} logger
+ * @returns {Application | null}
+ */
+export function requireApplication(applicationsManager, folder, logger) {
+    let application = applicationsManager.getApplicationFrom(folder);
+    if (application === undefined || application === null) {
+        logger.error('Could not discover the application configuration');
+        return null;
+    }
+    return application;
+}
+/**
+ * Gets the bounded context from the given folder and logs error if not found
+ *
+ * @export
+ * @param {BoundedContextsManager} boundedContextsManager
+ * @param {string} folder The folder where the bounded context configuration should be searched from
+ * @param {import('winston').Logger} logger
+ * @returns {BoundedContext | null}
+ */
+export function requireBoundedContext(boundedContextsManager, folder, logger) {
+    
+    let boundedContext = boundedContextsManager.getNearestBoundedContextConfig(folder);
+    if (!boundedContext) {
+        logger.error('Could not discover the bounded context configuration');
+        return null;
+    }
+    return boundedContext;
+}
 /**
  * Show command help if needed
  *
