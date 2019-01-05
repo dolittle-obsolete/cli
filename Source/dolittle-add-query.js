@@ -4,26 +4,13 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 import args from 'args';
 import globals from './globals';
-import { usagePrefix, validateArgsNameInput } from './helpers';
 
-const USAGE = 'dolittle add query [name]';
-args
-    .example(USAGE, 'Creates a query in the current folder');
+const artifactType = 'query';
+const commandName = 'query';
+const description = 'Creates a query';
+const cwd = process.cwd();
 
-args.option('path', 'Override the destination path of the artifact');
-
-let flags = args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add query'});
-if (! args.sub.length || args.sub.length < 1) args.showHelp();
-
-validateArgsNameInput(args.sub[0]);
-let context = {
-    artifactName: args.sub[0], 
-    artifactType: 'query',
-    area: 'read',
-    path: flags.path
-};
-
-globals.artifactsManager.createArtifact(context);
-
+globals.commandManager.handleAddArtifact(args, commandName, artifactType, description, cwd);

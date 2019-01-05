@@ -5,21 +5,18 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
+import { usagePrefix, createUsageArgumentText, getApplicationArgumentDependencies, showHelpIfNeeded, contextFromArgs } from './helpers';
+import {applicationsManager} from '@dolittle/tooling.common';
 import globals from './globals';
-import { usagePrefix, validateArgsNameInput } from './helpers';
 
-const USAGE = 'dolittle create application [name]';
+let dependencies = getApplicationArgumentDependencies(applicationsManager, 'any');
+const USAGE = 'dolittle create application ' + createUsageArgumentText(dependencies.argument);
 args
     .example(USAGE, 'Creates an application with a given name');
     
 args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle create application'});
 
-if( !args.sub.length ) args.showHelp();
+showHelpIfNeeded(args, dependencies.argument.length);
 
-validateArgsNameInput(args.sub[0]);
-let context = {
-    name: args.sub[0],
-    destination: process.cwd()
-};
-
-globals.applicationManager.create(context);
+const destinationPath = process.cwd();
+globals.commandManager.createApplication(contextFromArgs(args.sub, dependencies.argument), dependencies.rest, destinationPath);

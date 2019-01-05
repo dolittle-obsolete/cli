@@ -2,54 +2,116 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
+import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, BoundedContextsManager, Dependency} from '@dolittle/tooling.common';
 /**
  * The usage prefix used in commands info
  * @returns {string} the usage prefix
  */
 export const usagePrefix = '\n\t ';
 
+/**
+ * Gets the application from the given folder and logs error if not found
+ *
+ * @export
+ * @param {ApplicationsManager} applicationsManager
+ * @param {string} folder The folder where the application configuration should be
+ * @param {import('winston').Logger} logger
+ * @returns {Application | null}
+ */
+export function requireApplication(applicationsManager, folder, logger) {
+    let application = applicationsManager.getApplicationFrom(folder);
+    if (application === undefined || application === null) {
+        logger.error('Could not discover the application configuration');
+        return null;
+    }
+    return application;
+}
+/**
+ * Gets the bounded context from the given folder and logs error if not found
+ *
+ * @export
+ * @param {BoundedContextsManager} boundedContextsManager
+ * @param {string} folder The folder where the bounded context configuration should be searched from
+ * @param {import('winston').Logger} logger
+ * @returns {BoundedContext | null}
+ */
+export function requireBoundedContext(boundedContextsManager, folder, logger) {
+    
+    let boundedContext = boundedContextsManager.getNearestBoundedContextConfig(folder);
+    if (!boundedContext) {
+        logger.error('Could not discover the bounded context configuration');
+        return null;
+    }
+    return boundedContext;
+}
 
 /**
- * Gets the full directory path
- * @param {string} filePath
- * @returns {string} directory path
+ * Gets the artifact template for given artifacttype with language and logs error if not found
+ *
+ * @export
+ * @param {ArtifactsManager} artifactsManager
+ * @param {string} language
+ * @param {string} artifactType
  */
-export function getFileDirPath(filePath) {
-    const path = require('path');
-    filePath = path.normalize(filePath);
-    return path.parse(filePath).dir;
+export function requireArtifactTemplate(artifactsManager, language, artifactType, logger) {
+    let artifactTemplate = artifactsManager.getArtifactTemplate(language, artifactType);
+    if (!artifactTemplate) {
+        logger.error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`);
+        return null;
+    }
+    return artifactTemplate;
 }
 /**
- * Gets the filename without extension
- * @param {string} filePath
- * @returns {string} filename
+ * Show command help if needed
+ *
+ * @export
+ * @param {import('args')} args
+ * @param {int} numDependencies
  */
-export function getFileName(filePath) {
-    const path = require('path');
-    filePath = path.normalize(filePath);
-    return path.parse(filePath).name;
+export function showHelpIfNeeded(args, numDependencies) {
+    if (numDependencies > 0 && (! args.sub.length || args.sub.length !== numDependencies)) args.showHelp();
 }
 /**
- * Gets the filename with extension
- * @param {string} filePath
- * @returns {string} filename
+ * Creates a context object from the argument list and the dependencies. Assumes that the arguments are given in the same order as the dependencies
+ *
+ * @export
+ * @param {string[]} args
+ * @param {Dependency[]} dependencies
  */
-export function getFileNameAndExtension(filePath) {
-    const path = require('path');
-    filePath = path.normalize(filePath);
-    return path.parse(filePath).base;
+export function contextFromArgs(args, dependencies) {
+    if (args.length !== dependencies.length) throw new Error('Args does not match dependencies');
+    let context = {};
+    dependencies.forEach((dep, i) => {
+        context[dep.name] = args[i];        
+    });
+    return context;
+}   
+/**
+ * Creates a part of the usage text that describes the command argument inputs 
+ *
+ * @export
+ * @param {Dependency[]} argumentDependecies
+ * @returns {string}
+ */
+export function createUsageArgumentText(argumentDependecies) {
+    return argumentDependecies.map(_ => {
+        return _.description === undefined || _.description === '' ? 
+            `[${_.name}]`
+            : `[${_.name} - ${_.description}]`;
+    }).join(' ');
 }
 /**
-  * Gets the directory name
-  * @param {string} filePath
-  * @returns {string} file dirname
-  */
-export function getFileDir(filePath) {
-    const path = require('path');
-    filePath = path.normalize(filePath);
-    return path.dirname(filePath);
+ * Creates the USAGE text for 'dolittle add <artifact>' commands
+ *
+ * @export
+ * @param {Dependency[]} argumentDependencies
+ * @param {string} artifactType
+ * @returns
+ */
+export function createUsageTextForArtifact(argumentDependencies, artifactType) {
+    return `dolittle add ${artifactType} ${createUsageArgumentText(argumentDependencies)}` ;
 }
+
 /**
  * Validate the name argument
  * @param {string} name 
@@ -70,39 +132,52 @@ export function validateArgsNameInput(name) {
     }
 }
 /**
+ * Gets all dependencies
  *
- *
- * @param {string} area
- * @param {string} language
- * @param {string} name
- * @param {string} cwd
- * @param {string} boundedContextPath
- * @param {any} dolittleConfig
- * 
- * @returns {{destination: string, name: string}}
+ * @export
+ * @param {ApplicationsManager} applicationsManager
+ * @param {string} [language='any']
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
  */
-export function determineDestination(area, language, name, cwd, boundedContextPath, dolittleConfig){
-    const path = require('path');
-    let config = dolittleConfig[language];
-    if (config === undefined || config === null)
-        throw `No configuration for language ${language}`;
-    const areaName = config[area];
-    if (areaName === undefined || areaName === null)
-        throw `No configuration for area ${area} for language ${language}`;
-    const boundedContextRoot = path.dirname(boundedContextPath);
-    const regExp = new RegExp(
-        `(${escapeRegex(boundedContextRoot)})` + // Match first part of path (root of bounded-context) 
-        `(?:${escapeRegex(path.sep)}[^${escapeRegex(path.sep)}]+)?` + // Non-matching group matching the segment after the bounded-context root folder. This indicates the area of the artifact
-        `(${escapeRegex(path.sep)}?.*)` // Match all the segments after the area
-        
-    );
-    const newDestination = cwd.replace(regExp, '$1' + path.sep + areaName + '$2');
-
-    let splittedName = name.split('.');
-    const featurePath = path.sep + splittedName.slice(0, -1).join(path.sep);
-    return {destination: newDestination + featurePath, name: splittedName[splittedName.length - 1]};
+export function getApplicationArgumentDependencies(applicationsManager, language = 'any') {
+    let obj = {argument: [], rest: []};
+    applicationsManager.getDependencies(language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
+}
+/**
+ * Gets all dependencies
+ *
+ * @export
+ * @param {BoundedContextsManager} boundedContextsManager
+ * @param {string} [language='any']
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
+ */
+export function getBoundedContextsArgumentDependencies(boundedContextsManager, language = 'any') {
+    let obj = {argument: [], rest: []};
+    boundedContextsManager.getDependencies(language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
 }
 
-function escapeRegex(s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+/**
+ * Gets all dependencies
+ *
+ * @export
+ * @param {ArtifactsManager} artifactsManager
+ * @param {string} artifactType
+ * @param {BoundedContext} boundedContext
+ * @returns {{argument: Dependency[], rest: Dependency[]}}
+ */
+export function getArtifactArgumentDependencies(artifactsManager, artifactType, boundedContext) {
+    let obj = {argument: [], rest: []};
+    artifactsManager.getDependencies(artifactType, boundedContext.core.language).forEach(_ => {
+        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
+        else obj.rest.push(_);
+    });
+    return obj;
 }

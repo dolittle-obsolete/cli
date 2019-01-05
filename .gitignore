@@ -1,3 +1,6 @@
+.yalc
+yalc.lock
+bin
 # Logs
 logs
 *.log
