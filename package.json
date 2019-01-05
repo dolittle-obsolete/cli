@@ -44,10 +44,10 @@
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@dolittle/build": "4.2.0",
-    "@dolittle/tooling.common": "3.0.0"
+    "@dolittle/build": "^4.3.0"
   },
   "dependencies": {
+    "@dolittle/tooling.common": "^3.0.3",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.0"
