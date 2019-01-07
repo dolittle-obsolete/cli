@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -11,6 +11,9 @@
   },
   "main": "bin/dolittle.js",
   "module": "bin/dolittle.js",
+  "files": [
+    "bin"
+  ],
   "preferGlobal": true,
   "bin": {
     "dolittle": "bin/dolittle.js",
@@ -44,10 +47,11 @@
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@dolittle/build": "^4.3.0"
+    "@dolittle/build": "6.1.0"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "^3.0.3",
+    "@babel/runtime": "^7.2.0",
+    "@dolittle/tooling.common": "3.0.5",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.0"
