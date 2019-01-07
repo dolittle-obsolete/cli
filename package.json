@@ -40,7 +40,7 @@
     "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedContext.js"
   },
   "scripts": {
-    "build": "rm -rf bin && npx babel Source --ignore **/for_* -d bin",
+    "build": "rm -rf bin && npx babel Source --ignore **/for_* -d bin --source-maps inline",
     "prepublish": "yarn build"
   },
   "devDependencies": {
