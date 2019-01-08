@@ -20,7 +20,8 @@ args
     .command('readmodel', 'A read model')
     .command('aggregateroot', 'An aggregate root')
     .command('query', 'A query')
-    .command('queryfor', 'A query for a specific read model');
+    .command('queryfor', 'A query for a specific read model')
+    .command('feature', 'Adds features accross concerns');
 
     
 args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle add'});
