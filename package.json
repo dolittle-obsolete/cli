@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -40,18 +40,18 @@
     "dolittle-run": "bin/dolittle-run.js",
     "dolittle-veracity": "bin/dolittle-veracity.js",
     "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
-    "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedcontext.js"
+    "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedcontext.js",
+    "dolittle-add-feature": "bin/dolittle-add-feature.js"
   },
   "scripts": {
     "build": "rm -rf bin && npx babel Source --ignore **/for_* -d bin --source-maps inline",
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@dolittle/build": "6.1.0"
+    "@dolittle/build": "~6.2.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.2.0",
-    "@dolittle/tooling.common": "3.0.5",
+    "@dolittle/tooling.common": "^3.1.1",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.0"
