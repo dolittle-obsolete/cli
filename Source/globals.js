@@ -6,6 +6,7 @@
 import {logger, dependenciesManager, folders, applicationsManager, boundedContextsManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
 import { Inquirer } from './Inquirer';
 import { CommandManager } from './CommandManager';
+import { handleUncaughtException } from './helpers';
 
 /**
  * Common globals object
@@ -17,6 +18,15 @@ class globals {
      * Perform initialization
      */
     constructor() {
+        process.on('unhandledRejection', (reason) => {
+            handleUncaughtExceptionion(reason, logger);
+            process.exit(1);
+        });
+        process.on('uncaughtException', err => {
+            handleUncaughtException(err, logger);
+            process.exit(1);
+        });
+        
         this.#inquirer = new Inquirer(dependenciesManager, logger);
         this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
     }

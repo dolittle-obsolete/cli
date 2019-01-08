@@ -9,6 +9,20 @@ import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, Boun
  */
 export const usagePrefix = '\n\t ';
 
+export function handleUncaughtException(error, logger) {
+    logger.error(
+        `
+An unhandled error occured. Error message:
+${error}
+Stack trace:
+${error.stack}
+        
+Try deleting your .dolittle folder in your root (%HOME%/.dolittle on windows and ~/.dolittle on Mac/Linux) and do a
+$ dolittle update.
+    
+If you still get an error or unexpected behaviour after deleting the .dolittle folder, please register your issue at our issue page: https://github.com/dolittle-tools/cli/issues`);
+}
+
 /**
  * Gets the application from the given folder and logs error if not found
  *
