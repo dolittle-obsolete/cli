@@ -6,6 +6,7 @@
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
 import { usagePrefix } from './helpers';
+import globals from './globals.js';
 
 const USAGE = 'dolittle create [command] [args]';
 args

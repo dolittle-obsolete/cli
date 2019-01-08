@@ -11,6 +11,7 @@ import Docker from 'dockerode';
 import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
+import globals from './globals.js';
 
 let isWindows = process.platform == 'win32';
 

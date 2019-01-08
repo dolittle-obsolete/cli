@@ -7,6 +7,7 @@
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
 import {logger} from '@dolittle/tooling.common';
+import globals from './globals.js';
 
 let root = 'k8s';
 if( !fs.existsSync(root)) {

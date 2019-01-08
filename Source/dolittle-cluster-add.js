@@ -5,6 +5,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
+import globals from './globals.js';
 
 args
     .example('dolittle cluster add [name] [url]', 'Adds a cluster to the configuration');

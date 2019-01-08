@@ -5,8 +5,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
-
 import {configManager, boilerPlatesManager, logger} from '@dolittle/tooling.common';
+import globals from './globals.js';
 
 // * First run - configure default bounded-context language. Store in config file in ~/.dolittle
 // * 
