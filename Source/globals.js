@@ -7,6 +7,7 @@ import {logger, dependenciesManager, folders, applicationsManager, boundedContex
 import { Inquirer } from './Inquirer';
 import { CommandManager } from './CommandManager';
 import { handleUncaughtException } from './helpers';
+import updateNotifier from 'update-notifier';
 
 /**
  * Common globals object
@@ -29,6 +30,7 @@ class globals {
         
         this.#inquirer = new Inquirer(dependenciesManager, logger);
         this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
+        this.notifyUpdate();
     }
     /**
      * Gets the {InquirerManager
@@ -43,6 +45,10 @@ class globals {
      */
     get commandManager() {
         return this.#commandManager;
+    }
+
+    notifyUpdate() {
+        updateNotifier({pkg: require('../package.json'), }).notify({isGlobal: true});
     }
 }
 
