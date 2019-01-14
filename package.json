@@ -51,7 +51,7 @@
     "@dolittle/build": "~6.2.1"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "^4.1.0",
+    "@dolittle/tooling.common": "^4.1.1",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.0",
