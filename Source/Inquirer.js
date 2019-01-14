@@ -71,7 +71,7 @@ export class Inquirer {
                                 discoveryResult.map(item => new Object(
                                     {
                                         name: `${item.namespace}.${item.value}`, 
-                                        value: item.value 
+                                        value: {namespace: item.namespace, value: item.value} 
                                     }))
                                 : discoveryResult;
                     questions.push(...this.#createPrompt(dep, choices))
