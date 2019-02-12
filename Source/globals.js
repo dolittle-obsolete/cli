@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {logger, dependenciesManager, folders, applicationsManager, boundedContextsManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
+import {logger, dependenciesManager, folders, applicationsManager, boundedContextsManager, boilerPlatesManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
 import { Inquirer } from './Inquirer';
 import { CommandManager } from './CommandManager';
 import { handleUncaughtException } from './helpers';
@@ -29,8 +29,10 @@ class globals {
         });
         
         this.#inquirer = new Inquirer(dependenciesManager, logger);
-        this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
+        this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig);
         this.notifyUpdate();
+
+        boilerPlatesManager.init();
     }
     /**
      * Gets the {InquirerManager
