@@ -13,7 +13,8 @@ args
     .command('installed', 'Lists the globally installed boilerplates found')
     .command('discover', 'Discovers boilerplates and adds them to the local configuration used by the tool')
     .command('online', 'Lists boilerplates found on npm based on keywords')
-    .command('dolittle', 'Lists dolittle boilerlpates found on npm under a dolittle user');
+    .command('dolittle', 'Lists dolittle boilerlpates found on npm under a dolittle user')
+    .command('check', 'Lists installed boilerplates that are out of date');
     
 args.parse(process.argv);
 
