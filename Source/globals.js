@@ -20,7 +20,7 @@ class globals {
      */
     constructor() {
         process.on('unhandledRejection', (reason) => {
-            handleUncaughtExceptionion(reason, logger);
+            handleUncaughtException(reason, logger);
             process.exit(1);
         });
         process.on('uncaughtException', err => {
