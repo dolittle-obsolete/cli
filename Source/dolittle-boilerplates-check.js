@@ -23,8 +23,6 @@ boilerPlatesManager.getLatestBoilerplateVersion(...locallyInstalled.map(pkg => p
         locallyInstalled.forEach((pkg, i) => {
             if (semver.gt(latestVersions[i], pkg.version)) {
                 console.log(`${pkg.name} is outdated.\n\t$ npm i -g ${pkg.name}`);
-            } else {
-                console.log(`${pkg.name} is up to date`);
             }
         });
     });
