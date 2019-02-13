@@ -20,6 +20,7 @@ args
     .command('cluster', 'Work with cluster hosting Dolittle')
     .command('create', 'Create something from one of the boilerplates')
     .command('add', 'Adds an Artifact to the Bounded Context')
+    .command('boilerplates', 'List and discover boilerplates')
     .command('run', 'Runs a Bounded Context')
     .command('deploy', 'Deploy a Bounded Context')
     .command('veracity', 'Veracity specific operations');

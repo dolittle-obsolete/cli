@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -41,7 +41,13 @@
     "dolittle-veracity": "bin/dolittle-veracity.js",
     "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
     "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedcontext.js",
-    "dolittle-add-feature": "bin/dolittle-add-feature.js"
+    "dolittle-add-feature": "bin/dolittle-add-feature.js",
+    "dolittle-boilerplates": "bin/dolittle-boilerplates.js",
+    "dolittle-boilerplates-list": "bin/dolittle-boilerplates-list.js",
+    "dolittle-boilerplates-installed": "bin/dolittle-boilerplates-installed.js",
+    "dolittle-boilerplates-online": "bin/dolittle-boilerplates-online.js",
+    "dolittle-boilerplates-dolittle": "bin/dolittle-boilerplates-dolittle.js",
+    "dolittle-boilerplates-discover": "bin/dolittle-boilerplates-discover.js"
   },
   "scripts": {
     "build": "rm -rf bin && npx babel Source --ignore **/for_* -d bin --source-maps inline",
@@ -51,10 +57,10 @@
     "@dolittle/build": "~6.2.1"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "^4.1.1",
+    "@dolittle/tooling.common": "file:.yalc/@dolittle/tooling.common",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
-    "inquirer": "^6.2.0",
+    "inquirer": "^6.2.2",
     "update-notifier": "^2.5.0"
   }
 }
