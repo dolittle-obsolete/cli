@@ -12,7 +12,7 @@ Using boilerplates, custom templating and configuration and [handlebars](http://
 
 The cli tool is currently only configured to work with dolittle projects where the bounded-context.backend is configured with language = 'csharp'. The goal of the cli tool is to ultimately be language and framework agnostic. 
 
-[Download the tool](https://dolittle.io/cli/installing/)
+[Download the tool](installing)
 
 To get the tool fully initialized and ready for use simply do this command:
 ```shell
