@@ -58,7 +58,7 @@
     "@dolittle/build": "~6.2.1"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "file:.yalc/@dolittle/tooling.common",
+    "@dolittle/tooling.common": "^5.0.0-alpha.1",
     "args": "^5.0.0",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.2",
