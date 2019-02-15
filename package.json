@@ -60,8 +60,10 @@
   "dependencies": {
     "@dolittle/tooling.common": "^5.0.0-alpha.1",
     "args": "^5.0.0",
+    "chalk": "^2.4.2",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.2",
+    "ora": "^3.1.0",
     "semver": "^5.6.0",
     "update-notifier": "^2.5.0"
   }
