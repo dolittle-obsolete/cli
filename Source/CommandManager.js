@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Application, BoundedContext, ArtifactTemplate, helpers } from '@dolittle/tooling.common';
-import {  determineDestination, requireBoundedContext, contextFromArgs, getArtifactArgumentDependencies, createUsageTextForArtifact, showHelpIfNeeded, requireArtifactTemplate } from './helpers';
+import { Application, BoundedContext, ArtifactTemplate, Dependency, helpers } from '@dolittle/tooling.common';
+import {  determineDestination, requireBoundedContext, contextFromArgs, getArtifactArgumentDependencies, createUsageTextForArtifact, showHelpIfNeeded, requireArtifactTemplate, groupBy } from './helpers';
 import { usagePrefix } from '../bin/helpers';
 
 /**
@@ -64,7 +64,7 @@ export class CommandManager {
         /**
          * @type {{destination: string, name: string}} The destination path and the actual name of the artifact
          */
-        let destinationAndName = helpers.determineDestination(artifactTemplate.area, artifactTemplate.language, context['name'], cwd, boundedContext.path, this.#dolittleConfig);
+        let destinationAndName = helpers.determineDestination(artifactTemplate.area, artifactTemplate.boilerplate.language, context['name'], cwd, boundedContext.path, this.#dolittleConfig);
         context['name'] = destinationAndName.name;
         this.addArtifact(context, artifactTemplate, dependencies.rest, destinationAndName.destination);
     }
@@ -78,14 +78,12 @@ export class CommandManager {
      * @param {string} destinationFolder
      * @memberof CommandManager
      */
-    addArtifact(context, artifactTemplate, dependencies, destinationFolder) {
-        this.#logger.info(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
+    async addArtifact(context, artifactTemplate, dependencies, destinationFolder) {
+        this.#logger.info(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.boilerplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
         this.#folders.makeFolderIfNotExists(destinationFolder);
-        context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, artifactTemplate.language, context);
-        this.#inquirer.promptUser(context, dependencies, destinationFolder, artifactTemplate.language)
-            .then(templateContext => {
-                this.#artifactsManager.createArtifact(templateContext, artifactTemplate.language, artifactTemplate, destinationFolder);
-            });
+        context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, artifactTemplate.boilerplate.language, context);
+        context = await this.#inquirer.promptUser(context, dependencies, destinationFolder, artifactTemplate.boilerplate.language);
+        this.#artifactsManager.createArtifact(context, artifactTemplate.boilerplate.language, artifactTemplate, destinationFolder);
     }
     /**
      * Handles the 'dolittle create application' command
@@ -110,11 +108,13 @@ export class CommandManager {
      * @param {string} destinationFolder The path where the application should be created
      * @memberof CommandManager
      */
-    createBoundedContext(context, application, dependencies, destinationFolder) {
+    async createBoundedContext(context, application, dependencies, destinationFolder) {
         this.#logger.info(`Creating bounded context`);
         context['applicationId'] = application.id; // Hard coded, for now
+        dependencies.push(...this.#boundedContextsManager.createInteractionDependencies('csharp'));
         context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, 'csharp', context);
-        return this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationFolder); // Language is hardcoded, for now
+        context = await this.#inquirer.promptUser(context, dependencies, destinationFolder, 'csharp');
+        return this.#boundedContextsManager.createBoundedContext(context, 'csharp', destinationFolder);
     }
     
     /**

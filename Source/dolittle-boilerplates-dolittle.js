@@ -17,4 +17,6 @@ boilerPlatesManager.discoverOnlineDolittleBoilerplates()
         packages.forEach(pkg => {
             console.log(`${pkg.name}:\nDescription: ${pkg.description}\nLink: https://npmjs.com/package/${pkg.name}\nInstall: npm i -g ${pkg.name}\n`);
         });
+        console.log('Install and update all:');
+        console.log(`$ npm i -g ${packages.map(_ => _.name).join(' ')}`);
     });

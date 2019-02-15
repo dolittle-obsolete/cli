@@ -22,4 +22,6 @@ boilerPlatesManager.discoverOnlineBoilerplates(args.sub, flags.limit)
         packageNamesAndDescription.forEach(nameAndDesc => {
             console.log(`${nameAndDesc.name}:\nDescription: ${nameAndDesc.description}\nLink: https://npmjs.com/package/${nameAndDesc.name}\nInstall: npm i -g ${nameAndDesc.name}\n`);
         });
+        console.log('Install and update all:');
+        console.log(`$ npm i -g ${packageNamesAndDescription.map(_ => _.name).join(' ')}`);
     });

@@ -11,7 +11,7 @@ export const usagePrefix = '\n\t ';
 
 export function handleUncaughtException(error, logger) {
     logger.error(
-`An unhandled error occured. Error message:
+        `An unhandled error occured. Error message:
 ${error}
 Stack trace:
 ${error.stack}
