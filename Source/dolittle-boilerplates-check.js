@@ -10,13 +10,9 @@ import globals from './globals';
 import {boilerPlatesManager} from '@dolittle/tooling.common';
 import semver from 'semver';
 import { usagePrefix } from './helpers';
+import outputter from './outputter';
 
-const USAGE = 'dolittle boilerplates check';
-args
-    .example(USAGE, 'Checks for out-of-date boilerplates installed on the system');
-args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle boilerplates check'});
-
-console.log('Checking versions:\n');
+let spinner = outputter.spinner('Checking versions:\n').start();
 let paths = boilerPlatesManager.installedBoilerplatePaths;
 let locallyInstalled = [];
 paths.map(path => JSON.parse(require('fs').readFileSync(require('path').join(path, 'package.json'), {encoding: 'utf8'})))
@@ -24,24 +20,28 @@ paths.map(path => JSON.parse(require('fs').readFileSync(require('path').join(pat
         locallyInstalled.push({name: pkg.name, version: pkg.version});    
     });
 
-boilerPlatesManager.getLatestBoilerplateVersion(...locallyInstalled.map(pkg => pkg.name))
-    .then(latestVersions => {
-        let anyOutOfDate = false;
-        locallyInstalled.forEach((pkg, i) => {
-            if (semver.gt(latestVersions[i], pkg.version)) {
-                locallyInstalled[i].outOfDate = true;
-                anyOutOfDate = true;
-            }
-        });
+new Promise(async (resolve) => {
+    let outOfDatePackages = [];
+    for (let pkg of locallyInstalled) {
+        spinner.text = `Checking ${pkg.name}`;
+        await boilerPlatesManager.getLatestBoilerplateVersion(pkg.name)
+            .then(latestVersions => {
+                let latestVersion = latestVersions[0];
+                if (semver.gt(latestVersion, pkg.version)) {
+                    outOfDatePackages.push({name: pkg.name, version: pkg.version, latest: latestVersion});
+                    spinner.warn(`${pkg.name}: ${pkg.version} ==> ${latestVersion} `);
+                    spinner = outputter.spinner().start();
+                }
+            }).catch(_ => spinner.fail(`Failed to fetch ${pkg.name}`));
+    }
+    resolve(outOfDatePackages);
 
-        if (anyOutOfDate) {
-            let outOfDatePackages = locallyInstalled.map((pkg, i) => new Object({outOfDate: pkg.outOfDate, name: pkg.name, version: pkg.version, latest: latestVersions[i]})).filter(pkg => pkg.outOfDate);
-            console.log(`There are ${outOfDatePackages.length} out-of-date packages:`);
-            outOfDatePackages.forEach(pkg => console.log(`${pkg.name}: ${pkg.version} ==> ${pkg.latest}`));
-            console.log();
-            console.log('Update all packages with');
-            console.log(`$ npm i -g ${outOfDatePackages.map(_ => _.name).join(' ')}`);
-        } 
-        else console.log('All boilerplates are up-to-date');
-    });
+}).then(outOfDatePackages => {
+    if (outOfDatePackages.length > 0) {
+        spinner.warn(`There are ${outOfDatePackages.length} out-of-date packages:\n`);
+        outputter.warn('Update all packages with');
+        outputter.warn(`$ npm i -g ${outOfDatePackages.map(_ => _.name).join(' ')}`);
+    } 
+    else spinner.succeed('All boilerplates are up-to-date');
+});
 

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, BoundedContextsManager, Dependency} from '@dolittle/tooling.common';
+import outputter from './outputter';
 /**
  * The usage prefix used in commands info
  * @returns {string} the usage prefix
@@ -10,13 +11,7 @@ import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, Boun
 export const usagePrefix = '\n\t ';
 
 export function handleUncaughtException(error, logger) {
-    logger.error(
-        `An unhandled error occured. Error message:
-${error}
-Stack trace:
-${error.stack}
-        
-Please register your issue with the error message and stacktrace on our issues page: https://github.com/dolittle-tools/cli/issues`);
+    outputter.error(error, 'Please register your issue with the error message and stacktrace on our issues page: https://github.com/dolittle-tools/cli/issues');
 }
 
 /**
@@ -31,7 +26,7 @@ Please register your issue with the error message and stacktrace on our issues p
 export function requireApplication(applicationsManager, folder, logger) {
     let application = applicationsManager.getApplicationFrom(folder);
     if (application === undefined || application === null) {
-        logger.error('Could not discover the application configuration');
+        outputter.error(new Error('Could not discover the application configuration'));
         return null;
     }
     return application;
@@ -49,7 +44,7 @@ export function requireBoundedContext(boundedContextsManager, folder, logger) {
     
     let boundedContext = boundedContextsManager.getNearestBoundedContextConfig(folder);
     if (!boundedContext) {
-        logger.error('Could not discover the bounded context configuration');
+        outputter.error(new Error('Could not discover the bounded context configuration'));
         return null;
     }
     return boundedContext;
@@ -66,7 +61,7 @@ export function requireBoundedContext(boundedContextsManager, folder, logger) {
 export function requireArtifactTemplate(artifactsManager, language, artifactType, logger) {
     let artifactTemplate = artifactsManager.getArtifactTemplate(language, artifactType);
     if (!artifactTemplate) {
-        logger.error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`);
+        outputter.error(new Error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`));
         return null;
     }
     return artifactTemplate;

@@ -6,14 +6,14 @@
  *--------------------------------------------------------------------------------------------*/
 import { spawn, exec } from 'child_process';
 import fs from 'fs';
-import {logger} from '@dolittle/tooling.common';
 import globals from './globals.js';
+import outputter from './outputter.js';
 
 let root = 'k8s';
 if( !fs.existsSync(root)) {
-    logger.error('Artifacts for deployment is missing');
+    outputter.print('Artifacts for deployment is missing');
 } else {
-    logger.info('Deploying Bounded Context');
+    outputter.print('Deploying Bounded Context');
     fs.readdir(root, (err, files) => {
         files.forEach(file => {
             file = file.toLowerCase();

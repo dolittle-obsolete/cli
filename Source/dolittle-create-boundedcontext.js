@@ -9,12 +9,19 @@ import args from 'args';
 import {applicationsManager, boundedContextsManager, logger} from '@dolittle/tooling.common';
 import globals from './globals';
 import { showHelpIfNeeded, contextFromArgs, usagePrefix, createUsageArgumentText, getBoundedContextsArgumentDependencies, requireApplication} from './helpers';
+import outputter from './outputter';
 
 const destinationPath = process.cwd();
 let application = requireApplication(applicationsManager, destinationPath, logger);
 if (application === null) process.exit(1);
 
-let dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
+let dependencies = [];
+try {
+    dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
+} catch(error) {
+    outputter.error(error, 'It seems like you might be missing some boilerplates.\nUse \'dolittle boilerplates online\' to see what\'s available');
+    process.exit(0);
+}
 
 const USAGE = 'dolittle create boundedcontext ' + createUsageArgumentText(dependencies.argument);
 args

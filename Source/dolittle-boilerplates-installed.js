@@ -7,16 +7,32 @@
 
 import args from 'args';
 import globals from './globals';
-import {boilerPlatesManager} from '@dolittle/tooling.common';
+import path from 'path';
+import {boilerPlatesManager, filesystem} from '@dolittle/tooling.common';
+import outputter from './outputter';
 
+let spinner = outputter.spinner('Installed boilerplates:\n').start();
 let paths = boilerPlatesManager.installedBoilerplatePaths;
 
-console.log('Installed boilerplates:\n');
-paths.map(path => JSON.parse(require('fs').readFileSync(require('path').join(path, 'boilerplate.json'), {encoding: 'utf8'}))).forEach(boilerplate => {
-    console.log(
-`${boilerplate.name}: 
-Type: ${boilerplate.type}
-Language: ${boilerplate.language}
-Description: ${boilerplate.description}
-`);
+let boilerplatesAndPackages = paths.map(boilerplatePaths => {
+    let boilerplate = filesystem.readJsonSync(path.join(boilerplatePaths, 'boilerplate.json'));
+    let packageJson = filesystem.readJsonSync(path.join(boilerplatePaths, 'package.json'));
+    return {boilerplate, packageJson};
 });
+let numBoilerplates = boilerplatesAndPackages.length;
+if (numBoilerplates > 0) {
+    spinner.succeed(`Found ${numBoilerplates} installed boilerplates`);
+    boilerplatesAndPackages.forEach(boilerplateAndPackage => {
+        outputter.print(
+            `${boilerplateAndPackage.packageJson.name}:${boilerplateAndPackage.packageJson.version} 
+Boilerplate name: ${boilerplateAndPackage.boilerplate.name}
+Description: ${boilerplateAndPackage.boilerplate.description}
+Type: ${boilerplateAndPackage.boilerplate.type}
+Language: ${boilerplateAndPackage.boilerplate.language}
+`);
+    });
+}
+else {
+    spinner.warn('Could not find any installed boilerplates.\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+}
+

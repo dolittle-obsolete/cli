@@ -12,6 +12,7 @@ import { spawn, exec } from 'child_process';
 import glob from 'glob';
 import fs from 'fs';
 import globals from './globals';
+import outputter from './outputter';
 
 const USAGE = 'dolittle veracity create boundedcontext [name]';
 args
@@ -25,24 +26,30 @@ run(destinationPath);
 async function run(destinationPath) {
     let application = requireApplication(applicationsManager, destinationPath, logger);
     if (application === null) {
-        logger.error('Missing application - use \'dolittle create application [name]\' for a new application');
+        outputter.error('Missing application - use \'dolittle create application [name]\' for a new application');
         process.exit(1);
     }
 
-    let dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
+    let dependencies = [];
+    try {
+        dependencies = getBoundedContextsArgumentDependencies(boundedContextsManager, 'csharp'); // Language is hard coded, for now
+    } catch(error) {
+        outputter.error(error, 'It seems like you might be missing some boilerplates.\nUse \'dolittle boilerplates online\' to see what\'s available');
+        process.exit(0);
+    }
 
     showHelpIfNeeded(args, dependencies.argument.length);
 
     let context = contextFromArgs(args.sub, dependencies.argument);
 
     if (! (await globals.commandManager.createBoundedContext(context, application, dependencies.rest, destinationPath))) {
-        logger.error('Failed to create bounded context');
+        outputter.error('Failed to create bounded context');
         process.exit(1);
     }
     //TODO: Cannot index by 0 anymore when there are more adornments
-    let adornmentBoilerPlate = boilerPlatesManager.boilerPlatesByLanguageAndType('csharp', 'boundedContext-adornment')[0];
-    if (!adornmentBoilerPlate) {
-        logger.error('Failed to find bounded context adornment');
+    let adornmentBoilerPlates = boilerPlatesManager.boilerPlatesByLanguageAndType('csharp', 'boundedContext-adornment')[0];
+    if (!adornmentBoilerPlates || adornmentBoilerPlates.length < 1) {
+        outputter.error('Failed to find bounded context adornment.\nUse \'dolittle boilerplates online\' to see what\'s available');
         process.exit(1);
     }
     const boundedContextFolder = path.join(destinationPath, context.name);
@@ -51,7 +58,7 @@ async function run(destinationPath) {
         name: context.name,
         applicationId: application.id
     };
-    boilerPlatesManager.createInstance(adornmentBoilerPlate, boundedContextFolder, templateContext);
+    boilerPlatesManager.createInstance(adornmentBoilerPlates[0], boundedContextFolder, templateContext);
 
     process.chdir(context.name);
 
@@ -68,7 +75,7 @@ async function run(destinationPath) {
 
     glob('./Core/*.csproj', (err, matches) => {
         if (matches.length) {
-            logger.info('.NET Core project found - restoring packages');
+            outputter.print('.NET Core project found - restoring packages');
 
             addPackage('Veracity.Authentication.OpenIDConnect.Core','1.0.0', () => {
                 addPackage('Microsoft.AspNetCore.All','2.1.4', () => {
@@ -84,7 +91,7 @@ async function run(destinationPath) {
 
     let packageJsonFile = path.join(process.cwd(), 'Web', 'package.js');
     if (fs.existsSync(packageJsonFile)) {
-        logger.info('Web found - restoring packages');
+        outputter.print('Web found - restoring packages');
 
         let npmInstall = spawn('npm', ['install'], {
             cwd: './Web'
