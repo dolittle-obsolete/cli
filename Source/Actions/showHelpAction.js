@@ -7,7 +7,7 @@ import { Command } from '../Commands/Command';
 import { ParserResult } from '../ParserResult';
 
 /**
- *
+ * Prints help based on the context and the command
  *
  * @export
  * @param {Command} command
@@ -15,5 +15,5 @@ import { ParserResult } from '../ParserResult';
  * @param {import('../Commands/Command').CliContext} context
  */
 export default function showHelp(command, parserResult, context) {
-    
+    context.outputter.print(command.commandDocs);
 }

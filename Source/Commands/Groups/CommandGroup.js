@@ -6,13 +6,14 @@
 
 import {Command} from '../Command';
 
-export const commandGroups = [
-    'add',
-    'boilerplates',
-    'cluster',
-    'create'
-];
-export default class CommandGroup extends Command {
+/**
+ * Base class for {CommandGroup} commands
+ *
+ * @export
+ * @class CommandGroup
+ * @extends {Command}
+ */
+export class CommandGroup extends Command {
     
     /**
      * Creates an instance of {CommandGroup}.
@@ -22,7 +23,8 @@ export default class CommandGroup extends Command {
      * @memberof Command
      */
     constructor(group, help, usage) {
-        super(undefined, group, undefined, undefined, help, usage);
-        this.description = `${group} is a command group`;
+        super(group, `${group} is a command group grouping together common commands`,
+            usage, group, help);
+        
     }
 }

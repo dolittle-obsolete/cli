@@ -81,15 +81,28 @@ export class Command {
     /**
      * The action performed when the command is invoked by the CLI
      *
-     * 
      * @param {ParserResult} parserResult
      * @param {CliContext} context
      * @memberof Command
      */
-    action(parserResult, context) { showHelp(this, parserResult, context) }
+    async action(parserResult, context) { showHelp(this, parserResult, context) }
 
     get commandDocs() {
         let res = [`Usage: ${this.usage}`, '', `    ${this.description}`, '', this.help? this.help : ''];
         return res.join('\n');
+    }
+    /**
+     * Returns the JSON object representation of a {Command}
+     *
+     * @memberof Command
+     */
+    toJson() {
+        return {
+            name: this.name,
+            group: this.group,
+            description: this.description,
+            help: this.help,
+            usage: this.usage
+        }
     }
 }

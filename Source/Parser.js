@@ -10,15 +10,15 @@ export class Parser {
     parse(args = process.argv) {
         const {
             _,
-            help, version, debug,
+            h, help, v, version, d, debug,
             coreLang,
             '--': extraArgs,
             ...extraOptions
 
-        } = minimist(args, {
+        } = minimist(args.slice(2), {
             '--': true,
             string: ['coreLang'],
-            alias: {v: 'version', h: 'help', d: 'debug'}
+            boolean: ['h', 'help', 'v', 'version', 'd', 'debug']
         });
         const [firstArg, ...restArgs] = _;
         return new ParserResult(firstArg, restArgs, help, version, debug, coreLang, extraArgs, extraOptions)

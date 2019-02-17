@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/dolittle-tools/cli.git"
   },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "main": "bin/dolittle.js",
   "files": [
     "bin"
@@ -27,10 +30,15 @@
   "dependencies": {
     "@dolittle/tooling.common": "^5.0.0-alpha.2",
     "chalk": "^2.4.2",
+    "conf": "^2.2.0",
     "debug": "^4.1.1",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.2",
+    "listr": "^0.14.3",
+    "lodash": "^4.17.11",
     "minimist": "^1.2.0",
+    "omelette": "^0.4.12",
+    "opn": "^5.4.0",
     "ora": "^3.1.0",
     "semver": "^5.6.0",
     "update-notifier": "^2.5.0"
