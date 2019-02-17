@@ -6,16 +6,16 @@
  *--------------------------------------------------------------------------------------------*/
 import args from 'args';
 import globals from './globals';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 
 // * First run - configure default bounded-context language. Store in config file in ~/.dolittle
 // * 
 
 let pkg = require('../package.json');
-outputter.print(`Dolittle CLI v${pkg.version}\n`);
+Outputter.print(`Dolittle CLI v${pkg.version}\n`);
 args
     .command('update', 'Update dolittle', () => {
-        outputter.print('$ dolittle update serves another purpose now. It has not been implemented yet...');
+        Outputter.print('$ dolittle update serves another purpose now. It has not been implemented yet...');
     })
     .command('cluster', 'Work with cluster hosting Dolittle')
     .command('create', 'Create something from one of the boilerplates')

@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Application, BoundedContext, ArtifactTemplate, Dependency, helpers } from '@dolittle/tooling.common';
-import {  determineDestination, requireBoundedContext, contextFromArgs, getArtifactArgumentDependencies, createUsageTextForArtifact, showHelpIfNeeded, requireArtifactTemplate, groupBy } from './helpers';
-import { usagePrefix } from '../bin/helpers';
-import outputter from './outputter';
+import {  determineDestination, requireBoundedContext, contextFromArgs, getArtifactArgumentDependencies, createUsageTextForArtifact, showHelpIfNeeded, requireArtifactTemplate, groupBy } from '../old/helpers';
+import { usagePrefix } from '../../bin/helpers';
+import Outputter from '../Outputter';
 
 /**
  * Represents a manager for artifacts
@@ -52,7 +52,7 @@ export class CommandManager {
         try {
             dependencies = getArtifactArgumentDependencies(this.#artifactsManager, artifactType, boundedContext);
         } catch(error) {
-            outputter.error(error, 'It seems like you might be missing some boilerplates.\nUse \'dolittle boilerplates online\' to see what\'s available');
+            Outputter.error(error, 'It seems like you might be missing some boilerplates.\nUse \'dolittle boilerplates online\' to see what\'s available');
             process.exit(0);
         }
 
@@ -86,7 +86,7 @@ export class CommandManager {
      * @memberof CommandManager
      */
     async addArtifact(context, artifactTemplate, dependencies, destinationFolder) {
-        outputter.print(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.boilerplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
+        Outputter.print(`Creating artifact with artifacttype '${artifactTemplate.type}', language '${artifactTemplate.boilerplate.language}', name '${context['name']} and destination folder '${destinationFolder}'`);
         this.#folders.makeFolderIfNotExists(destinationFolder);
         context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, artifactTemplate.boilerplate.language, context);
         context = await this.#inquirer.promptUser(context, dependencies, destinationFolder, artifactTemplate.boilerplate.language);
@@ -101,7 +101,7 @@ export class CommandManager {
      * @memberof CommandManager
      */
     createApplication(context, dependencies, destinationFolder) {
-        outputter.print(`Creating application`);
+        Outputter.print(`Creating application`);
 
         context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, 'any', context);
         return this.#applicationsManager.createApplication(context, destinationFolder);
@@ -116,7 +116,7 @@ export class CommandManager {
      * @memberof CommandManager
      */
     async createBoundedContext(context, application, dependencies, destinationFolder) {
-        outputter.print(`Creating bounded context`);
+        Outputter.print(`Creating bounded context`);
         context['applicationId'] = application.id; // Hard coded, for now
         dependencies.push(...this.#boundedContextsManager.createInteractionDependencies('csharp'));
         context = this.#resolveNonPrompDependencies(dependencies, destinationFolder, 'csharp', context);

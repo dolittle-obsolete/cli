@@ -12,12 +12,12 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import globals from './globals.js';
-import outputter from './outputter.js';
+import Outputter from '../Outputter.js';
 
 let isWindows = process.platform == 'win32';
 
 if (!fs.existsSync('./bounded-context.json')) {
-    outputter.error('Missing "bounded-context.json" file - run "dolittle run" from a folder that holds this file');
+    Outputter.error('Missing "bounded-context.json" file - run "dolittle run" from a folder that holds this file');
 } else {
     const dolittleMongoLabel = 'dolittle-mongo';
 
@@ -27,21 +27,21 @@ if (!fs.existsSync('./bounded-context.json')) {
     let isMongoRunning = false;
     docker.listContainers((err, containers) => {
         if( err ) {
-            outputter.error(err);
+            Outputter.error(err);
             return;
         }
 
         if( containers != null ) {
             containers.forEach(container => {
                 if (container.Labels.hasOwnProperty(dolittleMongoLabel)) {
-                    outputter.print('Mongo is already running');
+                    Outputter.print('Mongo is already running');
                     isMongoRunning = true;
                 }
             });
         }
 
         if (!isMongoRunning) {
-            outputter.print('Starting a MongoDB Docker Container');
+            Outputter.print('Starting a MongoDB Docker Container');
 
             docker.run('mongo', [], [process.stdout, process.stderr], {
                 Labels: {
@@ -61,7 +61,7 @@ if (!fs.existsSync('./bounded-context.json')) {
     });
 
     let dotnetWatch = () => {
-        outputter.print('Starting .NET watcher');
+        Outputter.print('Starting .NET watcher');
         let dotnet = spawn('dotnet', ['watch','run'], {
             cwd: 'Core'
         });
@@ -70,7 +70,7 @@ if (!fs.existsSync('./bounded-context.json')) {
     };
 
     let webpackWatch = () => {
-        outputter.print('Starting webpack watcher');
+        Outputter.print('Starting webpack watcher');
         
         let webpackPath = isWindows?path.join(process.env.APPDATA,'npm','webpack.cmd'):'webpack';
 
@@ -88,12 +88,12 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     glob('./Core/*.csproj', (err, matches) => {
         if (matches.length) {
-            outputter.print('.NET Core project found');
+            Outputter.print('.NET Core project found');
 
             let projectJson = path.join('Core','obj','project.assets.json');
 
             if( !fs.existsSync(projectJson)) {
-                outputter.print('.NET Restore has not ran yet - running it');
+                Outputter.print('.NET Restore has not ran yet - running it');
                 let dotnetRestore = exec('dotnet restore', {
                     cwd: 'Core'
                 });
@@ -108,7 +108,7 @@ if (!fs.existsSync('./bounded-context.json')) {
 
     let webpackFile = path.join(process.cwd(),'Web','webpack.config.js');
     if( fs.existsSync(webpackFile)) {
-        outputter.print('Web project found');
+        Outputter.print('Web project found');
 
         let nodeModules = path.join(process.cwd(),'Web','node_modules');
         if( !fs.existsSync(nodeModules)) {

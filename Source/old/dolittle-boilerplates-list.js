@@ -8,16 +8,16 @@
 import args from 'args';
 import globals from './globals';
 import {boilerPlatesManager} from '@dolittle/tooling.common';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 
-let spinner = outputter.spinner('Boilerplates in use:\n').start();
+let spinner = Outputter.spinner('Boilerplates in use:\n').start();
 
 let boilerplates = boilerPlatesManager.boilerPlates;
 let numBoilerplates = boilerplates.length;
 if (numBoilerplates > 0) {
     spinner.succeed(`There are ${numBoilerplates} in use`);
     boilerplates.forEach(boilerplate => {
-        outputter.print(
+        Outputter.print(
             `${boilerplate.name}: 
     Type: ${boilerplate.type}
     Language: ${boilerplate.language}

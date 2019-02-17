@@ -8,8 +8,8 @@
 import args from 'args';
 import globals from './globals';
 import {boilerPlatesManager} from '@dolittle/tooling.common';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 
-let discoverSpinner = outputter.spinner('Discovering installed boilerplates...').start();
+let discoverSpinner = Outputter.spinner('Discovering installed boilerplates...').start();
 boilerPlatesManager.discoverInstalledBoilerplates();
 discoverSpinner.succeed('Finished discovering boilerplates');

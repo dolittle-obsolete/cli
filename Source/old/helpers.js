@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import {Application, ApplicationsManager, ArtifactsManager, BoundedContext, BoundedContextsManager, Dependency} from '@dolittle/tooling.common';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 /**
  * The usage prefix used in commands info
  * @returns {string} the usage prefix
@@ -11,7 +11,7 @@ import outputter from './outputter';
 export const usagePrefix = '\n\t ';
 
 export function handleUncaughtException(error, logger) {
-    outputter.error(error, 'Please register your issue with the error message and stacktrace on our issues page: https://github.com/dolittle-tools/cli/issues');
+    Outputter.error(error, 'Please register your issue with the error message and stacktrace on our issues page: https://github.com/dolittle-tools/cli/issues');
 }
 
 /**
@@ -26,7 +26,7 @@ export function handleUncaughtException(error, logger) {
 export function requireApplication(applicationsManager, folder, logger) {
     let application = applicationsManager.getApplicationFrom(folder);
     if (application === undefined || application === null) {
-        outputter.error(new Error('Could not discover the application configuration'));
+        Outputter.error(new Error('Could not discover the application configuration'));
         return null;
     }
     return application;
@@ -44,7 +44,7 @@ export function requireBoundedContext(boundedContextsManager, folder, logger) {
     
     let boundedContext = boundedContextsManager.getNearestBoundedContextConfig(folder);
     if (!boundedContext) {
-        outputter.error(new Error('Could not discover the bounded context configuration'));
+        Outputter.error(new Error('Could not discover the bounded context configuration'));
         return null;
     }
     return boundedContext;
@@ -61,7 +61,7 @@ export function requireBoundedContext(boundedContextsManager, folder, logger) {
 export function requireArtifactTemplate(artifactsManager, language, artifactType, logger) {
     let artifactTemplate = artifactsManager.getArtifactTemplate(language, artifactType);
     if (!artifactTemplate) {
-        outputter.error(new Error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`));
+        Outputter.error(new Error(`Could not discover the artifact template configuration for artifacttype '${artifactType}' with language '${language}'`));
         return null;
     }
     return artifactTemplate;

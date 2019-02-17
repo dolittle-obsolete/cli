@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {logger, dependenciesManager, folders, applicationsManager, boundedContextsManager, boilerPlatesManager, artifactsManager, dolittleConfig} from '@dolittle/tooling.common';
-import { Inquirer } from './Inquirer';
-import { CommandManager } from './CommandManager';
+import { Inquirer } from '../Inquirer';
+import { CommandManager } from '../Commands/CommandManager';
 import { handleUncaughtException } from './helpers';
 import updateNotifier from 'update-notifier';
 

@@ -9,9 +9,9 @@ import args from 'args';
 import globals from './globals';
 import path from 'path';
 import {boilerPlatesManager, filesystem} from '@dolittle/tooling.common';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 
-let spinner = outputter.spinner('Installed boilerplates:\n').start();
+let spinner = Outputter.spinner('Installed boilerplates:\n').start();
 let paths = boilerPlatesManager.installedBoilerplatePaths;
 
 let boilerplatesAndPackages = paths.map(boilerplatePaths => {
@@ -23,7 +23,7 @@ let numBoilerplates = boilerplatesAndPackages.length;
 if (numBoilerplates > 0) {
     spinner.succeed(`Found ${numBoilerplates} installed boilerplates`);
     boilerplatesAndPackages.forEach(boilerplateAndPackage => {
-        outputter.print(
+        Outputter.print(
             `${boilerplateAndPackage.packageJson.name}:${boilerplateAndPackage.packageJson.version} 
 Boilerplate name: ${boilerplateAndPackage.boilerplate.name}
 Description: ${boilerplateAndPackage.boilerplate.description}

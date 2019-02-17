@@ -5,7 +5,7 @@
 
 import {Logger} from 'winston';
 import {Dependency, Boilerplate} from '@dolittle/tooling.common'
-import outputter from './outputter';
+import Outputter from './Outputter';
 
 const inquirer = require('inquirer');
 
@@ -82,7 +82,7 @@ export class Inquirer {
                 questions.push(...this.#createPrompt(dep));
             } 
             else {
-                outputter.error(`Found an invalid 'type' on dependency: '${dep.type}'`);
+                Outputter.error(`Found an invalid 'type' on dependency: '${dep.type}'`);
                 throw new Error(`Invalid type '${dependency.type}'`);
             }
         });
@@ -111,7 +111,7 @@ export class Inquirer {
             return this.#createCheckboxPrompt(dependency, dependency.promptMessage || 'Input', items);
         }
         else {
-            outputter.error(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
+            Outputter.error(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
             throw new Error(`Invalid userInputType '${inputType}'`)
         }
     }

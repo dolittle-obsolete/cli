@@ -10,9 +10,9 @@ import globals from './globals';
 import {boilerPlatesManager} from '@dolittle/tooling.common';
 import semver from 'semver';
 import { usagePrefix } from './helpers';
-import outputter from './outputter';
+import Outputter from '../Outputter';
 
-let spinner = outputter.spinner('Checking versions:\n').start();
+let spinner = Outputter.spinner('Checking versions:\n').start();
 let paths = boilerPlatesManager.installedBoilerplatePaths;
 let locallyInstalled = [];
 paths.map(path => JSON.parse(require('fs').readFileSync(require('path').join(path, 'package.json'), {encoding: 'utf8'})))
@@ -30,7 +30,7 @@ new Promise(async (resolve) => {
                 if (semver.gt(latestVersion, pkg.version)) {
                     outOfDatePackages.push({name: pkg.name, version: pkg.version, latest: latestVersion});
                     spinner.warn(`${pkg.name}: ${pkg.version} ==> ${latestVersion} `);
-                    spinner = outputter.spinner().start();
+                    spinner = Outputter.spinner().start();
                 }
             }).catch(_ => spinner.fail(`Failed to fetch ${pkg.name}`));
     }
@@ -39,8 +39,8 @@ new Promise(async (resolve) => {
 }).then(outOfDatePackages => {
     if (outOfDatePackages.length > 0) {
         spinner.warn(`There are ${outOfDatePackages.length} out-of-date packages:\n`);
-        outputter.warn('Update all packages with');
-        outputter.warn(`$ npm i -g ${outOfDatePackages.map(_ => _.name).join(' ')}`);
+        Outputter.warn('Update all packages with');
+        Outputter.warn(`$ npm i -g ${outOfDatePackages.map(_ => _.name).join(' ')}`);
     } 
     else spinner.succeed('All boilerplates are up-to-date');
 });

@@ -5,7 +5,7 @@
 import chalk from 'chalk';
 import ora from 'ora';
 
-class outputter {
+export class Outputter {
     
     print(...args) {
         console.log(...args);
@@ -27,4 +27,4 @@ class outputter {
     }
 }
 
-export default new outputter();
+export default new Outputter();
