@@ -3,16 +3,12 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Command } from '../Command';
 
-export class DiscoverableCommands {
-    
-    /**
-     * 
-     * @returns {Command[]} The discovered commands
-     * @memberof DiscoverableCommands
-     */
-    async discover() {
-        
-    }
+/**
+ * @typedef {{outputter: Outputter, commandManager: CommandManager, inquirer: Inquirer, options: {name: string, value: any}[]}} CliContext
+ */
+
+
+export class CliContext {
+    outputter;
 }

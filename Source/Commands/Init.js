@@ -5,11 +5,11 @@
 
 import { Command } from './Command';
 
-export class HelpCommand extends Command{
+class Init extends Command{
     constructor() {
-        super('help', 'Displays help information', 
-            'usage: \n\t$ dolittle help\n\t$ dolittle --help\n\t$ dolittle -h\n\t$ dolittle <any command> [help, --help, -h]');
+        super('init', 'Initializes the Dolittle CLI', 
+            'usage: dolittle init', undefined, 'Sets up the environment for the CLI');
     }
 }
 
-export default new HelpCommand();
+export default new Init();

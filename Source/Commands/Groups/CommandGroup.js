@@ -16,15 +16,25 @@ import {Command} from '../Command';
 export class CommandGroup extends Command {
     
     /**
+     * The list commands belonging to this group
+     *
+     * @type {Command[]}
+     * @memberof CommandGroup
+     */
+    commands = [];
+    /**
      * Creates an instance of {CommandGroup}.
+     * @param {Command[]} commands
      * @param {string} group
      * @param {string} help
      * @param {string} usage
      * @memberof Command
      */
-    constructor(group, help, usage) {
+    constructor(commands, group, help, usage) {
         super(group, `${group} is a command group grouping together common commands`,
             usage, group, help);
+
+        this.commands = commands;
         
     }
 }

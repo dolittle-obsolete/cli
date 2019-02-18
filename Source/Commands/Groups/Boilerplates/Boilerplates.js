@@ -3,29 +3,32 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { CommandGroup } from './CommandGroup';
-import { Command } from '../Command';
+import { CommandGroup } from '../CommandGroup';
+import { Command } from '../../Command';
+import dolittleCommand from './Dolittle';
+import onlineCommand from './Online';
 
-
+export const group = 'boilerplates';
 /**
- * The Add {CommandGroup}
+ * The Boilerplates {CommandGroup}
  *
  * @export
- * @class Add
+ * @class Boilerplates
  * @extends {CommandGroup}
  */
-export class Add extends CommandGroup {
+class Boilerplates extends CommandGroup {
     /**
-     * Creates an instance of Add.
+     * Creates an instance of {Boilerlates}.
      * @param {Command[]} commands
-     * @memberof Add
+     * @memberof Boilerplates
      */
     constructor(commands) {
-        const group = 'add';
-        const help = 'Creates and adds a dolittle artifact to the currenent dolittle project.';
+        const help = 'Group of the commands related to boilerplates.';
         const usage = `usage:
 ${commands.map( cmd => `\t$ dolittle ${group} ${cmd.name}`).join('\n')}`;
         
-        super(group, help, usage);
+        super(commands, group, help, usage);
     }
 }
+
+export default new Boilerplates([dolittleCommand, onlineCommand])

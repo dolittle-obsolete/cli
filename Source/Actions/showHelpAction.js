@@ -11,9 +11,12 @@ import { ParserResult } from '../ParserResult';
  *
  * @export
  * @param {Command} command
- * @param {ParserResult} args
+ * @param {ParserResult} parserResult
  * @param {import('../Commands/Command').CliContext} context
  */
 export default function showHelp(command, parserResult, context) {
-    context.outputter.print(command.commandDocs);
+    if (!command || !parserResult.firstArg) { 
+        context.outputter.print()
+    }
+    context.outputter.print(command.helpDocs);
 }

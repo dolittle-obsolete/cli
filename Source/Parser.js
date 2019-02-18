@@ -6,7 +6,27 @@
 import minimist from 'minimist';
 import { ParserResult } from './ParserResult';
 
+/**
+ * The parser of the CLI arguments.
+ *
+ * @export
+ * @class Parser
+ */
 export class Parser {
+    /**
+     * Parses the given arguments.
+     * 
+     * Parsed options:
+     * 
+     *     [-v|--version]
+     *     [-h|--help]
+     *     [-d|--debug]
+     *     [--coreLang] 
+     *
+     * @param {*} [args=process.argv]
+     * @returns
+     * @memberof Parser
+     */
     parse(args = process.argv) {
         const {
             _,
@@ -21,7 +41,7 @@ export class Parser {
             boolean: ['h', 'help', 'v', 'version', 'd', 'debug']
         });
         const [firstArg, ...restArgs] = _;
-        return new ParserResult(firstArg, restArgs, help, version, debug, coreLang, extraArgs, extraOptions)
+        return new ParserResult(firstArg, restArgs, help || h, version || v, debug || d, coreLang, extraArgs, extraOptions);
 
     }
 }

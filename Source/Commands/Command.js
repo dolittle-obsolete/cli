@@ -1,18 +1,14 @@
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+
 
 import { CommandManager } from "./CommandManager";
 import { Inquirer } from "../Inquirer";
 import { Outputter } from "../Outputter";
 import showHelp from "../Actions/showHelpAction";
 import { ParserResult } from "../ParserResult";
-
-/**
- * @typedef {{outputter: Outputter, commandManager: CommandManager, inquirer: Inquirer, options: {name: string, value: any}[]}} CliContext
- */
 
  /**
  * The base class of a command
@@ -61,22 +57,30 @@ export class Command {
      * @memberof Command
      */
     usage;
+    /**
+     * The arguments for this particular command
+     * @type {string[]}
+     * @memberof Command
+     */
+    args;
     
     /**
      * Creates an instance of Command.
      * @param {string} name
-     * @param {string} group
      * @param {string} description
      * @param {string} usage
-     * @param {string} help
+     * @param {string?} group
+     * @param {string?} help
+     * @param {string[]?} args
      * @memberof Command
      */
-    constructor(name, description, usage, group = undefined, help = undefined) {
+    constructor(name, description, usage, group = undefined, help = undefined, args = []) {
         this.name = name;
         this.group = group;
         this.description = description;
         this.usage = usage;
         this.help = help;
+        this.args = args;
     }
     /**
      * The action performed when the command is invoked by the CLI
@@ -87,7 +91,7 @@ export class Command {
      */
     async action(parserResult, context) { showHelp(this, parserResult, context) }
 
-    get commandDocs() {
+    get helpDocs() {
         let res = [`Usage: ${this.usage}`, '', `    ${this.description}`, '', this.help? this.help : ''];
         return res.join('\n');
     }
