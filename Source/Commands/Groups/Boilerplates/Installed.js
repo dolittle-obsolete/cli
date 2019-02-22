@@ -5,26 +5,25 @@
 
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
-import dolittleBoilerplates from '../../../Actions/fetchDolittleBoilerplates';
+import { ParserResult } from '../../../ParserResult';
+import { CliContext } from '../../../../bin/CliContext';
 
-class Dolittle extends Command {
+class Installed extends Command {
     /**
-     * Creates an instance of {Dolittle}.
-     * @memberof Dolittle
+     * Creates an instance of {Online}.
+     * @memberof Installed
      */
     constructor() {
-        super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'usage: dolittle boilerplates dolittle', group);
+        super('installed', 'Lists installed boilerplates', 'usage: dolittle boilerplates installed', group);
     }
     /**
      * @inheritdoc
      * @param {ParserResult} parserResult
-     * @param {} context
+     * @param {CliContext} context
      */
     async action(parserResult, context) {
-        let boilerplates = await dolittleBoilerplates(context.managers.boilerplatesManager, context.outputter);
         
-        boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));
     }
 }
 
-export default new Dolittle();
+export default new Installed();

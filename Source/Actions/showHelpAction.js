@@ -15,8 +15,8 @@ import { ParserResult } from '../ParserResult';
  * @param {import('../Commands/Command').CliContext} context
  */
 export default function showHelp(command, parserResult, context) {
-    if (!command || !parserResult.firstArg) { 
-        context.outputter.print()
+    if (!command || !parserResult.firstArg) {
+        context.outputter.print('no such command');
     }
     context.outputter.print(command.helpDocs);
 }

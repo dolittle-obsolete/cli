@@ -3,23 +3,18 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {Logger} from 'winston';
 import {Dependency, Boilerplate} from '@dolittle/tooling.common'
 import Outputter from './Outputter';
-
-const inquirer = require('inquirer');
+import inquirer from 'inquirer';
 
 export class Inquirer {
     #dependencyManager;
-    #logger;
     /**
      * Initializes a new instance of {Inquirer}
      * @param {DependencyManager} dependencyManager
-     * @param {Logger} logger
      */
-    constructor(dependencyManager, logger) {
+    constructor(dependencyManager) {
         this.#dependencyManager = dependencyManager;
-        this.#logger = logger;
         
     }
     /**

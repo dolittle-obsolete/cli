@@ -4,8 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import debug from 'debug';
+export {default as debug} from 'debug';
 
-export default {
-    error: debug('dolittle:error'),
-    log: debug('dolittle:log')
-};
+let log = debug('dolittle:log');
+log.log = console.log.bind(console);
+
+export const error = debug('dolittle:error');
+
+export default log;
