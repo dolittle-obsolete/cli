@@ -23,12 +23,11 @@ class Boilerplates extends CommandGroup {
      * @memberof Boilerplates
      */
     constructor(commands) {
-        const help = 'Group of the commands related to boilerplates.';
-        const usage = `usage:
-${commands.map( cmd => `\t$ dolittle ${group} ${cmd.name}`).join('\n')}`;
-        
-        super(commands, group, help, usage);
+        super(commands, group, 
+            'Group of the commands related to boilerplates.',
+            'dolittle boilerplates <sub-command>'
+        );
     }
 }
 
-export default new Boilerplates([dolittleCommand, onlineCommand])
+export default new Boilerplates([dolittleCommand, onlineCommand]);

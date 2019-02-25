@@ -3,7 +3,6 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { CommandGroup } from '../CommandGroup';
 import { Command } from '../../Command';
 import { DiscoverableGroup } from '../DiscoverableGroup';
 
@@ -16,6 +15,7 @@ import { DiscoverableGroup } from '../DiscoverableGroup';
  * @extends {DiscoverableGroup}
  */
 export class Add extends DiscoverableGroup {
+    
     #boilerplatesManager;
     #artifactsManager;
     /**
@@ -23,15 +23,18 @@ export class Add extends DiscoverableGroup {
      * @memberof Add
      */
     constructor(boilerplatesManager, artifactsManager) {
-        const group = 'add';
-        const help = 'Creates and adds a dolittle artifact to the currenent dolittle project.';
-        const usage = `usage:
-${commands.map( cmd => `\t$ dolittle ${group} ${cmd.name}`).join('\n')}`;
-        
-        super(group, help, usage);
-
+        super('', '', '');
         this.#boilerplatesManager = boilerplatesManager;
         this.#artifactsManager = artifactsManager;
+
+        this.group = 'add';
+        this.help = 'Creates and adds a dolittle artifact to the current dolittle project.';
+        this.usage = 
+`usage: dolittle [<namespace>] add <sub-command> 
+
+    Sub commands:
+        ${this.commands.map(cmd => cmd.helpDocs).join('\n\t\t')}`;
+        
     }
 
     /**

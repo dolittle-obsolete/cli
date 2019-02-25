@@ -9,6 +9,7 @@ import { Inquirer } from "../Inquirer";
 import { Outputter } from "../Outputter";
 import showHelp from "../Actions/showHelpAction";
 import { ParserResult } from "../ParserResult";
+import { CliContext } from "../CliContext";
 
  /**
  * The base class of a command
@@ -63,9 +64,15 @@ export class Command {
      * @memberof Command
      */
     args;
-    
     /**
-     * Creates an instance of Command.
+     * The short description of the command. If none is specified the short description is the normal description
+     *
+     * @memberof Command
+     */
+    shortDescription;
+
+    /**
+     * Creates an instance of {Command}.
      * @param {string} name
      * @param {string} description
      * @param {string} usage
@@ -74,13 +81,14 @@ export class Command {
      * @param {string[]?} args
      * @memberof Command
      */
-    constructor(name, description, usage, group = undefined, help = undefined, args = []) {
+    constructor(name, description, usage, group = undefined, help = undefined, args = [], shortDescription = undefined) {
         this.name = name;
         this.group = group;
         this.description = description;
         this.usage = usage;
         this.help = help;
         this.args = args;
+        this.shortDescription = shortDescription? shortDescription : description;
     }
     /**
      * The action performed when the command is invoked by the CLI
@@ -106,7 +114,7 @@ export class Command {
             group: this.group,
             description: this.description,
             help: this.help,
-            usage: this.usage
+            usage: this.usage,
         }
     }
 }

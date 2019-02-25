@@ -37,4 +37,20 @@ export class CommandGroup extends Command {
         this.commands = commands;
         
     }
+    /**
+     * Generates and gets the whole 'help' text for a {CommandGroup}
+     *
+     * @readonly
+     * @memberof CommandGroup
+     */
+    get commandGroupHelpDocs() {
+        let res = [];
+        if (this.usage) res.push(`usage: ${this.usage}`);
+        if (this.commands.length > 0) res.push('', 'Sub Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        if (this.description) res.push('', this.description);
+        if (this.help) res.push('', this.help);
+        
+        return res.join('\n');
+    }
+
 }

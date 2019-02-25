@@ -27,10 +27,7 @@ export class Create extends DiscoverableGroup {
     constructor(boilerplatesManager, applicationsManager, boundedContextsManager) {
         const group = 'create';
         const help = 'Scaffolding of dolittle structures, based on boilerplates.';
-        const usage = `usage: dolittle ${group} [<args>]
-
-        Commands:
-            ${commands.map( cmd => `\t$ dolittle ${group} ${cmd.name}`).join('\n')}`;
+        const usage = '';
         
         super(group, help, usage);
 

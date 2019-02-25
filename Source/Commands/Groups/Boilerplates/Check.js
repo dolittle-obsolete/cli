@@ -8,13 +8,13 @@ import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
 
-class Installed extends Command {
+class Check extends Command {
     /**
-     * Creates an instance of {Online}.
+     * Creates an instance of {Check}.
      * @memberof Installed
      */
     constructor() {
-        super('installed', 'Lists installed boilerplates', 'usage: dolittle boilerplates installed', group);
+        super('check', 'Lists installed boilerplates that are out of date', 'dolittle boilerplates check', group, '');
     }
     /**
      * @inheritdoc
@@ -26,4 +26,4 @@ class Installed extends Command {
     }
 }
 
-export default new Installed();
+export default new Check();

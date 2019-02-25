@@ -6,6 +6,7 @@
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import dolittleBoilerplates from '../../../Actions/fetchDolittleBoilerplates';
+import { CliContext } from '../../../CliContext';
 
 class Dolittle extends Command {
     /**
@@ -18,7 +19,7 @@ class Dolittle extends Command {
     /**
      * @inheritdoc
      * @param {ParserResult} parserResult
-     * @param {} context
+     * @param {CliContext} context
      */
     async action(parserResult, context) {
         let boilerplates = await dolittleBoilerplates(context.managers.boilerplatesManager, context.outputter);

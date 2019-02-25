@@ -8,6 +8,7 @@ import initCommand from './Init';
 import { CommandGroup } from './Groups/CommandGroup';
 import { Add } from './Groups/Add/Add';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
+import { Create } from './Groups/Create/Create';
 
 /**
  * Represents a manager for commands
@@ -43,9 +44,9 @@ export class CommandManager {
             initCommand
         ]);
         this.commandGroups.push(...[
-            new Add([]),
+            new Add(this.#boilerplatesManager, this.#artifactsManager),
             boilerplatesCommandGroup,
-            new Create([])
+            new Create(this.#boilerplatesManager, this.#applicationsManager, this.#boundedContextsManager)
         ]);
     }
     /**

@@ -6,6 +6,7 @@
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
+import { CliContext } from '../../../CliContext';
 
 class Online extends Command{
     /**
@@ -18,7 +19,7 @@ class Online extends Command{
     /**
      * @inheritdoc
      * @param {ParserResult} parserResult
-     * @param {} context
+     * @param {CliContext} context
      */
     async action(parserResult, context) {
         
