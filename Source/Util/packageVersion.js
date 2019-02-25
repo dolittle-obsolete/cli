@@ -5,6 +5,7 @@
 
 import latestVersion from 'latest-version';
 import semver from 'semver';
+import outputter from '../Outputter';
 
 /**
  * Gets the latest version of a package from npmjs.com
@@ -14,7 +15,9 @@ import semver from 'semver';
  * @returns The latest version
  */
 export async function getLatestVersion(pkgName) {
+    let spinner = outputter.spinner(`Getting latest version of ${pkgName}`).start();
     let version = await latestVersion(pkgName);
+    spinner.stop(`Got latest version of ${pkgName}`);
     return version;
 } 
 /**
