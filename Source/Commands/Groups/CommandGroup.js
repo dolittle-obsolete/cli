@@ -7,6 +7,7 @@
 import {Command} from '../Command';
 import { CliContext } from '../../CliContext';
 import { ParserResult } from '../../ParserResult';
+import chalk from 'chalk';
 
 /**
  * Base class for {CommandGroup} commands
@@ -44,10 +45,10 @@ export class CommandGroup extends Command {
      * @memberof CommandGroup
      */
     get helpDocs() {
-        let res = ['Usage:', `\t${this.usage}`];
+        let res = [chalk.bold('Usage:'), `\t${this.usage}`];
         res.push('', this.description);
-        if (this.commands.length > 0) res.push('', 'Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
-        if (this.help) res.push('', 'Help: ', this.help);
+        if (this.commands.length > 0) res.push('', chalk.bold('Commands:'), this.commands.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
+        if (this.help) res.push('', chalk.bold('Help:'), this.help);
         
         return res.join('\n');
     }
@@ -67,8 +68,9 @@ export class CommandGroup extends Command {
             await command.action(parserResult, context);
         }
         else {
-            cliContext.outputter.error(`No such sub command '${parserResult.firstArg}'`);
-            context.outputter.print(this.commandGroupHelpDocs);
+            context.outputter.warn(`No such sub command as '${parserResult.firstArg}'`);
+            context.outputter.print();
+            context.outputter.print(this.helpDocs);
         }
     }
 }

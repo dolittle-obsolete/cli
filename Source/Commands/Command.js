@@ -99,9 +99,9 @@ export class Command {
      * @memberof Command
      */
     get helpDocs() {
-        let res = ['Usage:', `\t${this.usage}`];
+        let res = [chalk.bold('Usage:'), `\t${this.usage}`];
         res.push('', this.description);
-        if (this.help) res.push('', 'Help:', this.help);
+        if (this.help) res.push('', chalk.bold('Help:'), this.help);
         
         return res.join('\n');
     }

@@ -12,7 +12,7 @@ export class Outputter {
         console.log(...args);
     }
     warn(...args) {
-        console.warn(...args);
+        console.warn(...args.map(_ => chalk.yellow(_)));
     }
     
     error(error, ...args) {
