@@ -7,22 +7,30 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
+import installedBoilerplates from './installedBoilerplates';
 
 class Installed extends Command {
+    
     /**
      * Creates an instance of {Online}.
      * @memberof Installed
      */
     constructor() {
-        super('installed', 'Lists installed boilerplates', 'usage: dolittle boilerplates installed', group);
+        super('installed', 'Lists installed boilerplates', 'dolittle boilerplates installed', group);
     }
+
     /**
      * @inheritdoc
      * @param {ParserResult} parserResult
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-        
+        if (parserResult.help) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
+        let boilerplates = await installedBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
+        boilerplates.forEach(_ => context.outputter.print(_.packageJson.name));
     }
 }
 

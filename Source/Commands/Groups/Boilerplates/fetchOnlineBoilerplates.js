@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import {BoilerplatesManager} from '@dolittle/tooling.common';
-import { Outputter } from '../Outputter';
+import { Outputter } from '../../../Outputter';
 
 /**
  * Fetches the online dolittle boilerplates from npmjs
@@ -13,11 +13,11 @@ import { Outputter } from '../Outputter';
  * @param {Outputter} outputter
  * @returns {Promise<>}
  */
-async function dolittleBoilerplates(boilerplatesManager, outputter) {
-    let spinner = outputter.spinner('Getting dolittle boilerplates (this might take a while, depending on your internet connection): ').start();
-    let boilerplates = await boilerplatesManager.discoverOnlineDolittleBoilerplates()
+async function onlineBoilerplates(boilerplatesManager, outputter, keywords = [], limit = 250) {
+    let spinner = outputter.spinner('Getting boilerplates (this might take a while, depending on your internet connection): ').start();
+    let boilerplates = await boilerplatesManager.discoverOnlineBoilerplates(keywords, limit)
         .then(boilerplates => {
-            spinner.succeed(`Fetched ${boilerplates.length} dolittle boilerplates`);
+            spinner.succeed(`Fetched ${boilerplates.length} boilerplates`);
             return boilerplates;
         }).catch(error => {
             spinner.fail(error);
@@ -26,4 +26,4 @@ async function dolittleBoilerplates(boilerplatesManager, outputter) {
     return boilerplates;
 }
 
-export default dolittleBoilerplates;
+export default onlineBoilerplates;

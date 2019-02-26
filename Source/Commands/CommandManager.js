@@ -9,6 +9,13 @@ import { CommandGroup } from './Groups/CommandGroup';
 import { Add } from './Groups/Add/Add';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
 import { Create } from './Groups/Create/Create';
+import { ParserResult } from '../ParserResult';
+import { CliContext } from '../CliContext';
+
+const description = 
+`The Dolittle CLI helps developers develop dolittle-based applications fast`;
+const help = 
+'Something';
 
 /**
  * Represents a manager for commands
@@ -59,5 +66,45 @@ export class CommandManager {
         let commands = this.commands;
         this.commandGroups.forEach(_ => commands.push(..._.commands));
         return commands;
+    }
+    /**
+     * Gets the help message giving an overview of the CLI tool
+     *
+     * @readonly
+     * @memberof CommandManager
+     */
+    get helpDocs() {
+        let res = [
+            'usage: dolittle [<namespace>] <command-group> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [-n | --namespace]'
+        ];
+        if (this.commands.length > 0) res.push('', 'Basic Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        if (this.commandGroups.length > 0) res.push('', 'Command Groups:', this.commandGroups.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        if (description) res.push('', description);
+        if (help) res.push('', help);
+        return res.join('\n');
+    }
+    /**
+     * Startingpoint of command execution
+     *
+     * @param {ParserResult} parserResult
+     * @param {CliContext} cliContext
+     * @memberof CommandManager
+     */
+    async execute(parserResult, cliContext) {
+        if (!parserResult.firstArg) {
+            cliContext.outputter.print(this.helpDocs);
+            return;
+        }
+        let isCommandGroup = this.commandGroups.map(_ => _.name).includes(parserResult.firstArg);
+        let isBasicCommand = this.commands.map(_ => _.name).includes(parserResult.firstArg);
+        let command = null;
+        if (isBasicCommand) command = this.commands.find(_ => _.name === parserResult.firstArg);
+        else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === parserResult.firstArg);
+        else {
+            cliContext.outputter.error(`No such command or command group '${parserResult.firstArg}'`);
+            cliContext.outputter.print(this.helpDocs);
+        }
+        parserResult.firstArg = parserResult.restArgs.shift();
+        await command.action(parserResult, cliContext);
     }
 }

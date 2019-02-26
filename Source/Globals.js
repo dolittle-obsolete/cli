@@ -100,14 +100,14 @@ class Globals {
                 artifactsManager: managers.artifactsManager,
                 dependenciesManager: managers.dependenciesManager,
                 commandManager: this.#commandManager
-            }, this.#inquirer);
+            }, this.#inquirer, require('fs'));
         
         spinner.stop();
     }
     
     #installHandlers() {
         process.on('unhandledRejection', (reason, _) => {
-            outputter.error(error, 'Unhandled rejection:', reason.stack);
+            outputter.error(reason, 'Unhandled rejection:', reason.stack);
             process.exit(1);
         });
     }

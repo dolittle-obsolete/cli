@@ -7,7 +7,6 @@
 import { CommandManager } from "./CommandManager";
 import { Inquirer } from "../Inquirer";
 import { Outputter } from "../Outputter";
-import showHelp from "../Actions/showHelpAction";
 import { ParserResult } from "../ParserResult";
 import { CliContext } from "../CliContext";
 
@@ -59,12 +58,6 @@ export class Command {
      */
     usage;
     /**
-     * The arguments for this particular command
-     * @type {string[]}
-     * @memberof Command
-     */
-    args;
-    /**
      * The short description of the command. If none is specified the short description is the normal description
      *
      * @memberof Command
@@ -81,13 +74,12 @@ export class Command {
      * @param {string[]?} args
      * @memberof Command
      */
-    constructor(name, description, usage, group = undefined, help = undefined, args = [], shortDescription = undefined) {
+    constructor(name, description, usage, group = undefined, help = undefined, shortDescription = undefined) {
         this.name = name;
-        this.group = group;
         this.description = description;
         this.usage = usage;
+        this.group = group;
         this.help = help;
-        this.args = args;
         this.shortDescription = shortDescription? shortDescription : description;
     }
     /**
@@ -97,10 +89,20 @@ export class Command {
      * @param {CliContext} context
      * @memberof Command
      */
-    async action(parserResult, context) { showHelp(this, parserResult, context) }
-
+    async action(parserResult, context) { 
+        context.outputter.print(this.helpDocs);
+    }
+    /**
+     * Gets the message that should be printed when help is needed for a command
+     *
+     * @readonly
+     * @memberof Command
+     */
     get helpDocs() {
-        let res = [`Usage: ${this.usage}`, '', `    ${this.description}`, '', this.help? this.help : ''];
+        let res = ['Usage:', `\t${this.usage}`];
+        res.push('', this.description);
+        if (this.help) res.push('', this.help);
+        
         return res.join('\n');
     }
     /**

@@ -5,6 +5,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import {Command} from '../Command';
+import { CliContext } from '../../CliContext';
+import { ParserResult } from '../../ParserResult';
 
 /**
  * Base class for {CommandGroup} commands
@@ -30,27 +32,43 @@ export class CommandGroup extends Command {
      * @param {string} usage
      * @memberof Command
      */
-    constructor(commands, group, help, usage) {
-        super(group, `${group} is a command group grouping together common commands`,
-            usage, group, help);
+    constructor(commands, group, description, usage, help = undefined, shortDescription = undefined) {
+        super(group, description, usage, group, help, shortDescription);
 
         this.commands = commands;
         
     }
     /**
-     * Generates and gets the whole 'help' text for a {CommandGroup}
-     *
+     * @inheritdoc 
      * @readonly
      * @memberof CommandGroup
      */
-    get commandGroupHelpDocs() {
-        let res = [];
-        if (this.usage) res.push(`usage: ${this.usage}`);
+    get helpDocs() {
+        let res = ['Usage:', `\t${this.usage}`];
+        res.push('', this.description);
         if (this.commands.length > 0) res.push('', 'Sub Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
-        if (this.description) res.push('', this.description);
         if (this.help) res.push('', this.help);
         
         return res.join('\n');
     }
-
+    /**
+     * @inheritdoc
+     * @param {ParserResult} parserResult
+     * @param {CliContext} context
+     */
+    async action(parserResult, context) {
+        if (!parserResult.firstArg) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
+        let command = this.commands.filter(_ => _.name === parserResult.firstArg)[0];
+        if (command) {
+            parserResult.firstArg = parserResult.restArgs.shift();
+            await command.action(parserResult, context);
+        }
+        else {
+            cliContext.outputter.error(`No such sub command '${parserResult.firstArg}'`);
+            context.outputter.print(this.commandGroupHelpDocs);
+        }
+    }
 }

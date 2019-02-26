@@ -16,6 +16,7 @@ export class CliContext {
     #projectConfigObj;
     #managers;
     #inquirer;
+    #filesystem;
 
     /**
      * Creates an instance of {CliContext}.
@@ -23,13 +24,15 @@ export class CliContext {
      * @param {{[key: string]: any}} projectConfigObj
      * @param {} managers;
      * @param {Inquirer} inquirer
+     * @param {import('fs')} filesystem
      * @memberof CliContext
      */
-    constructor(outputter, projectConfigObj, managers, inquirer) {
+    constructor(outputter, projectConfigObj, managers, inquirer, filesystem) {
         this.#outputter = outputter;
         this.#projectConfigObj = projectConfigObj;
         this.#managers = managers;
         this.#inquirer = inquirer;
+        this.#filesystem = filesystem;
     }
 
     get outputter() {
@@ -43,5 +46,8 @@ export class CliContext {
     }
     get inquirer() {
         return this.#inquirer;
+    }
+    get filesystem() {
+        return this.#filesystem;
     }
 }

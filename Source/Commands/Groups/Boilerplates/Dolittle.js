@@ -5,8 +5,9 @@
 
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
-import dolittleBoilerplates from '../../../Actions/fetchDolittleBoilerplates';
+import dolittleBoilerplates from './fetchDolittleBoilerplates';
 import { CliContext } from '../../../CliContext';
+import { ParserResult } from '../../../ParserResult';
 
 class Dolittle extends Command {
     /**
@@ -14,7 +15,7 @@ class Dolittle extends Command {
      * @memberof Dolittle
      */
     constructor() {
-        super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'usage: dolittle boilerplates dolittle', group);
+        super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'dolittle boilerplates dolittle', group);
     }
     /**
      * @inheritdoc
@@ -22,6 +23,10 @@ class Dolittle extends Command {
      * @param {CliContext} context
      */
     async action(parserResult, context) {
+        if (parserResult.help) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
         let boilerplates = await dolittleBoilerplates(context.managers.boilerplatesManager, context.outputter);
         
         boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));

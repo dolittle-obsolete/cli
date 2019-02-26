@@ -15,7 +15,7 @@ import { DiscoverableGroup } from '../DiscoverableGroup';
  * @extends {DiscoverableGroup}
  */
 export class Add extends DiscoverableGroup {
-    
+
     #boilerplatesManager;
     #artifactsManager;
     /**
@@ -23,18 +23,14 @@ export class Add extends DiscoverableGroup {
      * @memberof Add
      */
     constructor(boilerplatesManager, artifactsManager) {
-        super('', '', '');
+        const group = 'add';
+        const description = 'Adds artifacts and other building blocks to an existing bounded context.';
+        const usage = `dolittle ${group} [<sub-command>]`;
+        super(group, description, usage);
+
         this.#boilerplatesManager = boilerplatesManager;
         this.#artifactsManager = artifactsManager;
 
-        this.group = 'add';
-        this.help = 'Creates and adds a dolittle artifact to the current dolittle project.';
-        this.usage = 
-`usage: dolittle [<namespace>] add <sub-command> 
-
-    Sub commands:
-        ${this.commands.map(cmd => cmd.helpDocs).join('\n\t\t')}`;
-        
     }
 
     /**

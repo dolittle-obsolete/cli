@@ -7,6 +7,7 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
+import listBoilerplates from './listBoilerplates';
 
 class List extends Command {
     /**
@@ -14,15 +15,20 @@ class List extends Command {
      * @memberof Installed
      */
     constructor() {
-        super('check', 'Lists the boilerplates in use by the tooling', 'dolittle boilerplates check', group);
+        super('list', 'Lists the boilerplates in use by the tooling', 'dolittle boilerplates list', group);
     }
+
     /**
      * @inheritdoc
      * @param {ParserResult} parserResult
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-        
+        if (parserResult.help) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
+        await listBoilerplates(context.outputter, context.managers.boilerplatesManager);
     }
 }
 

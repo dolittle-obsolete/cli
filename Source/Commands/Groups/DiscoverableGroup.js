@@ -5,6 +5,8 @@
 
 import { Command } from '../Command';
 import { CommandGroup } from './CommandGroup';
+import { CliContext } from '../../CliContext';
+import { ParserResult } from '../../ParserResult';
 
 /**
  * Represents a group of commands which must be discovered
@@ -18,8 +20,8 @@ export class DiscoverableGroup extends CommandGroup {
      * @param {string} group The command group these commands will belong to
      * @memberof DiscoverableCommands
      */
-    constructor(group, help, usage) {
-        super([], group, help, usage);
+    constructor(group, description, usage, help, shortDescription) {
+        super([], group, description, usage, help, shortDescription);
     }
     /**
      * Discovers the commands

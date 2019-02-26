@@ -5,7 +5,10 @@
 
 import { CommandGroup } from '../CommandGroup';
 import { Command } from '../../Command';
+import checkCommand from './Check';
 import dolittleCommand from './Dolittle';
+import installedCommand from './Installed';
+import listCommand from './List';
 import onlineCommand from './Online';
 
 export const group = 'boilerplates';
@@ -25,9 +28,9 @@ class Boilerplates extends CommandGroup {
     constructor(commands) {
         super(commands, group, 
             'Group of the commands related to boilerplates.',
-            'dolittle boilerplates <sub-command>'
+            `dolittle ${group} <sub-command>`
         );
     }
 }
 
-export default new Boilerplates([dolittleCommand, onlineCommand]);
+export default new Boilerplates([checkCommand, dolittleCommand, installedCommand, listCommand, onlineCommand]);
