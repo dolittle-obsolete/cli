@@ -17,7 +17,7 @@ async function dolittleBoilerplates(boilerplatesManager, outputter) {
     let spinner = outputter.spinner('Getting dolittle boilerplates (this might take a while, depending on your internet connection): ').start();
     let boilerplates = await boilerplatesManager.discoverOnlineDolittleBoilerplates()
         .then(boilerplates => {
-            spinner.succeed(`Fetched ${boilerplates.length} dolittle boilerplates`);
+            spinner.succeed(`Found ${boilerplates.length} dolittle boilerplates`);
             return boilerplates;
         }).catch(error => {
             spinner.fail(`An error occured ${error.message? error.message : error}`);

@@ -17,7 +17,7 @@ async function onlineBoilerplates(boilerplatesManager, outputter, keywords = [],
     let spinner = outputter.spinner('Getting boilerplates (this might take a while, depending on your internet connection): ').start();
     let boilerplates = await boilerplatesManager.discoverOnlineBoilerplates(keywords, limit)
         .then(boilerplates => {
-            spinner.succeed(`Fetched ${boilerplates.length} boilerplates`);
+            spinner.succeed(`Found ${boilerplates.length} boilerplates`);
             return boilerplates;
         }).catch(error => {
             spinner.fail(`An error occured: ${error.message? error.message : error}`);

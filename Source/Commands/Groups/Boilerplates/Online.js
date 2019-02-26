@@ -8,6 +8,8 @@ import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
 import onlineBoilerplates from './fetchOnlineBoilerplates';
+import inquirer from 'inquirer';
+import spawn from 'cross-spawn';
 
 class Online extends Command {
     /**
@@ -38,7 +40,51 @@ class Online extends Command {
 
         let boilerplates = await onlineBoilerplates(context.managers.boilerplatesManager, context.outputter, keywords, limit? limit : 250);
         boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));
+        if (boilerplates.length && boilerplates.length > 0) {
+            const shouldDownload = await askToDownload();
+            if (shouldDownload) {
+                let useYarn = false;
+                let packageNames = await askWhichBoilerplates(boilerplates);
+                if (packageNames.length > 0) {
+                    let spinner = context.outputter.spinner('Downloading boilerplates').start();
+                    if (!useYarn)
+                        spawn.sync('npm', ['i', '-g', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
+                    else 
+                        spawn.sync('yarn', ['global', 'add', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
+                    spinner.succeed('Boilerplates downloaded');
+                }
+            }
+        } 
     }
+}
+
+async function askUseYarn() {
+    let answers = await inquirer.prompt([{type: 'confirm', default: false, name: 'yarn', message: 'Download packages using yarn? (We currently recommend not to)'}]);   
+    return answers['yarn'];
+}
+async function askToDownload() {
+    let answers = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'Download and update boilerplates?'}]);   
+    return answers['download'];
+}
+async function askWhichBoilerplates(boilerplates) {
+    let answers = await inquirer.prompt([
+        {type: 'confirm', name: 'downloadAll', default: false, message: 'All available boilerplates? '}
+    ]);
+    if (!answers['downloadAll']) {
+        let choices = boilerplates.map(_ => new Object({name: `${_.name}`, value: `${_.name}@${_.version}`}));
+        answers = await inquirer.prompt([
+            {
+                type: 'checkbox', name: 'boilerplates', message: 'Choose boilerplates:',
+                choices,
+                validate: function(answer) {
+                    if (answer.length < 1) return 'You must atleast choose one boilerplate';
+                    return true;
+                }
+            }
+        ]);
+        return answers['boilerplates'];
+    }
+    return boilerplates.map(_ => `${_.name}@${_.version}`);
 }
 
 export default new Online();
