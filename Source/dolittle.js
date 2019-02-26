@@ -21,14 +21,13 @@ async function runDolittleCli() {
     if (!parseResult.debug)
         debug.disable();
     
-    outputter.print(parseResult);
 
     if (parseResult.version) {
         await printCliVersion();
         process.exit(0);
     }
     if (!hasBoilerplates()) {
-        outputter.print('Has no boilerplates');
+        //TODO: Something
     }
     await globals.commandManager.execute(parseResult, globals.cliContext);
 }

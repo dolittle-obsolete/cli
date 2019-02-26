@@ -14,8 +14,15 @@ import { CliContext } from '../CliContext';
 
 const description = 
 `The Dolittle CLI helps developers develop dolittle-based applications fast`;
-const help = 
-'Something';
+const help = [
+    '\tnamespace: ',
+'\tcommand-group: ',
+'\tbasic-command: ',
+'\t--help: ',
+'\t--version: ',
+'\t--debug: ',
+'\t--namespace: ',
+].join('\n');
 
 /**
  * Represents a manager for commands
@@ -75,12 +82,14 @@ export class CommandManager {
      */
     get helpDocs() {
         let res = [
-            'usage: dolittle [<namespace>] <command-group> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [-n | --namespace]'
+            'Usage:',
+            '\tdolittle [<namespace>] <command-group | basic-command> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [-n | --namespace]'
         ];
-        if (this.commands.length > 0) res.push('', 'Basic Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
-        if (this.commandGroups.length > 0) res.push('', 'Command Groups:', this.commandGroups.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
         if (description) res.push('', description);
-        if (help) res.push('', help);
+        if (this.commands.length > 0) res.push('', 'Basic commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        if (this.commandGroups.length > 0) res.push('', 'Command groups:', this.commandGroups.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        //TODO: List namespaces
+        if (help) res.push('', 'Help:', help);
         return res.join('\n');
     }
     /**

@@ -101,7 +101,7 @@ export class Command {
     get helpDocs() {
         let res = ['Usage:', `\t${this.usage}`];
         res.push('', this.description);
-        if (this.help) res.push('', this.help);
+        if (this.help) res.push('', 'Help:', this.help);
         
         return res.join('\n');
     }

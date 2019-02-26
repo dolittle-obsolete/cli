@@ -46,8 +46,8 @@ export class CommandGroup extends Command {
     get helpDocs() {
         let res = ['Usage:', `\t${this.usage}`];
         res.push('', this.description);
-        if (this.commands.length > 0) res.push('', 'Sub Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
-        if (this.help) res.push('', this.help);
+        if (this.commands.length > 0) res.push('', 'Commands:', this.commands.map(cmd => `\t${cmd.name} - ${cmd.shortDescription}`).join('\n'));
+        if (this.help) res.push('', 'Help: ', this.help);
         
         return res.join('\n');
     }

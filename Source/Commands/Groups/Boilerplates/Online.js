@@ -16,7 +16,10 @@ class Online extends Command {
      */
     constructor() {
         super('online', 'Lists boilerplates found on npm', 'dolittle boilerplates online [keywords...] [-l | --limit]', group, 
-            ['\tkeywords: Additional keywords used in the npmjs search', '\t-l | --limit: The maximum limit of fetched npm packages. Cannot exceed 250 or be lower that 0'].join('\n'));
+            [
+                '\tkeywords: Additional keywords used in the npmjs search',
+                '\t-l | --limit: The maximum limit of fetched npm packages. Cannot exceed 250 or be lower that 0'
+            ].join('\n'));
     }
 
     /**
