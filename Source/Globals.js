@@ -107,7 +107,7 @@ class Globals {
     
     #installHandlers() {
         process.on('unhandledRejection', (reason, _) => {
-            outputter.error(reason, 'Unhandled rejection:', reason.stack);
+            outputter.error(reason);
             process.exit(1);
         });
     }
