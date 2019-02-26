@@ -28,7 +28,11 @@ class List extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await listBoilerplates(context.outputter, context.managers.boilerplatesManager);
+        await listBoilerplates(context.outputter, context.managers.boilerplatesManager).catch(error => {
+            context.outputter.warn('An error occured while getting the used boilerplates.\nError message:');
+            context.outputter.error(error.message);
+            context.outputter.warn('There problem might be that you haven\'t initialized the tooling');
+        });
     }
 }
 

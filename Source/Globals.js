@@ -89,7 +89,7 @@ class Globals {
         this.#artifactsManager = managers.artifactsManager;
         this.#boundedContextsManager = managers.boundedContextsManager;
         this.#dependenciesManager = managers.dependenciesManager;
-
+        
         this.#inquirer = new Inquirer(this.#dependenciesManager);
         this.#commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
         this.#cliContext = new CliContext(outputter, this.#projectConfig, 

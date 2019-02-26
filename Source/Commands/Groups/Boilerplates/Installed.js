@@ -29,7 +29,12 @@ class Installed extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        let boilerplates = await installedBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
+        let boilerplates = await installedBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem)
+            .catch(error => {
+                context.outputter.warn('An error occured while getting the installed boilerplates.\nError message:');
+                context.outputter.error(error.message);
+                context.outputter.warn('There problem might be that you haven\'t initialized the tooling');
+            });
         boilerplates.forEach(_ => context.outputter.print(_.packageJson.name));
     }
 }

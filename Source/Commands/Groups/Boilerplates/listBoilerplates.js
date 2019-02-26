@@ -15,10 +15,10 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * @param {BoilerplatesManager} boilerplatesManager
  * 
  */
-export default function listBoilerplates(outputter, boilerplatesManager) {
+export default async function listBoilerplates(outputter, boilerplatesManager) {
     let spinner = outputter.spinner('Boilerplates in use:\n').start();
 
-    let boilerplates = boilerplatesManager.boilerPlates;
+    let boilerplates = boilerplatesManager.boilerplates;
     let numBoilerplates = boilerplates.length;
     if (numBoilerplates > 0) {
         spinner.succeed(`There are ${numBoilerplates} in use`);
