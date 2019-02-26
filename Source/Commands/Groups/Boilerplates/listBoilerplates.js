@@ -17,20 +17,24 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  */
 export default async function listBoilerplates(outputter, boilerplatesManager) {
     let spinner = outputter.spinner('Boilerplates in use:\n').start();
-
-    let boilerplates = boilerplatesManager.boilerplates;
-    let numBoilerplates = boilerplates.length;
-    if (numBoilerplates > 0) {
-        spinner.succeed(`There are ${numBoilerplates} in use`);
-        boilerplates.forEach(boilerplate => {
-            outputter.print(
-                `${boilerplate.name}: 
+    try {
+        let boilerplates = boilerplatesManager.boilerplates;
+        let numBoilerplates = boilerplates.length;
+        if (numBoilerplates > 0) {
+            spinner.succeed(`There are ${numBoilerplates} in use`);
+            boilerplates.forEach(boilerplate => {
+                outputter.print(
+                    `${boilerplate.name}: 
 Type: ${boilerplate.type}
 Language: ${boilerplate.language}
 Description: ${boilerplate.description}
 `);
-        });
-    }
-    else spinner.warn('There are no boilerplates in use.\nDo you have any installed? use \'dolittle boilerplates discover\'\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+            });
+        }
+        else spinner.warn('There are no boilerplates in use.\nDo you have any installed? use \'dolittle boilerplates discover\'\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
 
+    } catch(error) {
+        spinner.fail(`An error occured: ${error.message? error.message : error}`);
+        throw error;
+    }
 }

@@ -29,9 +29,9 @@ export default async function checkBoilerplates(outputter, boilerplatesManager, 
         let outOfDatePackages = [];
         for (let pkg of locallyInstalled) {
             spinner.text = `Checking ${pkg.name}`;
-            await boilerplatesManager.getLatestBoilerplateVersion(pkg.name)
-                .then(latestVersions => {
-                    let latestVersion = latestVersions[0];
+            await boilerplatesManager.latestCompatibleBoilerplate(pkg.name)
+                .then(packageJson => {
+                    let latestVersion = packageJson.version;
                     if (semver.gt(latestVersion, pkg.version)) {
                         outOfDatePackages.push({name: pkg.name, version: pkg.version, latest: latestVersion});
                         spinner.warn(`${pkg.name}@${pkg.version} ==> ${latestVersion}`);

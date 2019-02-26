@@ -18,18 +18,24 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * 
  * @returns {{boilerplate: any, packageJson: any}[]} A list of the boilerplate and package configurations for each boilerplate
  */
-export default function installedBoilerplates(outputter, boilerplatesManager, filesystem) {
+export default async function installedBoilerplates(outputter, boilerplatesManager, filesystem) {
     let spinner = outputter.spinner('Installed boilerplates:\n').start();
-    let paths = boilerplatesManager.installedBoilerplatePaths;
+    try {
 
-    let boilerplatesAndPackages = paths.map(boilerplatePaths => {
-        let boilerplate = JSON.parse(filesystem.readFileSync(path.join(boilerplatePaths, 'boilerplate.json')));
-        let packageJson = JSON.parse(filesystem.readFileSync(path.join(boilerplatePaths, 'package.json')));
-        return {boilerplate, packageJson};
-    });
-    let numBoilerplates = boilerplatesAndPackages.length;
-    if (numBoilerplates > 0) spinner.succeed(`Found ${numBoilerplates} installed boilerplates`);
-    else spinner.warn('Could not find any installed boilerplates.\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+        let paths = boilerplatesManager.installedBoilerplatePaths;
     
-    return boilerplatesAndPackages;
+        let boilerplatesAndPackages = paths.map(boilerplatePaths => {
+            let boilerplate = JSON.parse(filesystem.readFileSync(path.join(boilerplatePaths, 'boilerplate.json')));
+            let packageJson = JSON.parse(filesystem.readFileSync(path.join(boilerplatePaths, 'package.json')));
+            return {boilerplate, packageJson};
+        });
+        let numBoilerplates = boilerplatesAndPackages.length;
+        if (numBoilerplates > 0) spinner.succeed(`Found ${numBoilerplates} installed boilerplates`);
+        else spinner.warn('Could not find any installed boilerplates.\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+        
+        return boilerplatesAndPackages;
+    } catch (error) {
+        spinner.fail(`An error occured: ${error.message? error.message : error}`);
+        throw error;
+    }
 }

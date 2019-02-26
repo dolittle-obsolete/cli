@@ -32,8 +32,9 @@ class Installed extends Command {
         let boilerplates = await installedBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem)
             .catch(error => {
                 context.outputter.warn('An error occured while getting the installed boilerplates.\nError message:');
-                context.outputter.error(error.message);
+                context.outputter.error(error);
                 context.outputter.warn('There problem might be that you haven\'t initialized the tooling');
+                return;
             });
         boilerplates.forEach(_ => context.outputter.print(_.packageJson.name));
     }

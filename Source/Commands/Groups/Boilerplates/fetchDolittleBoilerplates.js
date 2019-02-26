@@ -20,7 +20,7 @@ async function dolittleBoilerplates(boilerplatesManager, outputter) {
             spinner.succeed(`Fetched ${boilerplates.length} dolittle boilerplates`);
             return boilerplates;
         }).catch(error => {
-            spinner.fail(error);
+            spinner.fail(`An error occured ${error.message? error.message : error}`);
             throw error;
         });
     return boilerplates;
