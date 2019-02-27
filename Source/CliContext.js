@@ -1,5 +1,5 @@
 import { Outputter } from "./Outputter";
-
+import { BoilerplatesConfig, ProjectConfig } from '@dolittle/tooling.common';
 /*---------------------------------------------------------------------------------------------
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
@@ -13,7 +13,8 @@ import { Outputter } from "./Outputter";
  */
 export class CliContext {
     #outputter;
-    #projectConfigObj;
+    #projectConfig;
+    #boilerplatesConfig;
     #managers;
     #inquirer;
     #filesystem;
@@ -21,15 +22,17 @@ export class CliContext {
     /**
      * Creates an instance of {CliContext}.
      * @param {Outputter} outputter
-     * @param {{[key: string]: any}} projectConfigObj
+     * @param {ProjectConfig} projectConfig
+     * @param {BoilerplatesConfig} boilerplatesConfig
      * @param {} managers;
      * @param {Inquirer} inquirer
      * @param {import('fs')} filesystem
      * @memberof CliContext
      */
-    constructor(outputter, projectConfigObj, managers, inquirer, filesystem) {
+    constructor(outputter, projectConfig, boilerplatesConfig, managers, inquirer, filesystem) {
         this.#outputter = outputter;
-        this.#projectConfigObj = projectConfigObj;
+        this.#projectConfig = projectConfig;
+        this.#boilerplatesConfig;
         this.#managers = managers;
         this.#inquirer = inquirer;
         this.#filesystem = filesystem;
@@ -38,8 +41,11 @@ export class CliContext {
     get outputter() {
         return this.#outputter;
     }
-    get projectConfigObj() {
-        return this.#projectConfigObj;
+    get projectConfig() {
+        return this.#projectConfig;
+    }
+    get boilerplatesConfig() {
+        return this.#boilerplatesConfig;
     }
     get managers() {
         return this.#managers;
