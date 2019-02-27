@@ -10,6 +10,7 @@ import dolittleCommand from './Dolittle';
 import installedCommand from './Installed';
 import listCommand from './List';
 import onlineCommand from './Online';
+import initCommand from '../../Init';
 
 export const group = 'boilerplates';
 /**
@@ -33,4 +34,4 @@ class Boilerplates extends CommandGroup {
     }
 }
 
-export default new Boilerplates([checkCommand, dolittleCommand, installedCommand, listCommand, onlineCommand]);
+export default new Boilerplates([checkCommand, dolittleCommand, installedCommand, listCommand, onlineCommand, initCommand]);
