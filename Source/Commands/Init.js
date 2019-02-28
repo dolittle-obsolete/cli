@@ -6,10 +6,11 @@
 import { Command } from './Command';
 import { CliContext } from '../CliContext';
 import { ParserResult } from '../ParserResult';
-class Init extends Command{
+
+class Init extends Command {
     constructor() {
         super('init', 'Initializes the Dolittle CLI', 
-            'dolittle init', undefined, '', 'Sets up the environment for the CLI' );
+            'dolittle init [-n | --namespace] [-c | --coreLanguage]', undefined, '');
     }
     /**
      * @inheritdoc
@@ -21,6 +22,7 @@ class Init extends Command{
             context.outputter.print(this.helpDocs);
             return;
         }
+        let projectConfigObj = context.projectConfig.store;
         
     }
 }
