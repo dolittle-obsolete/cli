@@ -10,6 +10,7 @@ import { CliContext } from '../../../CliContext';
 import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
 import inquirer from 'inquirer';
 import spawn from 'cross-spawn';
+import initBoilerplates from '../../../Actions/Boilerplates/initBoilerplates';
 
 class Online extends Command {
     /**
@@ -51,7 +52,9 @@ class Online extends Command {
                         spawn.sync('npm', ['i', '-g', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
                     else 
                         spawn.sync('yarn', ['global', 'add', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
+                        
                     spinner.succeed('Boilerplates downloaded');
+                    await initBoilerplates(context.outputter, context.managers.boilerplatesManager);
                 }
             }
         } 
