@@ -8,7 +8,15 @@ import { CommandManager } from './Commands/CommandManager';
 import { Inquirer } from './Inquirer';
 import { CliContext } from './CliContext';
 import outputter from './Outputter';
+import updateNotifier from 'update-notifier';
 
+const pkg = require('../package.json');
+const notifier = updateNotifier(
+    {
+        pkg, 
+        updateCheckInterval: 1000 * 60 * 60 * 24 // A day
+    }
+);
 /**
  * Initializes the CLI program
  *
@@ -39,6 +47,7 @@ class Globals {
         this.#_installHandlers();
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
+        notifier.notify();
     }
     /**
      * Gets the project configuration object
