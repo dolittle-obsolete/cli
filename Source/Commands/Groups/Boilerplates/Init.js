@@ -27,7 +27,7 @@ class Init extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        let projectConfig = context.projectConfig;
+        context.managers.boilerplatesManager.discoverInstalledBoilerplates();
     }
 }
 

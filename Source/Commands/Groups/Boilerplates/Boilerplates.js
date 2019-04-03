@@ -10,7 +10,7 @@ import dolittleCommand from './Dolittle';
 import installedCommand from './Installed';
 import listCommand from './List';
 import onlineCommand from './Online';
-import initCommand from '../../Init';
+import initCommand from './Init';
 
 export const group = 'boilerplates';
 /**
