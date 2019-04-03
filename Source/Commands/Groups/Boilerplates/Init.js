@@ -7,6 +7,7 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
+import initBoilerplates from './initBoilerplates';
 
 class Init extends Command {
     /**
@@ -27,7 +28,7 @@ class Init extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        context.managers.boilerplatesManager.discoverInstalledBoilerplates();
+        await initBoilerplates(context.outputter, context.managers.boilerplatesManager);
     }
 }
 

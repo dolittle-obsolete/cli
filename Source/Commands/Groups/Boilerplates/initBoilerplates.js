@@ -1,0 +1,19 @@
+/*---------------------------------------------------------------------------------------------
+*  Copyright (c) Dolittle. All rights reserved.
+*  Licensed under the MIT License. See LICENSE in the project root for license information.
+*--------------------------------------------------------------------------------------------*/
+
+/**
+ * @param {Outputter} outputter
+ */
+export default async function initBoilerplates(outputter, boilerplatesManager) {
+    let spinner = outputter.spinner('Initializing boilerplates system').start();
+    try {
+        boilerplatesManager.discoverInstalledBoilerplates();
+        spinner.succeed('Boilerplates system initialized');
+    } catch (error) {
+        spinner.fail(`An error occured: ${error.message? error.message : error}`);
+        throw error;
+    }
+    
+}
