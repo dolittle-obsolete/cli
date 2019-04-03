@@ -7,7 +7,7 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
-import onlineBoilerplates from './fetchOnlineBoilerplates';
+import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
 import inquirer from 'inquirer';
 import spawn from 'cross-spawn';
 

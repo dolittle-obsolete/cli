@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Outputter } from '../../../Outputter';
+import { Outputter } from '../../Outputter';
 import { BoilerplatesManager } from '@dolittle/tooling.common';
 
 

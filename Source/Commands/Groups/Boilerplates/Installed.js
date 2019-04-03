@@ -7,7 +7,7 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
-import installedBoilerplates from './installedBoilerplates';
+import installedBoilerplates from '../../../Actions/Boilerplates/installedBoilerplates';
 
 class Installed extends Command {
     

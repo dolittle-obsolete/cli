@@ -5,7 +5,7 @@
 
 import semver from 'semver';
 import path from 'path';
-import { Outputter } from '../../../Outputter';
+import { Outputter } from '../../Outputter';
 import { BoilerplatesManager } from '@dolittle/tooling.common';
 
 /**

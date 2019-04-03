@@ -5,7 +5,7 @@
 
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
-import dolittleBoilerplates from './fetchDolittleBoilerplates';
+import dolittleBoilerplates from '../../../Actions/Boilerplates/fetchDolittleBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import prompt from '../../../Util/prompter';
