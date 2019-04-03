@@ -17,66 +17,96 @@ import outputter from './Outputter';
 class Globals {
     isInitialized = false;
     
-    #projectConfig;
-    #boilerplatesConfig;
+    #_projectConfig;
+    #_boilerplatesConfig;
 
-    #inquirer;
-    #commandManager;
+    #_inquirer;
+    #_commandManager;
 
-    #boilerplatesManager;
-    #applicationsManager;
-    #artifactsManager;
-    #boundedContextsManager;
-    #dependenciesManager;
+    #_boilerplatesManager;
+    #_applicationsManager;
+    #_artifactsManager;
+    #_boundedContextsManager;
+    #_dependenciesManager;
 
-    #cliContext;
+    #_cliContext;
 
     /**
      * Creates an instance of {Globals}.
      * @memberof Globals
      */
     constructor () {
-        this.#installHandlers();
-        this.#projectConfig = projectConfig;
-        this.#boilerplatesConfig = boilerplatesConfig;
+        this.#_installHandlers();
+        this.#_projectConfig = projectConfig;
+        this.#_boilerplatesConfig = boilerplatesConfig;
     }
+    /**
+     * Gets the project configuration object
+     *
+     * @readonly
+     * @memberof Globals
+     */
     get projectConfig() {
-        return this.#projectConfig;
+        return this.#_projectConfig;
     }
+    /**
+     * Gets the boilerplates configuration object
+     *
+     * @readonly
+     * @memberof Globals
+     */
     get boilerplatesConfig() {
-        return this.#boilerplatesConfig;
+        return this.#_boilerplatesConfig;
     }
     get boilerplatesManager() {
-        if (!this.#boilerplatesManager) this.init();
-        return this.#boilerplatesManager;
+        if (!this.#_boilerplatesManager) this.init();
+        return this.#_boilerplatesManager;
     }
     get applicationsManager() {
-        if (!this.#applicationsManager) this.init();
-        return this.#applicationsManager;
+        if (!this.#_applicationsManager) this.init();
+        return this.#_applicationsManager;
     }
     get artifactsManager() {
-        if (!this.#artifactsManager) this.init();
-        return this.#artifactsManager;
+        if (!this.#_artifactsManager) this.init();
+        return this.#_artifactsManager;
     }
     get boundedContextsManager() {
-        if (!this.#boundedContextsManager) this.init();
-        return this.#boundedContextsManager;
+        if (!this.#_boundedContextsManager) this.init();
+        return this.#_boundedContextsManager;
     }
     get dependenciesManager() {
-        if (!this.#dependenciesManager) this.init();
-        return this.#dependenciesManager;
+        if (!this.#_dependenciesManager) this.init();
+        return this.#_dependenciesManager;
     }
+    /**
+     * Gets the Inquirer system 
+     * @type {Inquirer}
+     * @readonly
+     * @memberof Globals
+     */
     get inquirer() {
-        if (!this.#inquirer) this.init();
-        return this.#inquirer;
+        if (!this.#_inquirer) this.init();
+        return this.#_inquirer;
     }
+    /**
+     * Gets the Command Manager 
+     * @type {CommandManager}
+     * @readonly
+     * @memberof Globals
+     */
     get commandManager() {
-        if (!this.#commandManager) this.init();
-        return this.#commandManager;
+        if (!this.#_commandManager) this.init();
+        return this.#_commandManager;
     }
+    /**
+     * Gets the CLI Context 
+     * @type {CliContext}
+     * @readonly
+     * @memberof Globals
+     */
     get cliContext() {
-        if (!this.#cliContext) this.init();
-        return this.#cliContext;
+        if (!this.#_cliContext) this.init();
+        return this.#_cliContext;
     }
 
     init() {
@@ -84,28 +114,28 @@ class Globals {
 
         let spinner = outputter.spinner('Starting up tooling CLI').start();
         const managers = getManagers();
-        this.#boilerplatesManager = managers.boilerplatesManager;
-        this.#applicationsManager = managers.applicationsManager;
-        this.#artifactsManager = managers.artifactsManager;
-        this.#boundedContextsManager = managers.boundedContextsManager;
-        this.#dependenciesManager = managers.dependenciesManager;
+        this.#_boilerplatesManager = managers.boilerplatesManager;
+        this.#_applicationsManager = managers.applicationsManager;
+        this.#_artifactsManager = managers.artifactsManager;
+        this.#_boundedContextsManager = managers.boundedContextsManager;
+        this.#_dependenciesManager = managers.dependenciesManager;
         
-        this.#inquirer = new Inquirer(this.#dependenciesManager);
-        this.#commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
-        this.#cliContext = new CliContext(outputter, this.#projectConfig, this.#boilerplatesConfig, 
+        this.#_inquirer = new Inquirer(this.#_dependenciesManager);
+        this.#_commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
+        this.#_cliContext = new CliContext(outputter, this.#_projectConfig, this.#_boilerplatesConfig, 
             {
                 boilerplatesManager: managers.boilerplatesManager,
                 applicationsManager: managers.applicationsManager,
                 boundedContextsManager: managers.boundedContextsManager,
                 artifactsManager: managers.artifactsManager,
                 dependenciesManager: managers.dependenciesManager,
-                commandManager: this.#commandManager
-            }, this.#inquirer, require('fs'));
+                commandManager: this.#_commandManager
+            }, this.#_inquirer, require('fs'));
         
         spinner.stop();
     }
     
-    #installHandlers() {
+    #_installHandlers() {
         process.on('unhandledRejection', (reason, _) => {
             outputter.error(reason);
             process.exit(1);

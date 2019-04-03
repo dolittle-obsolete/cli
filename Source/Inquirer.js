@@ -8,13 +8,13 @@ import Outputter from './Outputter';
 import inquirer from 'inquirer';
 
 export class Inquirer {
-    #dependencyManager;
+    #_dependencyManager;
     /**
      * Initializes a new instance of {Inquirer}
      * @param {DependencyManager} dependencyManager
      */
     constructor(dependencyManager) {
-        this.#dependencyManager = dependencyManager;
+        this.#_dependencyManager = dependencyManager;
         
     }
     /**
@@ -32,7 +32,7 @@ export class Inquirer {
             else return true;
         });
         
-        let questions = this.#createQuestions(dependencies, destinationPath, language);
+        let questions = this.#_createQuestions(dependencies, destinationPath, language);
         return inquirer.prompt(questions)
             .then(answers => {
                 Object.keys(answers).forEach(name => {
@@ -52,12 +52,12 @@ export class Inquirer {
      * @memberof InquirerManager
      * @returns {any[]}
      */
-    #createQuestions(dependencies, destinationPath, language) {
+    #_createQuestions(dependencies, destinationPath, language) {
         let questions = [];
         dependencies.forEach(dep => {
             if (dep.type === 'discover') {
                 if (dep.userInputType) {
-                    let discoveryResult = this.#dependencyManager.discover(dep, destinationPath, language);
+                    let discoveryResult = this.#_dependencyManager.discover(dep, destinationPath, language);
                     
                     let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                         [discoveryResult]
@@ -70,11 +70,11 @@ export class Inquirer {
                                         value: {namespace: item.namespace, value: item.value} 
                                     }))
                                 : discoveryResult;
-                    questions.push(...this.#createPrompt(dep, choices))
+                    questions.push(...this.#_createPrompt(dep, choices))
                     }
                 }
             else if(dep.type === 'userInput') {
-                questions.push(...this.#createPrompt(dep));
+                questions.push(...this.#_createPrompt(dep));
             } 
             else {
                 Outputter.error(`Found an invalid 'type' on dependency: '${dep.type}'`);
@@ -88,11 +88,11 @@ export class Inquirer {
      * @param {Dependency} dependency
      * @param {any[]} choices
      */
-    #createPrompt(dependency, choices = []) {
+    #_createPrompt(dependency, choices = []) {
         const inputType = dependency.userInputType;
         
         if (inputType === 'input') {
-            return this.#createInputPrompt(dependency.name, dependency.promptMessage);
+            return this.#_createInputPrompt(dependency.name, dependency.promptMessage);
         }
         let items = dependency.choices !== undefined? 
                 dependency.choices.concat(choices)
@@ -100,10 +100,10 @@ export class Inquirer {
         if (dependency.customInput) items.push(dependency.customInput);
         if (inputType === 'chooseOne') {
             
-            return this.#createListPrompt(dependency, dependency.promptMessage || 'Input', items);
+            return this.#_createListPrompt(dependency, dependency.promptMessage || 'Input', items);
         }
         else if (inputType === 'chooseMultiple') {
-            return this.#createCheckboxPrompt(dependency, dependency.promptMessage || 'Input', items);
+            return this.#_createCheckboxPrompt(dependency, dependency.promptMessage || 'Input', items);
         }
         else {
             Outputter.error(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
@@ -116,7 +116,7 @@ export class Inquirer {
      * @param {string} name
      * @param {string} message
      */
-    #createInputPrompt(name, message) {
+    #_createInputPrompt(name, message) {
         return [{
             type: 'input',
             name: name,
@@ -129,7 +129,7 @@ export class Inquirer {
      * @param {string} message 
      * @param {any[]} choices 
      */
-    #createListPrompt(dependency, message, choices = []) {
+    #_createListPrompt(dependency, message, choices = []) {
         if (! dependency.customInput) {
             return [
                 {
@@ -167,7 +167,7 @@ export class Inquirer {
      * @param {string} message 
      * @param {any[]} choices 
      */
-    #createCheckboxPrompt(dependency, message, choices = []) {
+    #_createCheckboxPrompt(dependency, message, choices = []) {
         if (! dependency.customInput) {
             return [
                 {

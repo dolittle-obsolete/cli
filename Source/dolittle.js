@@ -10,7 +10,6 @@ import parser from './Parser';
 import {default as log, debug} from './Util/debug';
 import globals from './Globals';
 import outputLatestVersion from './Actions/outputLatestVersion';
-import dolittleBoilerplates from './Commands/Groups/Boilerplates/fetchDolittleBoilerplates';
 
 const pkg = require('../package.json');
 
@@ -20,7 +19,6 @@ async function runDolittleCli() {
     let parseResult = parser.parse();
     if (!parseResult.debug)
         debug.disable();
-    
 
     if (parseResult.version) {
         await printCliVersion();
