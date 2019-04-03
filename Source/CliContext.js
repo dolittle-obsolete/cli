@@ -1,9 +1,10 @@
-import { Outputter } from "./Outputter";
-import { BoilerplatesConfig, ProjectConfig } from '@dolittle/tooling.common';
 /*---------------------------------------------------------------------------------------------
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
+
+import { Outputter } from "./Outputter";
+import { BoilerplatesConfig, ProjectConfig } from '@dolittle/tooling.common';
 
 /**
  * The context needed by commands to perform their actions
