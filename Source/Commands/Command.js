@@ -9,7 +9,7 @@ import { Inquirer } from "../Inquirer";
 import { Outputter } from "../Outputter";
 import { ParserResult } from "../ParserResult";
 import { CliContext } from "../CliContext";
-
+import chalk from 'chalk';
  /**
  * The base class of a command
  *
