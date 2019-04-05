@@ -72,9 +72,9 @@ export class CommandManager {
             initCommand
         ]);
         this.commandGroups.push(...[
-            new Add(this.#boilerplatesManager, this.#artifactsManager),
+            new Add(this.boilerplatesManager, this.artifactsManager),
             boilerplatesCommandGroup,
-            new Create(this.#boilerplatesManager, this.#applicationsManager, this.#boundedContextsManager)
+            new Create(this.boilerplatesManager, this.applicationsManager, this.boundedContextsManager)
         ]);
     }
     /**
