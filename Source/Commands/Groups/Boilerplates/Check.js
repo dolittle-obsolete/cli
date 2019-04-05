@@ -8,6 +8,7 @@ import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
 import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
+import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
 
 class Check extends Command {
     /**
@@ -28,7 +29,8 @@ class Check extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await checkBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
+        let outOfDatePacakges = await checkBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
+        askToDownloadOrUpdateBoilerplates(outOfDatePacakges);    
     }
 }
 
