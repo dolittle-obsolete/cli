@@ -8,9 +8,6 @@ import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
 import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
-import inquirer from 'inquirer';
-import spawn from 'cross-spawn';
-import initBoilerplates from '../../../Actions/Boilerplates/initBoilerplates';
 import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
 
 class Online extends Command {
@@ -43,7 +40,7 @@ class Online extends Command {
         let boilerplates = await onlineBoilerplates(context.managers.boilerplatesManager, context.outputter, keywords, limit? limit : 250);
         boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));
         
-        askToDownloadOrUpdateBoilerplates(boilerplates);    
+        askToDownloadOrUpdateBoilerplates(boilerplates, context.managers.boilerplatesManager, context.outputter);    
     }
 }
 

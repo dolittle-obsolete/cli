@@ -8,7 +8,6 @@ import { group } from './Boilerplates';
 import dolittleBoilerplates from '../../../Actions/Boilerplates/fetchDolittleBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
-import initBoilerplates from '../../../Actions/Boilerplates/initBoilerplates';
 import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
 
 class Dolittle extends Command {
@@ -32,7 +31,7 @@ class Dolittle extends Command {
         let boilerplates = await dolittleBoilerplates(context.managers.boilerplatesManager, context.outputter);
         
         boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));
-        askToDownloadOrUpdateBoilerplates(boilerplates);    
+        askToDownloadOrUpdateBoilerplates(boilerplates, context.managers.boilerplatesManager, context.outputter);    
         
     }
     

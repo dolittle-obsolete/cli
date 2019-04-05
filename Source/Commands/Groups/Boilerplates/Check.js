@@ -30,7 +30,7 @@ class Check extends Command {
             return;
         }
         let outOfDatePacakges = await checkBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
-        askToDownloadOrUpdateBoilerplates(outOfDatePacakges);    
+        askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.managers.boilerplatesManager, context.outputter);    
     }
 }
 
