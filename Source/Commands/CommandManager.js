@@ -12,6 +12,11 @@ import { CliContext } from '../CliContext';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
 import initCommand from './Init';
 import chalk from 'chalk';
+import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
+import { ApplicationsManager } from '@dolittle/tooling.common/dist/applications/ApplicationsManager';
+import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager';
+import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
+import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
 
 const description = 
 `The Dolittle CLI helps developers develop dolittle-based applications fast`;
@@ -42,18 +47,26 @@ export class CommandManager {
      */
     commandGroups = []
     
-    #boilerplatesManager;
-    #applicationsManager;
-    #boundedContextsManager;
-    #artifactsManager;
-    #dependenciesManager;
-
+    #_boilerplatesManager;
+    #_applicationsManager;
+    #_boundedContextsManager;
+    #_artifactsManager;
+    #_dependenciesManager;
+    /**
+     *Creates an instance of {CommandManager}.
+     * @param {BoilerplatesManager} boilerplatesManager
+     * @param {ApplicationsManager} applicationsManager
+     * @param {BoundedContextsManager} boundedContextsManager
+     * @param {ArtifactsManager} artifactsManager
+     * @param {DependenciesManager} dependenciesManager
+     * @memberof CommandManager
+     */
     constructor(boilerplatesManager, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager) {
-        this.#boilerplatesManager = boilerplatesManager;
-        this.applicationsManager = applicationsManager;
-        this.boundedContextsManager = boundedContextsManager;
-        this.artifactsManager = artifactsManager;
-        this.dependenciesManager = dependenciesManager;
+        this.#_boilerplatesManager = boilerplatesManager;
+        this.#_applicationsManager = applicationsManager;
+        this.#_boundedContextsManager = boundedContextsManager;
+        this.#_artifactsManager = artifactsManager;
+        this.#_dependenciesManager = dependenciesManager;
 
         this.commands.push(...[
             initCommand
@@ -63,6 +76,52 @@ export class CommandManager {
             boilerplatesCommandGroup,
             new Create(this.#boilerplatesManager, this.#applicationsManager, this.#boundedContextsManager)
         ]);
+    }
+    /**
+     *
+     * @type {BoilerplatesManager}
+     * @readonly
+     * @memberof CommandManager
+     */
+    get boilerplatesManager() {
+        return this.#_boilerplatesManager;
+    }
+    /**
+     *
+     * @type {ApplicationsManager}
+     * @readonly
+     * @memberof CommandManager
+     */
+    get applicationsManager() {
+        return this.#_applicationsManager;
+    }
+    /**
+     *
+     * @type {BoundedContextsManager}
+     * @readonly
+     * @memberof CommandManager
+     */
+    get boundedContextsManager() {
+        return this.#_boundedContextsManager;
+    }
+    /**
+     *
+     * @type {ArtifactsManager}
+     * @readonly
+     * @memberof CommandManager
+     */
+    get artifactsManager() {
+        return this.#_artifactsManager;
+    }
+
+    /**
+     *
+     * @type {DependenciesManager}
+     * @readonly
+     * @memberof CommandManager
+     */
+    get dependenciesManager() {
+        return this.#_dependenciesManager;
     }
     /**
      * Gets all the commands available to the CLI
@@ -94,7 +153,7 @@ export class CommandManager {
         return res.join('\n');
     }
     /**
-     * Startingpoint of command execution
+     * Starting point of command execution
      *
      * @param {ParserResult} parserResult
      * @param {CliContext} cliContext

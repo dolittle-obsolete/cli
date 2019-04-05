@@ -24,7 +24,6 @@ export class Parser {
      *     [--coreLang] 
      *
      * @param {*} [args=process.argv]
-     * @returns
      * @memberof Parser
      */
     parse(args = process.argv) {

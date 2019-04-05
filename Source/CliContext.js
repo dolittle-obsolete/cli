@@ -4,8 +4,15 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { Outputter } from "./Outputter";
-import { BoilerplatesConfig, ProjectConfig } from '@dolittle/tooling.common';
 import { Inquirer } from "./Inquirer";
+import { BoilerplatesConfig } from "@dolittle/tooling.common/dist/configuration/BoilerplatesConfig";
+import { ProjectConfig } from "@dolittle/tooling.common/dist/configuration/ProjectConfig";
+import { CommandManager } from "./Commands/CommandManager";
+import { BoilerplatesManager } from "@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager";
+import { BoundedContextsManager } from "@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager";
+import { ApplicationsManager } from "@dolittle/tooling.common/dist/applications/ApplicationsManager";
+import { ArtifactsManager } from "@dolittle/tooling.common/dist/artifacts/ArtifactsManager";
+import { DependenciesManager } from "@dolittle/tooling.common/dist/dependencies/DependenciesManager";
 
 /**
  * The context needed by commands to perform their actions
@@ -38,6 +45,7 @@ export class CliContext {
         this.#_managers = managers;
         this.#_inquirer = inquirer;
         this.#_filesystem = filesystem;
+        
     }
     /**
      * Gets the CLI outputter
@@ -50,6 +58,7 @@ export class CliContext {
     }
     /**
      * Gets the project configuration object
+     * @type {ProjectConfig}
      * @readonly
      * @memberof CliContext
      */
@@ -58,6 +67,7 @@ export class CliContext {
     }
     /**
      * Gets the boilerplates configuration object
+     * @type {BoilerplatesConfig}
      * @readonly
      * @memberof CliContext
      */
@@ -66,6 +76,7 @@ export class CliContext {
     }
     /**
      * Gets the managers
+     * @type {{boilerplatesManager: BoilerplatesManager, applicationsManager: ApplicationsManager, boundedContextsManager: BoundedContextsManager, artifactsManager: ArtifactsManager, dependenciesManager: DependenciesManager, commandManager: CommandManager }}
      * @readonly
      * @memberof CliContext
      */

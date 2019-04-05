@@ -6,16 +6,25 @@
 import {Dependency, Boilerplate} from '@dolittle/tooling.common'
 import Outputter from './Outputter';
 import inquirer from 'inquirer';
+import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
 
 export class Inquirer {
-    #_dependencyManager;
+    #_dependenciesManager;
     /**
      * Initializes a new instance of {Inquirer}
-     * @param {DependencyManager} dependencyManager
+     * @param {DependenciesManager} dependenciesManager
      */
-    constructor(dependencyManager) {
-        this.#_dependencyManager = dependencyManager;
-        
+    constructor(dependenciesManager) {
+        this.#_dependenciesManager = dependenciesManager;   
+    }
+    /**
+     * 
+     * @type {DependenciesManager}
+     * @readonly
+     * @memberof Inquirer
+     */
+    get dependenciesManager() {
+        return this._dependenciesManager;
     }
     /**
      * Prompts the user for additional information and fills the context used for templating
@@ -57,7 +66,7 @@ export class Inquirer {
         dependencies.forEach(dep => {
             if (dep.type === 'discover') {
                 if (dep.userInputType) {
-                    let discoveryResult = this.#_dependencyManager.discover(dep, destinationPath, language);
+                    let discoveryResult = this.dependenciesManager.discover(dep, destinationPath, language);
                     
                     let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                         [discoveryResult]

@@ -9,6 +9,13 @@ import { Inquirer } from './Inquirer';
 import { CliContext } from './CliContext';
 import outputter from './Outputter';
 import updateNotifier from 'update-notifier';
+import { ProjectConfig } from '@dolittle/tooling.common/dist/configuration/ProjectConfig';
+import { BoilerplatesConfig } from '@dolittle/tooling.common/dist/configuration/BoilerplatesConfig';
+import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
+import { ApplicationsManager } from '@dolittle/tooling.common/dist/applications/ApplicationsManager';
+import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
+import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager';
+import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
 
 const pkg = require('../package.json');
 const notifier = updateNotifier(
@@ -52,6 +59,7 @@ class Globals {
     /**
      * Gets the project configuration object
      *
+     * @type {ProjectConfig}
      * @readonly
      * @memberof Globals
      */
@@ -61,28 +69,59 @@ class Globals {
     /**
      * Gets the boilerplates configuration object
      *
+     * @type {BoilerplatesConfig}
      * @readonly
      * @memberof Globals
      */
     get boilerplatesConfig() {
         return this.#_boilerplatesConfig;
     }
+    /**
+     *
+     * @type {BoilerplatesManager}
+     * @readonly
+     * @memberof Globals
+     */
     get boilerplatesManager() {
         if (!this.#_boilerplatesManager) this.init();
         return this.#_boilerplatesManager;
     }
+    /**
+     *
+     * @type {ApplicationsManager}
+     * @readonly
+     * @memberof Globals
+     */
     get applicationsManager() {
         if (!this.#_applicationsManager) this.init();
         return this.#_applicationsManager;
     }
+    /**
+     *
+     * @type {ArtifactsManager}
+     * @readonly
+     * @memberof Globals
+     */
     get artifactsManager() {
         if (!this.#_artifactsManager) this.init();
         return this.#_artifactsManager;
     }
+    /**
+     *
+     * @type {BoundedContextsManager}
+     * @readonly
+     * @memberof Globals
+     */
     get boundedContextsManager() {
         if (!this.#_boundedContextsManager) this.init();
         return this.#_boundedContextsManager;
     }
+    /**
+     *
+     * @type {DependenciesManager}
+     * @readonly
+     * @memberof Globals
+     */
     get dependenciesManager() {
         if (!this.#_dependenciesManager) this.init();
         return this.#_dependenciesManager;
