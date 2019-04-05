@@ -66,7 +66,7 @@ async function askWhichBoilerplates(boilerplates) {
         {type: 'confirm', name: 'downloadAll', default: false, message: 'All available boilerplates? '}
     ]);
     if (!answers['downloadAll']) {
-        let choices = boilerplates.map(_ => new Object({name: `${_.name}`, value: `${_.name}@${_.version}`}));
+        let choices = boilerplates.map(_ => new Object({name: `${_.name}`, value: `${_.name}@${_.latest? _.latest : _.version}`}));
         answers = await inquirer.prompt([
             {
                 type: 'checkbox', name: 'boilerplates', message: 'Choose boilerplates:',
