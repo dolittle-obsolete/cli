@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 /**
+ * Initializes the boilerplates system in the common tooling
  * @param {Outputter} outputter
  */
 export default async function initBoilerplates(outputter, boilerplatesManager) {

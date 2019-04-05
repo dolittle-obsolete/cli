@@ -11,7 +11,7 @@ import { Outputter } from '../../Outputter';
  *
  * @param {BoilerplatesManager} boilerplatesManager
  * @param {Outputter} outputter
- * @returns {Promise<>}
+ * @returns {Promise<{name: string, version: string}[]>}
  */
 async function dolittleBoilerplates(boilerplatesManager, outputter) {
     let spinner = outputter.spinner('Getting dolittle boilerplates (this might take a while, depending on your internet connection): ').start();
