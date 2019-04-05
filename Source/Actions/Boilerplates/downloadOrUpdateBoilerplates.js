@@ -6,20 +6,19 @@
 import initBoilerplates from './initBoilerplates';
 import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
-import { Inquirer } from '../../Inquirer';
 import { Outputter } from '../../Outputter';
+import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
 
 /**
  * Performs the action that asks the user whether or not to download or update boilerplate packages 
  *
  * @export
  * @param {{name: string, version: string}[]} boilerplates
- * @param {} boilerplatesManager
- * @param {Inquirer} inquirer
+ * @param {BoilerplatesManager} boilerplatesManager
  * @param {Outputter} outputter
  * @returns {Promise<void>}
  */
-export async function askToDownloadOrUpdateBoilerplates(boilerplates, boilerplatesManager, inquirer, outputter) {
+export async function askToDownloadOrUpdateBoilerplates(boilerplates, boilerplatesManager, outputter) {
     if (boilerplates.length && boilerplates.length > 0) {
         const shouldDownload = await askToDownload();
         if (shouldDownload) {
