@@ -15,6 +15,7 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * @param {Outputter} outputter
  * @param {BoilerplatesManager} boilerplatesManager
  * @param {import('fs')} filesystem
+ * @returns {Promise<{name: string, version: string, latest: string}[]>} Returns a Promise containing a list of out-of-date packages with current version and the latest compatible version
  */
 export default async function checkBoilerplates(outputter, boilerplatesManager, filesystem) {
     let spinner = outputter.spinner('Checking versions:\n').start();
@@ -25,7 +26,7 @@ export default async function checkBoilerplates(outputter, boilerplatesManager, 
             locallyInstalled.push({name: pkg.name, version: pkg.version});    
         });
 
-    new Promise(async (resolve) => {
+    return new Promise(async (resolve) => {
         let outOfDatePackages = [];
         for (let pkg of locallyInstalled) {
             spinner.text = `Checking ${pkg.name}`;
@@ -46,5 +47,6 @@ export default async function checkBoilerplates(outputter, boilerplatesManager, 
             spinner.warn(`There are ${outOfDatePackages.length} out-of-date packages:\n`);
         } 
         else spinner.succeed('All boilerplates are up-to-date');
+        return outOfDatePackages;
     });
 }
