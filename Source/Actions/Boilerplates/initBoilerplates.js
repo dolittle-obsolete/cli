@@ -1,5 +1,5 @@
-import { Outputter } from "../../Outputter";
-import { BoilerplatesManager } from "@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager";
+import { Outputter } from '../../Outputter';
+import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
 
 /*---------------------------------------------------------------------------------------------
 *  Copyright (c) Dolittle. All rights reserved.

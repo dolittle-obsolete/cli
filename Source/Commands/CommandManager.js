@@ -6,10 +6,10 @@
 import { Command } from './Command';
 import { CommandGroup } from './Groups/CommandGroup';
 import { Add } from './Groups/Add/Add';
-import { Create } from './Groups/Create/Create';
 import { ParserResult } from '../ParserResult';
 import { CliContext } from '../CliContext';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
+import createCommandGroup from './Groups/Create/Create';
 import initCommand from './Init';
 import chalk from 'chalk';
 import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
@@ -74,7 +74,7 @@ export class CommandManager {
         this.commandGroups.push(...[
             new Add(this.boilerplatesManager, this.artifactsManager),
             boilerplatesCommandGroup,
-            new Create(this.boilerplatesManager, this.applicationsManager, this.boundedContextsManager)
+            createCommandGroup
         ]);
     }
     /**

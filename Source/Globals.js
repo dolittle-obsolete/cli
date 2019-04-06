@@ -170,7 +170,7 @@ class Globals {
         
         this.#_inquirer = new Inquirer(this.#_dependenciesManager);
         this.#_commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
-        this.#_cliContext = new CliContext(outputter, this.#_projectConfig, this.#_boilerplatesConfig, 
+        this.#_cliContext = new CliContext(process.cwd(), outputter, this.#_projectConfig, this.#_boilerplatesConfig, 
             {
                 boilerplatesManager: managers.boilerplatesManager,
                 applicationsManager: managers.applicationsManager,

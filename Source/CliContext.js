@@ -21,6 +21,7 @@ import { DependenciesManager } from "@dolittle/tooling.common/dist/dependencies/
  * @class CliContext
  */
 export class CliContext {
+    #_cwd;
     #_outputter;
     #_projectConfig;
     #_boilerplatesConfig;
@@ -28,8 +29,10 @@ export class CliContext {
     #_inquirer;
     #_filesystem;
 
+
     /**
      * Creates an instance of {CliContext}.
+     * @param {string} cwd
      * @param {Outputter} outputter
      * @param {ProjectConfig} projectConfig
      * @param {BoilerplatesConfig} boilerplatesConfig
@@ -38,7 +41,8 @@ export class CliContext {
      * @param {import('fs')} filesystem
      * @memberof CliContext
      */
-    constructor(outputter, projectConfig, boilerplatesConfig, managers, inquirer, filesystem) {
+    constructor(cwd, outputter, projectConfig, boilerplatesConfig, managers, inquirer, filesystem) {
+        this.#_cwd = cwd;
         this.#_outputter = outputter;
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
@@ -46,6 +50,15 @@ export class CliContext {
         this.#_inquirer = inquirer;
         this.#_filesystem = filesystem;
         
+    }
+    /**
+     * Gets the current working directory
+     * @type {string}
+     * @readonly
+     * @memberof CliContext
+     */
+    get cwd() {
+        return this.#_cwd;
     }
     /**
      * Gets the CLI outputter

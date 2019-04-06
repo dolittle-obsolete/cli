@@ -24,7 +24,7 @@ export class DiscoverableGroup extends CommandGroup {
         super([], group, description, usage, help, shortDescription);
     }
     /**
-     * Discovers the commands
+     * Discovers the commands and persists them to storage somehow
      * @returns {Command[]} The discovered commands
      * @memberof DiscoverableCommands
      */
