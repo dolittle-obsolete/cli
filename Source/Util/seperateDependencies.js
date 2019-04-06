@@ -6,16 +6,16 @@
 import { Dependency } from '@dolittle/tooling.common/dist/dependencies/Dependency';
 
 /**
-* Gets the dependencies seperated by argument and others
+* 
 * @param {Dependency[]} dependencies
-* @returns {{argument: Dependency[], rest: Dependency[]}
+* @returns {{argument: Dependency[], nonPrompt: Dependency[], prompt: Dependency[]}}
 */
 export default function seperateDependencies(dependencies) {
-    let obj = {argument: [], rest: []};
+    let deps = {argument: [], nonPrompt: [], prompt: []};
     dependencies.forEach(_ => {
-        if (_.userInputType !== undefined && _.userInputType === 'argument') obj.argument.push(_);
-        else obj.rest.push(_);
+        if (_.userInputType !== undefined && _.userInputType === 'argument') deps.argument.push(_);
+        else if (_.type === 'discover' && !_.userInputType) deps.nonPrompt.push(_);
+        else deps.prompt.push(_);
     });
-    return obj;
-
+    return deps;
 }

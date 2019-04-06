@@ -7,12 +7,11 @@ import { Command } from '../../Command';
 import { group } from './Create';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
-import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
-import contextFromArgs from '../../../Util/contextFromArgs';
 import { BaseBoilerplate } from '@dolittle/tooling.common/dist/boilerplates/BaseBoilerplate';
-import resolveNonPromptDependencies from '../../../Util/resolveNonPromptDependencies';
-import seperateDependencies from '../../../Util/seperateDependencies';
+import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
 import requireArguments from '../../../Util/requireArguments';
+import seperateDependencies from '../../../Util/seperateDependencies';
+import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 
 //TODO: Maybe this should be a discoverable CommandGroup in the future
 
@@ -47,6 +46,10 @@ class Application extends Command {
         let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs];
         requireArguments(this, context.outputter, args, 'Missing application name');
         let boilerplates = context.managers.applicationsManager.boilerplatesByLanguage('any');
+        if (!boilerplates.length || boilerplates.length < 1) {
+            context.outputter.warn('No application boilerplates found for language \'any\'');
+            return;
+        }
         /**
          * @type {BaseBoilerplate}
          */
@@ -56,8 +59,8 @@ class Application extends Command {
         else boilerplate = boilerplates[0];
 
         let dependencies = seperateDependencies(boilerplate.dependencies);
-        let boilerplateContext = contextFromArgs(args, dependencies.argument, {});
-        boilerplateContext = resolveNonPromptDependencies(context.managers.dependenciesManager, dependencies.rest, context.cwd, boilerplate.language, boilerplateContext);
+        
+        let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
         context.managers.applicationsManager.createApplication(boilerplateContext, context.cwd, boilerplate);
     }
 }
