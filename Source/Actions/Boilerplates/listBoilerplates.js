@@ -16,7 +16,7 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * 
  */
 export default async function listBoilerplates(outputter, boilerplatesManager) {
-    let spinner = outputter.spinner('Boilerplates in use:\n').start();
+    let spinner = outputter.spinner('Listing boilerplates in use:\n').start();
     try {
         let boilerplates = boilerplatesManager.boilerplates;
         let numBoilerplates = boilerplates.length;

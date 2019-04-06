@@ -19,7 +19,7 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * @returns {{boilerplate: any, packageJson: any}[]} A list of the boilerplate and package configurations for each boilerplate
  */
 export default async function installedBoilerplates(outputter, boilerplatesManager, filesystem) {
-    let spinner = outputter.spinner('Installed boilerplates:\n').start();
+    let spinner = outputter.spinner('Getting installed boilerplates:\n').start();
     try {
 
         let paths = boilerplatesManager.installedBoilerplatePaths;
