@@ -8,15 +8,15 @@ import { CommandGroup } from './Groups/CommandGroup';
 import { Add } from './Groups/Add/Add';
 import { ParserResult } from '../ParserResult';
 import { CliContext } from '../CliContext';
-import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
-import createCommandGroup from './Groups/Create/Create';
-import initCommand from './Init';
-import chalk from 'chalk';
 import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
 import { ApplicationsManager } from '@dolittle/tooling.common/dist/applications/ApplicationsManager';
 import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager';
 import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
 import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
+import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
+import createCommandGroup from './Groups/Create/Create';
+import initCommand from './Init';
+import chalk from 'chalk';
 
 const description = 
 `The Dolittle CLI helps developers develop dolittle-based applications fast`;
