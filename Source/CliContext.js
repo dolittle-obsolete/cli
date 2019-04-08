@@ -13,6 +13,7 @@ import { BoundedContextsManager } from "@dolittle/tooling.common/dist/boundedCon
 import { ApplicationsManager } from "@dolittle/tooling.common/dist/applications/ApplicationsManager";
 import { ArtifactsManager } from "@dolittle/tooling.common/dist/artifacts/ArtifactsManager";
 import { DependenciesManager } from "@dolittle/tooling.common/dist/dependencies/DependenciesManager";
+import { CommandsConfig } from "./Configurations/CommandsConfig";
 
 /**
  * The context needed by commands to perform their actions
@@ -25,10 +26,10 @@ export class CliContext {
     #_outputter;
     #_projectConfig;
     #_boilerplatesConfig;
+    #_commandsConfig;
     #_managers;
     #_inquirer;
     #_filesystem;
-
 
     /**
      * Creates an instance of {CliContext}.
@@ -36,16 +37,18 @@ export class CliContext {
      * @param {Outputter} outputter
      * @param {ProjectConfig} projectConfig
      * @param {BoilerplatesConfig} boilerplatesConfig
+     * @param {CommandsConfig} commandsConfig
      * @param {} managers;
      * @param {Inquirer} inquirer
      * @param {import('fs')} filesystem
      * @memberof CliContext
      */
-    constructor(cwd, outputter, projectConfig, boilerplatesConfig, managers, inquirer, filesystem) {
+    constructor(cwd, outputter, projectConfig, boilerplatesConfig, commandsConfig, managers, inquirer, filesystem) {
         this.#_cwd = cwd;
         this.#_outputter = outputter;
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
+        this.#_commandsConfig = commandsConfig;
         this.#_managers = managers;
         this.#_inquirer = inquirer;
         this.#_filesystem = filesystem;
@@ -86,6 +89,15 @@ export class CliContext {
      */
     get boilerplatesConfig() {
         return this.#_boilerplatesConfig;
+    }
+    /**
+     * Gets the commands configuration object
+     * @type {CommandsConfig}
+     * @readonly
+     * @memberof CliContext
+     */
+    get commandsConfig() {
+        return this.#_commandsConfig;
     }
     /**
      * Gets the managers

@@ -7,8 +7,6 @@ import {boilerplatesConfig, projectConfig, getManagers} from '@dolittle/tooling.
 import { CommandManager } from './Commands/CommandManager';
 import { Inquirer } from './Inquirer';
 import { CliContext } from './CliContext';
-import outputter from './Outputter';
-import updateNotifier from 'update-notifier';
 import { ProjectConfig } from '@dolittle/tooling.common/dist/configuration/ProjectConfig';
 import { BoilerplatesConfig } from '@dolittle/tooling.common/dist/configuration/BoilerplatesConfig';
 import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
@@ -16,6 +14,10 @@ import { ApplicationsManager } from '@dolittle/tooling.common/dist/applications/
 import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
 import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager';
 import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
+import {getFileDirPath} from '@dolittle/tooling.common/dist/helpers';
+import outputter from './Outputter';
+import updateNotifier from 'update-notifier';
+import { CommandsConfig } from './Configurations/CommandsConfig';
 
 const pkg = require('../package.json');
 const notifier = updateNotifier(
@@ -45,6 +47,7 @@ class Globals {
     #_dependenciesManager;
 
     #_cliContext;
+    #_commandsConfig = new CommandsConfig(getFileDirPath(boilerplatesConfig.path));
 
     /**
      * Creates an instance of {Globals}.
@@ -55,6 +58,15 @@ class Globals {
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
         notifier.notify();
+    }
+    /**
+     * Gets the commands configuration object
+     *
+     * @readonly
+     * @memberof Globals
+     */
+    get commandsConfig() {
+        return this.#_commandsConfig;
     }
     /**
      * Gets the project configuration object
@@ -170,7 +182,7 @@ class Globals {
         
         this.#_inquirer = new Inquirer(this.#_dependenciesManager);
         this.#_commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
-        this.#_cliContext = new CliContext(process.cwd(), outputter, this.#_projectConfig, this.#_boilerplatesConfig, 
+        this.#_cliContext = new CliContext(process.cwd(), outputter, this.#_projectConfig, this.#_boilerplatesConfig, this.#_commandsConfig,
             {
                 boilerplatesManager: managers.boilerplatesManager,
                 applicationsManager: managers.applicationsManager,
