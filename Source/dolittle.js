@@ -14,6 +14,7 @@ import globals from './Globals';
 import outputLatestVersion from './Actions/outputLatestVersion';
 import dolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
 import {askToDownloadOrUpdateBoilerplates} from './Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import askForCoreLanguage from './Actions/askForCoreLanguage';
 
 const pkg = require('../package.json');
 
@@ -40,24 +41,16 @@ async function runDolittleCli() {
         }
     }
     if (!hasProjectConfiguration()) {
-        let language;
-        while (!language) language = await askForDefaultLanguage();
+        let coreLanguage;
+        while (!coreLanguage) coreLanguage = await askForCoreLanguage();
 
-        globals.projectConfig.store = {language};
+        globals.projectConfig.store = {coreLanguage};
     }
     await globals.commandManager.execute(parseResult, globals.cliContext);
 }
 async function askToFindBoilerplates() {
     let answers = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'No boilerplates matching the tooling version was found on your system.\nDo you want to find Dolittle\'s boilerplates?'}]);   
     return answers['download'];
-}
-async function askForDefaultLanguage() {
-    let answers = await inquirer.prompt([
-        {
-            type: 'list', name: 'language', message: 'Choose default programming language: ', 
-            choices: ['csharp']
-        }]);
-    return answers['language'];
 }
 async function printCliVersion() {
     await outputLatestVersion(pkg.name, pkg.version, outputter);

@@ -8,7 +8,6 @@ import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/
 import { artifactsBoilerplateType } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
 import { ArtifactsBoilerplate } from '@dolittle/tooling.common/dist/boilerplates/ArtifactsBoilerplate';
 import { ArtifactTemplate } from '@dolittle/tooling.common/dist/artifacts/ArtifactTemplate';
-import { artifactTemplateToConfig } from '../../../Util/artifactsTemplate';
 import { groupBy } from '@dolittle/tooling.common/dist/helpers';
 import { AddCommand } from './AddCommand';
 
