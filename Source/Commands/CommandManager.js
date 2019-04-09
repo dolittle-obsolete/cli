@@ -71,8 +71,12 @@ export class CommandManager {
         this.commands.push(...[
             initCommand
         ]);
+        
+        let addCommandGroup = new Add(this.boilerplatesManager, this.artifactsManager);
+        addCommandGroup.loadCommands();
+
         this.commandGroups.push(...[
-            new Add(this.boilerplatesManager, this.artifactsManager),
+            addCommandGroup,
             boilerplatesCommandGroup,
             createCommandGroup
         ]);

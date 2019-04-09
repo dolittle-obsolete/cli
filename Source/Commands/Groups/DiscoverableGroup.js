@@ -5,8 +5,6 @@
 
 import { Command } from '../Command';
 import { CommandGroup } from './CommandGroup';
-import { CliContext } from '../../CliContext';
-import { ParserResult } from '../../ParserResult';
 
 /**
  * Represents a group of commands which must be discovered
@@ -24,11 +22,11 @@ export class DiscoverableGroup extends CommandGroup {
         super([], group, description, usage, help, shortDescription);
     }
     /**
-     * Discovers the commands and persists them to storage somehow
-     * @returns {Command[]} The discovered commands
-     * @memberof DiscoverableCommands
+     * Loads commands from the commands configuration file
+     *
+     * @memberof DiscoverableGroup
      */
-    async discover() {
+    loadCommands() {
         throw new Error('Should not be implemented in the base class');
     }
 }
