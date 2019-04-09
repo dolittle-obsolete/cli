@@ -5,6 +5,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import fs from 'fs';
 import inquirer from 'inquirer';
 import outputter from './Outputter';
 import parser from './Parser';
@@ -38,11 +39,25 @@ async function runDolittleCli() {
             }
         }
     }
+    if (!hasProjectConfiguration()) {
+        let language;
+        while (!language) language = await askForDefaultLanguage();
+
+        globals.projectConfig.store = {language};
+    }
     await globals.commandManager.execute(parseResult, globals.cliContext);
 }
 async function askToFindBoilerplates() {
     let answers = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'No boilerplates matching the tooling version was found on your system.\nDo you want to find Dolittle\'s boilerplates?'}]);   
     return answers['download'];
+}
+async function askForDefaultLanguage() {
+    let answers = await inquirer.prompt([
+        {
+            type: 'list', name: 'language', message: 'Choose default programming language: ', 
+            choices: ['csharp']
+        }]);
+    return answers['language'];
 }
 async function printCliVersion() {
     await outputLatestVersion(pkg.name, pkg.version, outputter);
@@ -51,4 +66,8 @@ async function printCliVersion() {
 function hasBoilerplates() {
     let boilerplatesConfigObj = globals.boilerplatesConfig.store;
     return Object.keys(boilerplatesConfigObj).length > 0;
+}
+function hasProjectConfiguration() {
+    let projectConfigObj = globals.projectConfig;
+    return fs.existsSync(projectConfigObj.path);
 }
