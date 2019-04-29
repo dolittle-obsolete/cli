@@ -3,17 +3,17 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Outputter } from '../Outputter';
 import inquirer from 'inquirer';
-import { ArtifactTemplate } from '@dolittle/tooling.common/dist/boilerplates/BaseBoilerplate';
+import { ArtifactTemplate } from '@dolittle/tooling.common/dist/artifacts/ArtifactTemplate';
+import mapToInquirerChoices from '../../Util/mapToInquirerChoices';
 
 /**
- * Prompts the user to choose a boilerplate
+ * Prompts the user to choose a template
  * @param {ArtifactTemplate[]} templates
  */
-export default async function chooseBoilerplate(templates) {
+export default async function chooseTemplate(templates) {
     if (templates.length && templates.length > 0) {
-        let template = await askWhichBoilerplate(templates);
+        let template = await askWhichTemplate(templates);
         return template;
     }
 }
@@ -21,16 +21,20 @@ export default async function chooseBoilerplate(templates) {
 /**
  * Asks the user which boilerplate to choose
  *
- * @param {BaseBoilerplate[]} boilerplates
- * @returns {Promise<BaseBoilerplate>}
+ * @param {ArtifactTemplate[]} templates
+ * @returns {Promise<ArtifactTemplate>}
  */
-async function askWhichBoilerplate(boilerplates) {
-    let choices = boilerplates.map(boilerplate => new Object({name: `${boilerplate.name} language: ${boilerplate.language}`, value: boilerplate}));
+async function askWhichTemplate(templates) {
+    let choices = mapToInquirerChoices(
+        templates,
+        _ => `${_.name} language: ${_.boilerplate.language}`,
+        _ => _
+    );
     let answers = await inquirer.prompt([
         {
-            type: 'list', name: 'boilerplate', message: 'Choose boilerplate:',
+            type: 'list', name: 'artifactTemplate', message: 'Choose template:',
             choices
         }
     ]);
-    return answers['boilerplate'];
+    return answers['artifactTemplate'];
 }
