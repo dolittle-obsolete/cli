@@ -61,7 +61,7 @@ export class AddCommand extends Command {
 
         let template = templatesWithLanguage[0];
 
-        if (templatesWithLanguage.length > 1) template = await chooseTemplate(); 
+        if (templatesWithLanguage.length > 1) template = await chooseTemplate(templatesWithLanguage); 
 
         let dependencies = seperateDependencies(template.allDependencies());
         let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, template.boilerplate, context.cwd, args, dependencies);
