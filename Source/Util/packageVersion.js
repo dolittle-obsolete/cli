@@ -16,7 +16,11 @@ import outputter from '../Outputter';
  */
 export async function getLatestVersion(pkgName) {
     let spinner = outputter.spinner(`Getting latest version of ${pkgName}`).start();
-    let version = await latestVersion(pkgName);
+    let version = await latestVersion(pkgName)
+        .catch( error => {
+            spinner.fail(`Failed to get the latest version of ${pkgName}. ${error.message? error.message : error}`);
+            throw error;
+        });
     spinner.stop(`Got latest version of ${pkgName}`);
     return version;
 } 
