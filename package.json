@@ -38,6 +38,7 @@
     "debug": "^4.1.1",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.2",
+    "is-online": "^8.2.0",
     "latest-version": "^4.0.0",
     "listr": "^0.14.3",
     "lodash": "^4.17.11",

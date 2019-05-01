@@ -6,6 +6,7 @@
 import latestVersion from 'latest-version';
 import semver from 'semver';
 import outputter from '../Outputter';
+import requireInternet from './requireInternet';
 
 /**
  * Gets the latest version of a package from npmjs.com
@@ -15,6 +16,7 @@ import outputter from '../Outputter';
  * @returns The latest version
  */
 export async function getLatestVersion(pkgName) {
+    await requireInternet(outputter);
     let spinner = outputter.spinner(`Getting latest version of ${pkgName}`).start();
     try {
         const version = await latestVersion(pkgName);

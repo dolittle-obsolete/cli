@@ -8,6 +8,7 @@ import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import { Outputter } from '../../Outputter';
 import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/BoilerplatesManager';
+import requireInternet from '../../Util/requireInternet';
 
 /**
  * Performs the action that asks the user whether or not to download or update boilerplate packages 
@@ -19,6 +20,7 @@ import { BoilerplatesManager } from '@dolittle/tooling.common/dist/boilerplates/
  * @returns {Promise<void>}
  */
 export async function askToDownloadOrUpdateBoilerplates(boilerplates, boilerplatesManager, outputter) {
+    await requireInternet(outputter);
     if (boilerplates.length && boilerplates.length > 0) {
         const shouldDownload = await askToDownload();
         if (shouldDownload) {

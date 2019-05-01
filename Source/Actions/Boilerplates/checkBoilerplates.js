@@ -7,6 +7,7 @@ import semver from 'semver';
 import path from 'path';
 import { Outputter } from '../../Outputter';
 import { BoilerplatesManager } from '@dolittle/tooling.common';
+import requireInternet from '../../Util/requireInternet';
 
 /**
  * Checks the version of the installed boilerplates
@@ -18,6 +19,7 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
  * @returns {Promise<{name: string, version: string, latest: string}[]>} Returns a Promise containing a list of out-of-date packages with current version and the latest compatible version
  */
 export default async function checkBoilerplates(outputter, boilerplatesManager, filesystem) {
+    await requireInternet(outputter);
     let spinner = outputter.spinner('Checking versions:\n').start();
     let paths = boilerplatesManager.installedBoilerplatePaths;
     let locallyInstalled = [];
