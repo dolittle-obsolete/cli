@@ -16,13 +16,14 @@ import outputter from '../Outputter';
  */
 export async function getLatestVersion(pkgName) {
     let spinner = outputter.spinner(`Getting latest version of ${pkgName}`).start();
-    let version = await latestVersion(pkgName)
-        .catch( error => {
-            spinner.fail(`Failed to get the latest version of ${pkgName}. ${error.message? error.message : error}`);
-            throw error;
-        });
-    spinner.stop(`Got latest version of ${pkgName}`);
-    return version;
+    try {
+        const version = await latestVersion(pkgName);
+        spinner.stop();
+        return version;
+    } catch (error) {
+        spinner.fail(`Failed to get the latest version of ${pkgName}. Error: ${error.message? error.message : error}`);
+        throw error;
+    }
 } 
 /**
  * Checks whether or not the 'to' version is greater than 'from' 

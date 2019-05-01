@@ -53,7 +53,11 @@ async function askToFindBoilerplates() {
     return answers['download'];
 }
 async function printCliVersion() {
-    await outputLatestVersion(pkg.name, pkg.version, outputter);
+    try {
+        await outputLatestVersion(pkg.name, pkg.version, outputter);
+    } catch(error) {
+        outputter.print(`${pkg.name} v${pkg.version}`);
+    }
 }
 
 function hasBoilerplates() {

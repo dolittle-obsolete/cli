@@ -21,14 +21,19 @@ import chalk from 'chalk';
  * @param {Outputter} outputter
  */
 async function outputLatestVersion(pkgName, currentVersion, outputter) {
-    const latest = await getLatestVersion(pkgName);
-    let versionText = `v${currentVersion}`;
+    try {
+        const latest = await getLatestVersion(pkgName);
+        let versionText = `v${currentVersion}`;
     
-    if (isCompatibleUpgrade(latest, currentVersion)) versionText = chalk.yellow(versionText);
-    else if (isGreaterVersion(latest, currentVersion)) versionText = chalk.red(versionText);
-    else versionText = chalk.green(versionText);
-    
-    outputter.print(`${pkgName} ${versionText}\n\t${pkgName}@${currentVersion} --> ${pkgName}@${latest}`);
+        if (isCompatibleUpgrade(latest, currentVersion)) versionText = chalk.yellow(versionText);
+        else if (isGreaterVersion(latest, currentVersion)) versionText = chalk.red(versionText);
+        else versionText = chalk.green(versionText);
+        
+        outputter.print(`${pkgName} ${versionText}\n\t${pkgName}@${currentVersion} --> ${pkgName}@${latest}`);
+    } catch (error) {
+        outputter.warn('Failed to get latest version of an npm package. Are you online?');
+        throw error;
+    }
 }
 
 export default outputLatestVersion;
