@@ -39,7 +39,7 @@ class BoundedContext extends Command {
         }
         //TODO: Get language from project configuration
 
-        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs];
+        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
         let language = parserResult.coreLang? parserResult.coreLang : 'csharp';
         
         requireArguments(this, context.outputter, args, 'Missing bounded context name');

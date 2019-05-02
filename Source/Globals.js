@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import {boilerplatesConfig, projectConfig, getManagers} from '@dolittle/tooling.common'
+import {boilerplatesConfig, projectConfig, getManagers, dolittleConfig, folders} from '@dolittle/tooling.common'
 import { CommandManager } from './Commands/CommandManager';
 import { Inquirer } from './Inquirer';
 import { CliContext } from './CliContext';
@@ -183,7 +183,7 @@ class Globals {
         
         this.#_inquirer = new Inquirer(this.#_dependenciesManager);
         this.#_commandManager = new CommandManager(managers.boilerplatesManager, managers.applicationsManager, managers.boundedContextsManager, managers.artifactsManager, managers.dependenciesManager);
-        this.#_cliContext = new CliContext(process.cwd(), outputter, this.#_projectConfig, this.#_boilerplatesConfig, this.#_commandsConfig,
+        this.#_cliContext = new CliContext(process.cwd(), outputter, dolittleConfig, this.#_projectConfig, this.#_boilerplatesConfig, this.#_commandsConfig,
             {
                 boilerplatesManager: managers.boilerplatesManager,
                 applicationsManager: managers.applicationsManager,
@@ -191,7 +191,7 @@ class Globals {
                 artifactsManager: managers.artifactsManager,
                 dependenciesManager: managers.dependenciesManager,
                 commandManager: this.#_commandManager
-            }, this.#_inquirer, require('fs'));
+            }, this.#_inquirer, require('fs'), folders);
         
         spinner.stop();
     }

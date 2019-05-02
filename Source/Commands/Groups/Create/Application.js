@@ -43,7 +43,7 @@ class Application extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs];
+        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
         requireArguments(this, context.outputter, args, 'Missing application name');
         let boilerplates = context.managers.applicationsManager.boilerplatesByLanguage('any');
         if (!boilerplates.length || boilerplates.length < 1) {

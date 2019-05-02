@@ -13,9 +13,22 @@ import { Dependency } from '@dolittle/tooling.common/dist/dependencies/Dependenc
 * @returns {*}
 */
 export default function resolveArgumentDependencies(args, argumentDependencies, context) {
-    if (args.length !== argumentDependencies.length) throw new Error('Args does not match dependencies');
+    if (args.length !== argumentDependencies.length) {
+        throw ArgumentsNotMatchingDependenciesError.new;
+    }
     argumentDependencies.forEach((dep, i) => {
         context[dep.name] = args[i];        
     });
     return context;
+}
+
+export class ArgumentsNotMatchingDependenciesError extends Error {
+    constructor(...args) {
+        super(...args);
+        Error.captureStackTrace(this, ArgumentsNotMatchingDependenciesError);
+    }
+
+    static get new() {
+        return new ArgumentsNotMatchingDependenciesError('Command arguments not matching dependencies');
+    } 
 }

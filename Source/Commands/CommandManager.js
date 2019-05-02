@@ -20,6 +20,8 @@ import initCommand from './Init';
 import checkCommand from './Check';
 import chalk from 'chalk';
 import { MissingCommandArgumentError } from '../Util/requireArguments';
+import { ArgumentsNotMatchingDependenciesError } from '../Util/resolveArgumentDependencies';
+import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';
 
 const description = 
 `The Dolittle CLI helps developers develop dolittle-based applications fast`;
@@ -184,7 +186,7 @@ export class CommandManager {
             return;
         }
         parserResult.firstArg = parserResult.restArgs.shift();
-        
+
         try {
             await command.action(parserResult, cliContext);
         } catch (error) {
@@ -198,6 +200,14 @@ export class CommandManager {
                 cliContext.outputter.warn('Missing required argument');
                 process.exit(1);
             }
+            else if (error instanceof ArgumentsNotMatchingDependenciesError) {
+                cliContext.outputter.warn('Command arguments not matching boilerplate dependencies');
+                process.exit(1);
+            }
+            else if (error instanceof MissingBoundedContextError) {
+                cliContext.outputter.warn('Excpected to find a bounded context');
+                process.exit(1);
+            } 
             else throw error;
         }
     }

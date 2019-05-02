@@ -14,6 +14,7 @@ import { ApplicationsManager } from "@dolittle/tooling.common/dist/applications/
 import { ArtifactsManager } from "@dolittle/tooling.common/dist/artifacts/ArtifactsManager";
 import { DependenciesManager } from "@dolittle/tooling.common/dist/dependencies/DependenciesManager";
 import { CommandsConfig } from "./Configurations/CommandsConfig";
+import { Folders } from "@dolittle/tooling.common/dist/Folders";
 
 /**
  * The context needed by commands to perform their actions
@@ -24,35 +25,40 @@ import { CommandsConfig } from "./Configurations/CommandsConfig";
 export class CliContext {
     #_cwd;
     #_outputter;
+    #_dolittleConfig;
     #_projectConfig;
     #_boilerplatesConfig;
     #_commandsConfig;
     #_managers;
     #_inquirer;
     #_filesystem;
+    #_folders;
 
     /**
      * Creates an instance of {CliContext}.
      * @param {string} cwd
      * @param {Outputter} outputter
+     * @param {any} dolittleConfig
      * @param {ProjectConfig} projectConfig
      * @param {BoilerplatesConfig} boilerplatesConfig
      * @param {CommandsConfig} commandsConfig
      * @param {} managers;
      * @param {Inquirer} inquirer
      * @param {import('fs')} filesystem
+     * @param {Folders} folders
      * @memberof CliContext
      */
-    constructor(cwd, outputter, projectConfig, boilerplatesConfig, commandsConfig, managers, inquirer, filesystem) {
+    constructor(cwd, outputter, dolittleConfig, projectConfig, boilerplatesConfig, commandsConfig, managers, inquirer, filesystem, folders) {
         this.#_cwd = cwd;
         this.#_outputter = outputter;
+        this.#_dolittleConfig = dolittleConfig;
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
         this.#_commandsConfig = commandsConfig;
         this.#_managers = managers;
         this.#_inquirer = inquirer;
         this.#_filesystem = filesystem;
-        
+        this.#_folders = folders;
     }
     /**
      * Gets the current working directory
@@ -71,6 +77,15 @@ export class CliContext {
      */
     get outputter() {
         return this.#_outputter;
+    }
+    /**
+     * Gets the dolittle config
+     *
+     * @readonly
+     * @memberof CliContext
+     */
+    get dolittleConfig() {
+        return this.#_dolittleConfig;
     }
     /**
      * Gets the project configuration object
@@ -125,5 +140,14 @@ export class CliContext {
      */
     get filesystem() {
         return this.#_filesystem;
+    }
+    /**
+     * Gets the folders object
+     * @type {Folders}
+     * @readonly
+     * @memberof CliContext
+     */
+    get folders() {
+        return this.#_folders;
     }
 }
