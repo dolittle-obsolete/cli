@@ -21,7 +21,6 @@ import { BoilerplatesManager } from '@dolittle/tooling.common';
 export default async function installedBoilerplates(outputter, boilerplatesManager, filesystem) {
     let spinner = outputter.spinner('Getting installed boilerplates:\n').start();
     try {
-
         let paths = boilerplatesManager.installedBoilerplatePaths;
     
         let boilerplatesAndPackages = paths.map(boilerplatePaths => {

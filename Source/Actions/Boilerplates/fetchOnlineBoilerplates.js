@@ -15,7 +15,6 @@ import requireInternet from '../../Util/requireInternet';
  * @returns {Promise<{name: string, version: string}[]>}
  */
 async function onlineBoilerplates(boilerplatesManager, outputter, keywords = [], limit = 250) {
-
     await requireInternet(outputter);
     let spinner = outputter.spinner('Getting boilerplates (this might take a while, depending on your internet connection): ').start();
     let boilerplates = await boilerplatesManager.discoverOnlineBoilerplates(keywords, limit)
