@@ -9,6 +9,7 @@ import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
 import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
 import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import requireInternet from '../../../Util/requireInternet';
 
 class Online extends Command {
     /**
@@ -33,7 +34,7 @@ class Online extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-
+        await requireInternet(context.outputter);
         let keywords = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs];
         let limit = parserResult.extraOpts['l']? parserResult.extraOpts['l'] : parserResult.extraOpts['limit'];
 

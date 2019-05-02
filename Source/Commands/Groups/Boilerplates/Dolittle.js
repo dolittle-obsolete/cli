@@ -9,6 +9,7 @@ import dolittleBoilerplates from '../../../Actions/Boilerplates/fetchDolittleBoi
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import requireInternet from '../../../Util/requireInternet';
 
 class Dolittle extends Command {
     /**
@@ -28,8 +29,8 @@ class Dolittle extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
+        await requireInternet(context.outputter);
         let boilerplates = await dolittleBoilerplates(context.managers.boilerplatesManager, context.outputter);
-        
         boilerplates.map(_ => `${_.name}@${_.version}`).forEach(_ => context.outputter.print(_));
         askToDownloadOrUpdateBoilerplates(boilerplates, context.managers.boilerplatesManager, context.outputter);    
         

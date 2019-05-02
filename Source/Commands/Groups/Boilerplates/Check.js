@@ -7,8 +7,9 @@ import { Command } from '../../Command';
 import { group } from './Boilerplates';
 import { ParserResult } from '../../../ParserResult';
 import { CliContext } from '../../../CliContext';
-import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
 import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
+import requireInternet from '../../../Util/requireInternet';
 
 class Check extends Command {
     /**
@@ -29,6 +30,7 @@ class Check extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
+        await requireInternet(context.outputter);
         let outOfDatePacakges = await checkBoilerplates(context.outputter, context.managers.boilerplatesManager, context.filesystem);
         askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.managers.boilerplatesManager, context.outputter);    
     }
