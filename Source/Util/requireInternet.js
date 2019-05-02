@@ -5,18 +5,30 @@
 import isOnline from 'is-online';
 import { Outputter } from '../Outputter';
 
+let checkedConnection = false;
+let hasInternet;
+
 /**
- *
+ * Checks whether or not the user is connected to the internet.
+ * Because only one command is run during a session of the CLI-tool, 
+ * the check is only performed once and the result is stored in the session of the CLI-command.
+ * 
  * @param {Outputter} [outputter] creates a spinner of outputter is given as argument
+ * @throws An Error when no connection can be established 
  * @export
  */
 export default async function requireInternet(outputter) {
-    let spinner = outputter? outputter.spinner().start('Checking for internet connection') : undefined;
-    let online = await isOnline();
-    if (!online) {
-        const errorMsg = 'Not connected to the internet';
-        if (spinner) spinner.fail(errorMsg);
-        throw new Error(errorMsg);
+    if (!checkedConnection) {
+        checkedConnection = true;
+        let spinner = outputter? outputter.spinner().start('Checking for internet connection') : undefined;
+        hasInternet = await isOnline();
+        if (!hasInternet) {
+            if (spinner) spinner.fail('Not connected to the internet');
+            throw new Error('Internet connection is required');
+        }
+        if (spinner) spinner.stop();
     }
-    if (spinner) spinner.stop();
+    else {
+        if (!hasInternet) throw new Error('Internet connection is required');
+    }
 }
