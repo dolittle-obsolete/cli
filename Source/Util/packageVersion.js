@@ -5,25 +5,26 @@
 
 import latestVersion from 'latest-version';
 import semver from 'semver';
-import outputter from '../Outputter';
 import requireInternet from './requireInternet';
+import { Outputter } from '../Outputter';
 
 /**
  * Gets the latest version of a package from npmjs.com
  *
  * @export
  * @param {string} pkgName The name of the package
+ * @param {Outputter} [outputter] The optional outputter. If given this function creates a spinner
  * @returns The latest version
  */
-export async function getLatestVersion(pkgName) {
+export async function getLatestVersion(pkgName, outputter) {
     await requireInternet(outputter);
-    let spinner = outputter.spinner(`Getting latest version of ${pkgName}`).start();
+    let spinner = outputter? outputter.spinner().start(`Getting latest version of ${pkgName}`) : undefined;
     try {
         const version = await latestVersion(pkgName);
-        spinner.stop();
+        if (spinner) spinner.stop();
         return version;
     } catch (error) {
-        spinner.fail(`Failed to get the latest version of ${pkgName}. Error: ${error.message? error.message : error}`);
+        if (spinner) spinner.fail(`Failed to get the latest version of ${pkgName}. Error: ${error.message? error.message : error}`);
         throw error;
     }
 } 
