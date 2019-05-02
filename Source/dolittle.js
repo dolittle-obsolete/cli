@@ -11,7 +11,6 @@ import outputter from './Outputter';
 import parser from './Parser';
 import {default as log, debug} from './Util/debug';
 import globals from './Globals';
-import outputLatestVersion from './Actions/outputLatestVersion';
 import dolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
 import {askToDownloadOrUpdateBoilerplates} from './Actions/Boilerplates/downloadOrUpdateBoilerplates';
 import askForCoreLanguage from './Actions/askForCoreLanguage';
