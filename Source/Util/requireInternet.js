@@ -24,11 +24,22 @@ export default async function requireInternet(outputter) {
         hasInternet = await isOnline();
         if (!hasInternet) {
             if (spinner) spinner.fail('Not connected to the internet');
-            throw new Error('Internet connection is required');
+            throw NotConnectedError.new;
         }
         if (spinner) spinner.stop();
     }
     else {
-        if (!hasInternet) throw new Error('Internet connection is required');
+        if (!hasInternet) throw NotConnectedError.new;
     }
+}
+
+export class NotConnectedError extends Error {
+    constructor(...args) {
+        super(...args);
+        Error.captureStackTrace(this, NotConnectedError);
+    }
+
+    static get new() {
+        return new NotConnectedError('Internet connection is required');
+    } 
 }
