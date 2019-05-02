@@ -26,7 +26,7 @@ async function runDolittleCli() {
         debug.disable();
 
     if (parseResult.version) {
-        await printCliVersion();
+        printCliVersion();
         process.exit(0);
     }
     if (!hasBoilerplates()) {
@@ -52,12 +52,8 @@ async function askToFindBoilerplates() {
     let answers = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'No boilerplates matching the tooling version was found on your system.\nDo you want to find Dolittle\'s boilerplates?'}]);   
     return answers['download'];
 }
-async function printCliVersion() {
-    try {
-        await outputLatestVersion(pkg.name, pkg.version, outputter);
-    } catch(error) {
-        outputter.print(`${pkg.name} v${pkg.version}`);
-    }
+function printCliVersion() {
+    outputter.print(`${pkg.name} v${pkg.version}`);
 }
 
 function hasBoilerplates() {

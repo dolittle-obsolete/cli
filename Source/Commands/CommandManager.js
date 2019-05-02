@@ -13,9 +13,11 @@ import { ApplicationsManager } from '@dolittle/tooling.common/dist/applications/
 import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedContexts/BoundedContextsManager';
 import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
 import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
+import { NotConnectedError } from '../Util/requireInternet';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
 import createCommandGroup from './Groups/Create/Create';
 import initCommand from './Init';
+import checkCommand from './Check';
 import chalk from 'chalk';
 
 const description = 
@@ -69,7 +71,8 @@ export class CommandManager {
         this.#_dependenciesManager = dependenciesManager;
 
         this.commands.push(...[
-            initCommand
+            initCommand,
+            checkCommand
         ]);
         
         let addCommandGroup = new Add(this.boilerplatesManager, this.artifactsManager);
@@ -180,6 +183,13 @@ export class CommandManager {
             return;
         }
         parserResult.firstArg = parserResult.restArgs.shift();
-        await command.action(parserResult, cliContext);
+        try {
+            await command.action(parserResult, cliContext);
+        } catch (error) {
+            cliContext.outputter.warn('Could not execute the command');
+            if (error instanceof NotConnectedError) {
+                cliContext.outputter.warn('Command requiring internet and no internet connection could be established');
+            }
+        }
     }
 }
