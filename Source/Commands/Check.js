@@ -45,7 +45,6 @@ class Check extends Command {
         this.output(context.outputter, pkgName, currentVersion, latestVersion, sameVersion, compatibleUpgrade, majorUpgrade);
         
         if (compatibleUpgrade || majorUpgrade) {
-            
             const update = await this.#askWhetherToUpdate(majorUpgrade);
             if (update)
                 spawn('npm', ['i', '-g', `${pkgName}@${latestVersion}`], {cwd: process.cwd(), stdio: 'inherit'});

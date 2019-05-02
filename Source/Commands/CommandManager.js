@@ -187,9 +187,13 @@ export class CommandManager {
             await command.action(parserResult, cliContext);
         } catch (error) {
             cliContext.outputter.warn('Could not execute the command');
+
             if (error instanceof NotConnectedError) {
-                cliContext.outputter.warn('Command requiring internet and no internet connection could be established');
+                cliContext.outputter.warn('No internet connection could be established');
+                process.exit(1);
             }
+            else throw error;
+            
         }
     }
 }
