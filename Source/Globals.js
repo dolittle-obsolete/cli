@@ -23,7 +23,8 @@ const pkg = require('../package.json');
 const notifier = updateNotifier(
     {
         pkg, 
-        updateCheckInterval: 1000 * 60 * 60 * 24 // A day
+        updateCheckInterval: 1000 * 60 * 60 * 24, // A day
+
     }
 );
 /**
@@ -57,7 +58,7 @@ class Globals {
         this.#_installHandlers();
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
-        notifier.notify();
+        notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
     }
     /**
      * Gets the commands configuration object
