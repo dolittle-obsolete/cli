@@ -19,6 +19,7 @@ import createCommandGroup from './Groups/Create/Create';
 import initCommand from './Init';
 import checkCommand from './Check';
 import chalk from 'chalk';
+import { MissingCommandArgumentError } from '../Util/requireArguments';
 
 const description = 
 `The Dolittle CLI helps developers develop dolittle-based applications fast`;
@@ -183,6 +184,7 @@ export class CommandManager {
             return;
         }
         parserResult.firstArg = parserResult.restArgs.shift();
+        
         try {
             await command.action(parserResult, cliContext);
         } catch (error) {
@@ -192,8 +194,11 @@ export class CommandManager {
                 cliContext.outputter.warn('No internet connection could be established');
                 process.exit(1);
             }
+            else if (error instanceof MissingCommandArgumentError) {
+                cliContext.outputter.warn('Missing required argument');
+                process.exit(1);
+            }
             else throw error;
-            
         }
     }
 }

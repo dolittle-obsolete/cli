@@ -8,13 +8,13 @@ import { Outputter } from '../Outputter';
 
 
 /**
- *
- *
+ * Checks whether or not there are missing arguments for a command. 
+ * 
  * @export
- * @param {Command} command
- * @param {Outputter} outputter
- * @param {string[]} args
- * @param {...string} argumentMessages
+ * @param {Command} command The command that is executed
+ * @param {Outputter} outputter The outputter for printing
+ * @param {string[]} args The given arguments. 
+ * @param {...string} argumentMessages A list of error messages for when a required argument is missing.
  */
 export default function requireArguments(command, outputter, args, ...argumentMessages) {
     for (let i = 0; i < argumentMessages.length; i++) {
@@ -22,7 +22,18 @@ export default function requireArguments(command, outputter, args, ...argumentMe
         if (!args[i]) {
             outputter.warn(msg);
             outputter.print(command.helpDocs);
-            throw new Error('Command is missing an argument');
+            throw MissingCommandArgumentError.new;
         }
     }
+}
+
+export class MissingCommandArgumentError extends Error {
+    constructor(...args) {
+        super(...args);
+        Error.captureStackTrace(this, MissingCommandArgumentError);
+    }
+
+    static get new() {
+        return new MissingCommandArgumentError('Missing a required argument');
+    } 
 }
