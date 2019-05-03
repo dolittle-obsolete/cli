@@ -68,7 +68,7 @@ export class AddCommand extends Command {
         if (templatesWithLanguage.length > 1) template = await chooseTemplate(templatesWithLanguage); 
 
         let dependencies = seperateDependencies(template.allDependencies());
-        this.#extendHelpDocs(dependencies.argument);
+        this.extendHelpDocs(dependencies.argument);
         
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -90,13 +90,5 @@ export class AddCommand extends Command {
         boilerplateContext = await resolvePromptDependencies(context.inquirer, dependencies.prompt, destinationAndName.destination, template.boilerplate.language, boilerplateContext);
         
         context.managers.artifactsManager.createArtifact(boilerplateContext, template, destinationAndName.destination);
-    }
-    /**
-     * Extends the help docs for the particular command with the given dependencies
-     * @param {Dependency[]} argumentDependencies
-     */
-    #extendHelpDocs(argumentDependencies) {
-        this.usage = `${this.#_usagePrefix} ${argumentDependencies.map(_ => _.name).join(' ')}`;
-        this.help = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
     }
 }

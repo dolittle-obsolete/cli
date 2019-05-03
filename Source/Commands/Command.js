@@ -9,6 +9,7 @@ import { Inquirer } from "../Inquirer";
 import { Outputter } from "../Outputter";
 import { ParserResult } from "../ParserResult";
 import { CliContext } from "../CliContext";
+import { Dependency } from "@dolittle/tooling.common/dist/dependencies/Dependency";
 import chalk from 'chalk';
  /**
  * The base class of a command
@@ -105,6 +106,17 @@ export class Command {
         
         return res.join('\n');
     }
+
+
+    /**
+     * Extends the help docs for the particular command with the given dependencies
+     * @param {Dependency[]} argumentDependencies
+     */
+    extendHelpDocs(argumentDependencies) {
+        this.usage = `${this.#_usagePrefix} ${argumentDependencies.map(_ => _.name).join(' ')}`;
+        this.help = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
+    }
+
     /**
      * Returns the JSON object representation of a {Command}
      *
