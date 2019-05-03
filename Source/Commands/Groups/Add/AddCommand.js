@@ -11,7 +11,6 @@ import { ArtifactTemplate } from '@dolittle/tooling.common/dist/artifacts/Artifa
 import {Dependency} from '@dolittle/tooling.common/dist/dependencies/Dependency';
 import seperateDependencies from '../../../Util/seperateDependencies';
 import requireArguments from '../../../Util/requireArguments';
-import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 import chooseTemplate from '../../../Actions/Add/chooseTemplate';
 import { helpers } from '@dolittle/tooling.common';
 import { MissingBoundedContextError } from './MissingBoundedContextError';
