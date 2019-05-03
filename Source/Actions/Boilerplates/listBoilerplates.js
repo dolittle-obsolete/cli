@@ -31,7 +31,11 @@ Description: ${boilerplate.description}
 `);
             });
         }
-        else spinner.warn('There are no boilerplates in use.\nDo you have any installed? use \'dolittle boilerplates discover\'\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+        else spinner.warn(`There are no boilerplates in use.
+Do you have any installed? Use 'dolittle boilerplates init' to initialize the boilerplates system
+
+Use 'dolittle boilerplates online' to discover what's available on npm.
+Or use 'dolittle boilerplates dolittle' to discover boilerplates that the Dolittle teams has made available on npm`);
 
     } catch(error) {
         spinner.fail(`An error occured: ${error.message? error.message : error}`);

@@ -30,7 +30,10 @@ export default async function installedBoilerplates(outputter, boilerplatesManag
         });
         let numBoilerplates = boilerplatesAndPackages.length;
         if (numBoilerplates > 0) spinner.succeed(`Found ${numBoilerplates} installed boilerplates`);
-        else spinner.warn('Could not find any installed boilerplates.\nUse \'dolittle boilerplates online\' to discover what\'s available on npm');
+        else spinner.warn(`Could not find any installed boilerplates.
+
+Use 'dolittle boilerplates online' to discover what's available on npm.
+Or use 'dolittle boilerplates dolittle' to discover boilerplates that the Dolittle team has made available on npm`);
         
         return boilerplatesAndPackages;
     } catch (error) {
