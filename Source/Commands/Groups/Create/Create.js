@@ -9,6 +9,10 @@ import applicationCommand from './Application';
 import boundedContextCommand from './BoundedContext';
 
 export const group = 'create';
+
+const description = `Commands related to scaffolding Dolittle appliation structures.
+
+Quickly get up and running by scaffolding bounded contexts and applications skeletons-`;
 /**
  * The Create {CommandGroup}
  *
@@ -23,9 +27,8 @@ class Create extends CommandGroup {
      * @memberof Create
      */
     constructor(commands) {
-        super(commands, group, 
-            'Group of the commands related to scaffolding dolittle structures.',
-            `dolittle ${group} <sub-command>`
+        super(commands, group, description,
+            `dolittle ${group} <sub-command>`, 'Commands related to scaffolding Dolittle appliation structures', 
         );
     }
 }

@@ -13,17 +13,19 @@ import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
 import seperateDependencies from '../../../Util/seperateDependencies';
 import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 
+const description = `Scaffolds a Dolittle bounded context`;
+const help = [
+    '\tbounded context name: The name of the bounded context',
+    '\t--coreLang: The language of the bounded context'
+].join('\n');
 class BoundedContext extends Command {
     /**
      * Creates an instance of {BoundedContext}.
      * @memberof Installed
      */
     constructor() {
-        super('boundedcontext', 'Scaffolds a dolittle bounded context', 'dolittle create boundedcontext <bounded context name> [--coreLang]', group,
-            [
-                '\tbounded context name: The name of the bounded context',
-                '\t--coreLang: The language of the bounded context'
-            ].join('\n')
+        super('boundedcontext', description, 'dolittle create boundedcontext <bounded context name> [--coreLang]', group,
+            help, 'Scaffolds a Dolittle bounded context'
         );
     }
 
@@ -37,7 +39,6 @@ class BoundedContext extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        //TODO: Get language from project configuration
 
         let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
         let language = parserResult.coreLang? parserResult.coreLang : 'csharp';

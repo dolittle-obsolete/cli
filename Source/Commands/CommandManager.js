@@ -14,25 +14,33 @@ import { BoundedContextsManager } from '@dolittle/tooling.common/dist/boundedCon
 import { ArtifactsManager } from '@dolittle/tooling.common/dist/artifacts/ArtifactsManager';
 import { DependenciesManager } from '@dolittle/tooling.common/dist/dependencies/DependenciesManager';
 import { NotConnectedError } from '../Util/requireInternet';
+import { MissingCommandArgumentError } from '../Util/requireArguments';
+import { ArgumentsNotMatchingDependenciesError } from '../Util/resolveArgumentDependencies';
+import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
 import createCommandGroup from './Groups/Create/Create';
 import initCommand from './Init';
 import checkCommand from './Check';
 import chalk from 'chalk';
-import { MissingCommandArgumentError } from '../Util/requireArguments';
-import { ArgumentsNotMatchingDependenciesError } from '../Util/resolveArgumentDependencies';
-import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';
 
 const description = 
-`The Dolittle CLI helps developers develop dolittle-based applications fast`;
+`${chalk.bold('Welcome to the Dolittle CLI!')}
+
+Developing on the Dolittle platform should be fast, easy and fun!
+
+This tool is meant for enhancing the experience of working with a Dolittle-based application while also giving the developer an interface into the Dolittle platform.
+
+Checkout the available commands and command groups to see what the CLI tool can do.
+For further information and help on each command and command group add '-h' or '--help' to the command.
+`;
 const help = [
-    '\tnamespace: ',
-'\tcommand-group: ',
-'\tbasic-command: ',
-'\t--help: ',
-'\t--version: ',
-'\t--debug: ',
-'\t--namespace: ',
+    '\tnamespace: <To be implemented>',
+'\tcommand-group: A group of related commands.',
+'\tbasic-command: Basic / global commands not related to any of the command groups',
+'\t--help: Displays usage, help and description of a command or command group',
+'\t--version: Displays the version of the CLI tool',
+'\t--debug: <To be implemented>',
+'\t--namespace: <To be implemented>',
 ].join('\n');
 
 /**

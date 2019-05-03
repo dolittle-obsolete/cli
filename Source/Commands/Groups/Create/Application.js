@@ -13,7 +13,10 @@ import requireArguments from '../../../Util/requireArguments';
 import seperateDependencies from '../../../Util/seperateDependencies';
 import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 
-//TODO: Maybe this should be a discoverable CommandGroup in the future
+const description = `Scaffolds a Dolittle application`;
+const help = [
+    '\tapplication name: The name of the application'
+].join('\n');
 
 /**
  * NOTE: Application is kinda hardcoded right now. Need to come up with a system for this later on, it must behave like a discoverable group in the future
@@ -27,10 +30,8 @@ class Application extends Command {
      * @memberof Installed
      */
     constructor() {
-        super('application', 'Scaffolds a Dolittle application', 'dolittle create application <application name>', group,
-            [
-                '\tapplication name: The name of the application'
-            ].join('\n'));
+        super('application', description, 'dolittle create application <application name>', group,
+            help, 'Scaffolds a Dolittle application');
     }
 
     /**

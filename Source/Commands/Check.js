@@ -19,6 +19,8 @@ The version text is color coded:
     ${chalk.red('Red')}:    There is a major/breaking change update to the CLI.
     ${chalk.yellow('Yellow')}: There is a compatible upgrade to the CLI.
     ${chalk.green('Green')}:  The version of the CLI is greater or equal to the version tagged with 'latest' on NPM.
+
+If there is an update to the CLI you will get to choose whether to download the latest one from NPM.
 `;
 class Check extends Command {
     constructor() {
