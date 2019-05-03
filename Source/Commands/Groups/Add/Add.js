@@ -11,7 +11,6 @@ import { ArtifactTemplate } from '@dolittle/tooling.common/dist/artifacts/Artifa
 import { groupBy } from '@dolittle/tooling.common/dist/helpers';
 import { AddCommand } from './AddCommand';
 
-export const commandsConfigurationField = 'add';
 export const group = 'add';
 
 const description = 'Adds artifacts and other building blocks to an existing bounded context.';

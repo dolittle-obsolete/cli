@@ -13,7 +13,6 @@ import { BoundedContextsManager } from "@dolittle/tooling.common/dist/boundedCon
 import { ApplicationsManager } from "@dolittle/tooling.common/dist/applications/ApplicationsManager";
 import { ArtifactsManager } from "@dolittle/tooling.common/dist/artifacts/ArtifactsManager";
 import { DependenciesManager } from "@dolittle/tooling.common/dist/dependencies/DependenciesManager";
-import { CommandsConfig } from "./Configurations/CommandsConfig";
 import { Folders } from "@dolittle/tooling.common/dist/Folders";
 
 /**
@@ -28,7 +27,6 @@ export class CliContext {
     #_dolittleConfig;
     #_projectConfig;
     #_boilerplatesConfig;
-    #_commandsConfig;
     #_managers;
     #_inquirer;
     #_filesystem;
@@ -41,20 +39,18 @@ export class CliContext {
      * @param {any} dolittleConfig
      * @param {ProjectConfig} projectConfig
      * @param {BoilerplatesConfig} boilerplatesConfig
-     * @param {CommandsConfig} commandsConfig
      * @param {} managers;
      * @param {Inquirer} inquirer
      * @param {import('fs')} filesystem
      * @param {Folders} folders
      * @memberof CliContext
      */
-    constructor(cwd, outputter, dolittleConfig, projectConfig, boilerplatesConfig, commandsConfig, managers, inquirer, filesystem, folders) {
+    constructor(cwd, outputter, dolittleConfig, projectConfig, boilerplatesConfig, managers, inquirer, filesystem, folders) {
         this.#_cwd = cwd;
         this.#_outputter = outputter;
         this.#_dolittleConfig = dolittleConfig;
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
-        this.#_commandsConfig = commandsConfig;
         this.#_managers = managers;
         this.#_inquirer = inquirer;
         this.#_filesystem = filesystem;
@@ -104,15 +100,6 @@ export class CliContext {
      */
     get boilerplatesConfig() {
         return this.#_boilerplatesConfig;
-    }
-    /**
-     * Gets the commands configuration object
-     * @type {CommandsConfig}
-     * @readonly
-     * @memberof CliContext
-     */
-    get commandsConfig() {
-        return this.#_commandsConfig;
     }
     /**
      * Gets the managers
