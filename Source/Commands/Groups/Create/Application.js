@@ -14,10 +14,8 @@ import seperateDependencies from '../../../Util/seperateDependencies';
 import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 
 const description = `Scaffolds a Dolittle application`;
-const help = [
-    '\tapplication name: The name of the application'
-].join('\n');
 
+const usage = 'dolittle create application';
 /**
  * NOTE: Application is kinda hardcoded right now. Need to come up with a system for this later on, it must behave like a discoverable group in the future
  *
@@ -30,8 +28,8 @@ class Application extends Command {
      * @memberof Installed
      */
     constructor() {
-        super('application', description, 'dolittle create application <application name>', group,
-            help, 'Scaffolds a Dolittle application');
+        super('application', description, usage, group,
+            '', 'Scaffolds a Dolittle application');
     }
 
     /**
@@ -40,13 +38,9 @@ class Application extends Command {
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-        if (parserResult.help) {
-            context.outputter.print(this.helpDocs);
-            return;
-        }
         let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
-        requireArguments(this, context.outputter, args, 'Missing application name');
         let boilerplates = context.managers.applicationsManager.boilerplatesByLanguage('any');
+        
         if (!boilerplates.length || boilerplates.length < 1) {
             context.outputter.warn('No application boilerplates found for language \'any\'');
             return;
@@ -58,8 +52,14 @@ class Application extends Command {
         if (boilerplates.length > 1)
             boilerplate = await chooseBoilerplate(boilerplates); 
         else boilerplate = boilerplates[0];
-
+        
         let dependencies = seperateDependencies(boilerplate.dependencies);
+        this.extendHelpDocs(dependencies.argument, usage);
+        if (parserResult.help) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
+        requireArguments(this, context.outputter, args, dependencies.argument.map(_ => `Missing '${_.name}'`));
         
         let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
         context.managers.applicationsManager.createApplication(boilerplateContext, context.cwd, boilerplate);

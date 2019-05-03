@@ -68,7 +68,7 @@ export class AddCommand extends Command {
         if (templatesWithLanguage.length > 1) template = await chooseTemplate(templatesWithLanguage); 
 
         let dependencies = seperateDependencies(template.allDependencies());
-        this.extendHelpDocs(dependencies.argument);
+        this.extendHelpDocs(dependencies.argument, this.#_usagePrefix);
         
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);

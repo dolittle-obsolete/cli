@@ -15,16 +15,16 @@ import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 
 const description = `Scaffolds a Dolittle bounded context`;
 const help = [
-    '\tbounded context name: The name of the bounded context',
     '\t--coreLang: The language of the bounded context'
 ].join('\n');
+const usage = 'dolittle create boundedcontext [--coreLang]';
 class BoundedContext extends Command {
     /**
      * Creates an instance of {BoundedContext}.
      * @memberof Installed
      */
     constructor() {
-        super('boundedcontext', description, 'dolittle create boundedcontext <bounded context name> [--coreLang]', group,
+        super('boundedcontext', description, usage, group,
             help, 'Scaffolds a Dolittle bounded context'
         );
     }
@@ -35,15 +35,10 @@ class BoundedContext extends Command {
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-        if (parserResult.help) {
-            context.outputter.print(this.helpDocs);
-            return;
-        }
 
         let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
         let language = parserResult.coreLang? parserResult.coreLang : 'csharp';
         
-        requireArguments(this, context.outputter, args, 'Missing bounded context name');
         let boilerplates = context.managers.boundedContextsManager.boilerplatesByLanguage(language);
         if (!boilerplates.length || boilerplates.length < 1) {
             context.outputter.warn(`No bounded context boilerplates found for language '${language}'`);
@@ -62,10 +57,17 @@ class BoundedContext extends Command {
                 ...context.managers.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name)
             ]
         );
+        this.extendHelpDocs(dependencies.argument, usage, help);
+        if (parserResult.help) {
+            context.outputter.print(this.helpDocs);
+            return;
+        }
+        requireArguments(this, context.outputter, args, dependencies.argument.map(_ => `Missing '${_.name}'`));
+
         let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
+
         try {
             context.managers.boundedContextsManager.createBoundedContext(boilerplateContext, boilerplate, context.cwd);
-
         } catch (error) {
             context.outputter.warn(`An error occured while creating bounded context.
 Make sure to initiate this command from a working directory with a application.json file.

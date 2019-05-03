@@ -28,7 +28,7 @@ class Create extends CommandGroup {
      */
     constructor(commands) {
         super(commands, group, description,
-            `dolittle ${group} <sub-command>`, 'Commands related to scaffolding Dolittle appliation structures', 
+            `dolittle ${group} <sub-command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
         );
     }
 }
