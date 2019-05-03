@@ -22,6 +22,10 @@ export default async function checkBoilerplates(outputter, boilerplatesManager, 
     await requireInternet(outputter);
     let spinner = outputter.spinner('Checking versions:\n').start();
     let paths = boilerplatesManager.installedBoilerplatePaths;
+    if (paths.length < 1) {
+        spinner.warn('No boilerplates installed');
+        return [];
+    }
     let locallyInstalled = [];
     paths.map(filePath => JSON.parse(filesystem.readFileSync(path.join(filePath, 'package.json'), {encoding: 'utf8'})))
         .forEach(pkg => {
