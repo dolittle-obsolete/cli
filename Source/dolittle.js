@@ -28,6 +28,12 @@ async function runDolittleCli() {
         printCliVersion();
         process.exit(0);
     }
+    if (!hasProjectConfiguration()) {
+        let coreLanguage;
+        while (!coreLanguage) coreLanguage = await askForCoreLanguage();
+
+        globals.projectConfig.store = {coreLanguage};
+    }
     if (!hasBoilerplates()) {
         let boilerplates = globals.boilerplatesManager.installedBoilerplatePaths;
         if (boilerplates.length > 0) globals.boilerplatesManager.discoverInstalledBoilerplates();
@@ -39,12 +45,7 @@ async function runDolittleCli() {
             }
         }
     }
-    if (!hasProjectConfiguration()) {
-        let coreLanguage;
-        while (!coreLanguage) coreLanguage = await askForCoreLanguage();
-
-        globals.projectConfig.store = {coreLanguage};
-    }
+    
     await globals.commandManager.execute(parseResult, globals.cliContext);
 }
 async function askToFindBoilerplates() {
