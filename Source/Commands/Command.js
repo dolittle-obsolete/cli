@@ -119,19 +119,4 @@ export class Command {
         this.usage = usagePrefix? `${usagePrefix} ${usageText}` : usageText;
         this.help = helpPrefix? `${helpPrefix}\n${helpText}` : helpText;
     }
-
-    /**
-     * Returns the JSON object representation of a {Command}
-     *
-     * @memberof Command
-     */
-    toJson() {
-        return {
-            name: this.name,
-            group: this.group,
-            description: this.description,
-            help: this.help,
-            usage: this.usage,
-        }
-    }
 }
