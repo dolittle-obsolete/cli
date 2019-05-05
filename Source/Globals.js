@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import {boilerplatesConfig, projectConfig, getManagers, dolittleConfig, folders} from '@dolittle/tooling.common'
+import {boilerplatesConfig, projectConfig, getManagers, dolittleConfig, folders, logger} from '@dolittle/tooling.common'
 import { CommandManager } from './Commands/CommandManager';
 import { Inquirer } from './Inquirer';
 import { CliContext } from './CliContext';
@@ -56,6 +56,7 @@ class Globals {
         this.#_installHandlers();
         this.#_projectConfig = projectConfig;
         this.#_boilerplatesConfig = boilerplatesConfig;
+        logger.transports.forEach(t => t.silent = true); // Turn off winston logging
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
     }
     /**
