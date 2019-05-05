@@ -25,7 +25,7 @@ export default async function chooseBoilerplate(boilerplates) {
  * @returns {Promise<BaseBoilerplate>}
  */
 async function askWhichBoilerplate(boilerplates) {
-    let choices = boilerplates.map(boilerplate => new Object({name: `${boilerplate.name} language: ${boilerplate.language}`, value: boilerplate}));
+    let choices = boilerplates.map(boilerplate => new Object({name: `${boilerplate.namespace? `${boilerplate.namespace}::`: ''}${boilerplate.name} language: ${boilerplate.language}`, value: boilerplate}));
     let answers = await inquirer.prompt([
         {
             type: 'list', name: 'boilerplate', message: 'Choose boilerplate:',
