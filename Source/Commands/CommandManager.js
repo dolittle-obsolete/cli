@@ -41,6 +41,7 @@ const help = [
 '\t--help: Displays usage, help and description of a command or command group',
 '\t--version: Displays the version of the CLI tool',
 '\t--debug: <To be implemented>',
+'\t--coreLang: Sets the core language for a command',
 '\t--namespace: <To be implemented>',
 ].join('\n');
 
@@ -162,7 +163,7 @@ export class CommandManager {
     get helpDocs() {
         let res = [
             chalk.bold('Usage:'),
-            '\tdolittle [<namespace>] <command-group | basic-command> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [-n | --namespace]'
+            '\tdolittle [<namespace>] <command-group | basic-command> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [--coreLang] [-n | --namespace]'
         ];
         if (description) res.push('', description);
         if (this.commands.length > 0) res.push('', chalk.bold('Basic commands:'), this.commands.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
