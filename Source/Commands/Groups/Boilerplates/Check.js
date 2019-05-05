@@ -23,7 +23,7 @@ class Check extends Command {
      * @memberof Installed
      */
     constructor() {
-        super('check', description, 'dolittle boilerplates check', group, 'Checks whether you have boilerplates that are out of date', );
+        super('check', description, 'dolittle boilerplates check', group, '', 'Checks whether you have boilerplates that are out of date', );
     }
 
     /**
