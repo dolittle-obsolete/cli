@@ -55,10 +55,10 @@ export class AddCommand extends Command {
         /**
          * @type {ArtifactTemplate[]}
          */
-        let templatesWithLanguage = this.artifactTemplates.filter(_ => _.boilerplate.language === language);
+        let templatesWithLanguage = this.artifactTemplates.filter(_ => _.boilerplate.namespace === context.namespace && _.boilerplate.language === language);
 
         if (!templatesWithLanguage.length || templatesWithLanguage.length < 1) {
-            context.outputter.warn(`There are no artifact templates of type '${this.name}' with language '${language}'.`);
+            context.outputter.warn(`There are no artifact templates of type '${this.name}' with language '${language}'${context.namespace? ' under namespace \'' + context.namespace + '\'' : ''}`);
             return;
         }
 

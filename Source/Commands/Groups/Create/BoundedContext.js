@@ -42,9 +42,9 @@ class BoundedContext extends Command {
         let args = parserResult.commandArgs;
         let language = getCoreLanguage(parserResult, projectConfigObj);
         
-        let boilerplates = context.managers.boundedContextsManager.boilerplatesByLanguage(language);
+        let boilerplates = context.managers.boundedContextsManager.boilerplatesByLanguage(language, context.namespace);
         if (!boilerplates.length || boilerplates.length < 1) {
-            context.outputter.warn(`No bounded context boilerplates found for language '${language}'`);
+            context.outputter.warn(`No bounded context boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.name + '\'' : ''} `);
             return;
         }
         /**
@@ -56,8 +56,10 @@ class BoundedContext extends Command {
         else boilerplate = boilerplates[0];
 
         let dependencies = seperateDependencies(
-            [...boilerplate.dependencies, 
-                ...context.managers.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name)
+            [
+                ...boilerplate.dependencies, 
+                ...context.managers.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name, context.namespace),
+                ...context.managers.boundedContextsManager.createAdornmentDependencies(boilerplate.language, boilerplate.name, context.namespace)
             ]
         );
         this.extendHelpDocs(dependencies.argument, usage, help);
@@ -70,7 +72,7 @@ class BoundedContext extends Command {
         let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
 
         try {
-            context.managers.boundedContextsManager.createBoundedContext(boilerplateContext, boilerplate, context.cwd);
+            context.managers.boundedContextsManager.createBoundedContext(boilerplateContext, boilerplate, context.cwd, context.namespace);
         } catch (error) {
             context.outputter.warn(`An error occured while creating bounded context.
 Make sure to initiate this command from a working directory with a application.json file.
