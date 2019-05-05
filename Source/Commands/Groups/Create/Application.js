@@ -40,10 +40,10 @@ class Application extends Command {
     async action(parserResult, context) {
         let args = parserResult.commandArgs;
         const language = 'any';
-        let boilerplates = context.managers.applicationsManager.boilerplatesByLanguage(language).filter(_ => _.namespace === context.namespace); //Hard coded 'any'. Maybe we will have multiple boilerplates for applications in the future?
+        let boilerplates = context.managers.applicationsManager.boilerplatesByLanguage(language, context.namespace);
         
         if (!boilerplates.length || boilerplates.length < 1) {
-            context.outputter.warn(`No application boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.name + '\'' : ''} `);
+            context.outputter.warn(`No application boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.namespace + '\'' : ''} `);
             return;
         }
         /**

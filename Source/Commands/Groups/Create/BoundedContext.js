@@ -44,7 +44,7 @@ class BoundedContext extends Command {
         
         let boilerplates = context.managers.boundedContextsManager.boilerplatesByLanguage(language, context.namespace);
         if (!boilerplates.length || boilerplates.length < 1) {
-            context.outputter.warn(`No bounded context boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.name + '\'' : ''} `);
+            context.outputter.warn(`No bounded context boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.namespace + '\'' : ''} `);
             return;
         }
         /**
@@ -77,9 +77,20 @@ class BoundedContext extends Command {
             context.outputter.warn(`An error occured while creating bounded context.
 Make sure to initiate this command from a working directory with a application.json file.
 If there isn't a application.json file in the working directory look for information in the 'dolittle create' command group for information on how to create a dolittle application.`);
-            throw error;
+            throw ApplicationConfigurationNotFoundError.new;
         }
     }
+}
+
+export class ApplicationConfigurationNotFoundError extends Error{
+    constructor(...args) {
+        super(...args);
+        Error.captureStackTrace(this, ApplicationConfigurationNotFoundError);
+    }
+
+    static get new() {
+        return new ApplicationConfigurationNotFoundError('Missing application configuration');
+    } 
 }
 
 export default new BoundedContext();

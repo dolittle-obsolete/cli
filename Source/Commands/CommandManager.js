@@ -23,6 +23,7 @@ import initCommand from './Init';
 import checkCommand from './Check';
 import chalk from 'chalk';
 import { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
+import { ApplicationConfigurationNotFoundError } from './Groups/Create/BoundedContext';
 
 const description = 
 `${chalk.bold('Welcome to the Dolittle CLI!')}
@@ -183,11 +184,10 @@ export class CommandManager {
      */
     async execute(parserResult, cliContext) {
         if (!parserResult.firstArg) {
+            if (!parserResult.help) cliContext.outputter.warn('No command is given');
             cliContext.outputter.print(this.helpDocs);
             return;
         }
-        console.log(parserResult.firstArg);
-        console.log(parserResult.restArgs);
         const isCommandGroup = this.commandGroups.map(_ => _.name).includes(parserResult.firstArg);
         const isBasicCommand = this.commands.map(_ => _.name).includes(parserResult.firstArg);
         const isFirstArgNamespace = this.#_namespaces.includes(parserResult.firstArg);
@@ -198,6 +198,7 @@ export class CommandManager {
             cliContext.namespace = parserResult.firstArg;
             parserResult.firstArg = parserResult.restArgs.shift();
             await this.execute(parserResult, cliContext);
+            return;
         }
         else {
             cliContext.outputter.warn(`No such command, command group or namespace '${parserResult.firstArg}'`);
@@ -229,6 +230,9 @@ export class CommandManager {
             }
             else if (error instanceof CoreLanguageNotFoundError) {
                 cliContext.outputter.warn('Could not get core language.')
+                process.exit(1);
+            }
+            else if (error instanceof ApplicationConfigurationNotFoundError) {
                 process.exit(1);
             }
             else throw error;
