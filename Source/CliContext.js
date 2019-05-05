@@ -31,6 +31,13 @@ export class CliContext {
     #_inquirer;
     #_filesystem;
     #_folders;
+    
+    /**
+     * The namespace of the CLI Context
+     *
+     * @memberof CliContext
+     */
+    namespace;
 
     /**
      * Creates an instance of {CliContext}.
