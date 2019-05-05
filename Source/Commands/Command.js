@@ -109,11 +109,11 @@ export class Command {
 
 
     /**
-     * Extends the help docs for the particular command with the given dependencies
+     * Extends the help docs with the given dependencies
      * @param {Dependency[]} argumentDependencies
      */
     extendHelpDocs(argumentDependencies, usagePrefix, helpPrefix) {
-        const usageText = argumentDependencies.map(_ => _.name).join(' ');
+        const usageText = argumentDependencies.map(_ => `<${_.name}>`).join(' ');
         const helpText = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
 
         this.usage = usagePrefix? `${usagePrefix} ${usageText}` : usageText;

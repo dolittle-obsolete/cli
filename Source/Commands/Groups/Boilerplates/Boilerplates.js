@@ -28,8 +28,8 @@ class Boilerplates extends CommandGroup {
      */
     constructor(commands) {
         super(commands, group, 
-            'Group of the commands related to boilerplates.',
-            `dolittle ${group} <sub-command>`
+            'Commands related to boilerplates.',
+            `dolittle ${group} <command>`
         );
     }
 }

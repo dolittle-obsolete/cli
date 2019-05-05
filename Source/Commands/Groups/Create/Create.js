@@ -12,7 +12,7 @@ export const group = 'create';
 
 const description = `Commands related to scaffolding Dolittle appliation structures.
 
-Quickly get up and running by scaffolding bounded contexts and applications skeletons-`;
+Quickly get up and running by scaffolding bounded context and application skeletons.`;
 /**
  * The Create {CommandGroup}
  *
@@ -28,7 +28,7 @@ class Create extends CommandGroup {
      */
     constructor(commands) {
         super(commands, group, description,
-            `dolittle ${group} <sub-command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
+            `dolittle ${group} <command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
         );
     }
 }

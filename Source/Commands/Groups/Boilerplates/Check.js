@@ -11,13 +11,19 @@ import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates
 import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
 import requireInternet from '../../../Util/requireInternet';
 
+const description = `Checks whether you have boilerplates that are out of date.
+
+Lists installed boilerplates that are out of date with the latest version.
+
+Asks whether to download the latest boilerplates or not.
+`;
 class Check extends Command {
     /**
      * Creates an instance of {Check}.
      * @memberof Installed
      */
     constructor() {
-        super('check', 'Lists installed boilerplates that are out of date', 'dolittle boilerplates check', group);
+        super('check', description, 'dolittle boilerplates check', group, 'Checks whether you have boilerplates that are out of date', );
     }
 
     /**

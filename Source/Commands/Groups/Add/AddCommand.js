@@ -48,9 +48,9 @@ export class AddCommand extends Command {
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-        
         let projectConfigObj = context.projectConfig.store;
         let language = projectConfigObj.coreLanguage;
+        
         /**
          * @type {ArtifactTemplate[]}
          */
