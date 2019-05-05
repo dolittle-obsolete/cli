@@ -18,6 +18,7 @@ import { BoundedContext } from '@dolittle/tooling.common/dist/boundedContexts/Bo
 import resolveArgumentDependencies from '../../../Util/resolveArgumentDependencies';
 import resolveNonPromptDependencies from '../../../Util/resolveNonPromptDependencies';
 import resolvePromptDependencies from '../../../Util/resolvePromptDependencies';
+import getCoreLanguage from '../../../Util/getCoreLanguage';
 
 export class AddCommand extends Command {
     #_artifactTemplates;
@@ -49,7 +50,7 @@ export class AddCommand extends Command {
      */
     async action(parserResult, context) {
         let projectConfigObj = context.projectConfig.store;
-        let language = projectConfigObj.coreLanguage;
+        let language = getCoreLanguage(parserResult, projectConfigObj);
         
         /**
          * @type {ArtifactTemplate[]}
@@ -61,7 +62,7 @@ export class AddCommand extends Command {
             return;
         }
 
-        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
+        let args = parserResult.commandArgs;
         
         let template = templatesWithLanguage[0];
 

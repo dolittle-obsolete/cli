@@ -87,8 +87,18 @@ export class ParserResult {
         this.extraArgs = extraArgs; 
         this.extraOpts = extraOpts;
     }
-
+    
     shouldExecuteCommand() {
         return !this.help && !this.version;
+    }
+    /**
+     * Gets the arguments in the context of a command
+     *
+     * @returns {string[]} The command line arguments
+     * @readonly
+     * @memberof ParserResult
+     */
+    get commandArgs() {
+        return [this.firstArg, ...this.restArgs, ...this.extraArgs].filter(_ => _ !== undefined);
     }
 }

@@ -12,13 +12,16 @@ import requireArguments from '../../../Util/requireArguments';
 import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
 import seperateDependencies from '../../../Util/seperateDependencies';
 import resolveAllDependencies from '../../../Util/resolveAllDependencies';
+import getCoreLanguage from '../../../Util/getCoreLanguage';
 
-const description = `Scaffolds a Dolittle bounded context`;
+const description = `Scaffolds a Dolittle bounded context.`;
 const help = [
+    'The \'dolittle create boundedcontext\' command should only be used from a folder with an application.json', 
     '\t--coreLang: The language of the bounded context'
 ].join('\n');
 const usage = 'dolittle create boundedcontext [--coreLang]';
 class BoundedContext extends Command {
+    
     /**
      * Creates an instance of {BoundedContext}.
      * @memberof Installed
@@ -35,9 +38,9 @@ class BoundedContext extends Command {
      * @param {CliContext} context
      */
     async action(parserResult, context) {
-
-        let args = [parserResult.firstArg, ...parserResult.restArgs, ...parserResult.extraArgs].filter(_ => _ !== undefined);
-        let language = parserResult.coreLang? parserResult.coreLang : 'csharp';
+        let projectConfigObj = context.projectConfig.store;
+        let args = parserResult.commandArgs;
+        let language = getCoreLanguage(parserResult, projectConfigObj);
         
         let boilerplates = context.managers.boundedContextsManager.boilerplatesByLanguage(language);
         if (!boilerplates.length || boilerplates.length < 1) {

@@ -22,6 +22,7 @@ import createCommandGroup from './Groups/Create/Create';
 import initCommand from './Init';
 import checkCommand from './Check';
 import chalk from 'chalk';
+import { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
 
 const description = 
 `${chalk.bold('Welcome to the Dolittle CLI!')}
@@ -199,7 +200,6 @@ export class CommandManager {
             await command.action(parserResult, cliContext);
         } catch (error) {
             cliContext.outputter.warn('Could not execute the command');
-
             if (error instanceof NotConnectedError) {
                 cliContext.outputter.warn('No internet connection could be established');
                 process.exit(1);
@@ -215,7 +215,11 @@ export class CommandManager {
             else if (error instanceof MissingBoundedContextError) {
                 cliContext.outputter.warn('Excpected to find a bounded context');
                 process.exit(1);
-            } 
+            }
+            else if (error instanceof CoreLanguageNotFoundError) {
+                cliContext.outputter.warn('Could not get core language.')
+                process.exit(1);
+            }
             else throw error;
         }
     }
