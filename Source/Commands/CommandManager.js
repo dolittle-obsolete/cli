@@ -67,6 +67,7 @@ export class CommandManager {
     #_boundedContextsManager;
     #_artifactsManager;
     #_dependenciesManager;
+    #_namespaces;
     /**
      *Creates an instance of {CommandManager}.
      * @param {BoilerplatesManager} boilerplatesManager
@@ -96,6 +97,7 @@ export class CommandManager {
             boilerplatesCommandGroup,
             createCommandGroup
         ]);
+        this.#_namespaces = [...new Set(this.boilerplatesManager.boilerplates.filter(_ => _.namespace).map(_ => _.namespace))];
     }
     /**
      *
@@ -168,7 +170,7 @@ export class CommandManager {
         if (description) res.push('', description);
         if (this.commands.length > 0) res.push('', chalk.bold('Basic commands:'), this.commands.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
         if (this.commandGroups.length > 0) res.push('', chalk.bold('Command groups:'), this.commandGroups.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
-        //TODO: List namespaces
+        if (this.#_namespaces.length > 0) res.push('', chalk.bold('Namespaces: '), this.#_namespaces.map(namespace => `\t${namespace}`).join('\n'));
         if (help) res.push('', chalk.bold('Help:'), help);
         return res.join('\n');
     }
@@ -184,13 +186,21 @@ export class CommandManager {
             cliContext.outputter.print(this.helpDocs);
             return;
         }
-        let isCommandGroup = this.commandGroups.map(_ => _.name).includes(parserResult.firstArg);
-        let isBasicCommand = this.commands.map(_ => _.name).includes(parserResult.firstArg);
+        console.log(parserResult.firstArg);
+        console.log(parserResult.restArgs);
+        const isCommandGroup = this.commandGroups.map(_ => _.name).includes(parserResult.firstArg);
+        const isBasicCommand = this.commands.map(_ => _.name).includes(parserResult.firstArg);
+        const isFirstArgNamespace = this.#_namespaces.includes(parserResult.firstArg);
         let command = null;
         if (isBasicCommand) command = this.commands.find(_ => _.name === parserResult.firstArg);
         else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === parserResult.firstArg);
+        else if (isFirstArgNamespace) {
+            cliContext.namespace = parserResult.firstArg;
+            parserResult.firstArg = parserResult.restArgs.shift();
+            await this.execute(parserResult, cliContext);
+        }
         else {
-            cliContext.outputter.warn(`No such command or command group '${parserResult.firstArg}'`);
+            cliContext.outputter.warn(`No such command, command group or namespace '${parserResult.firstArg}'`);
             cliContext.outputter.print();
             cliContext.outputter.print(this.helpDocs);
             return;
