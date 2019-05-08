@@ -13,6 +13,7 @@ import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
 import seperateDependencies from '../../../Util/seperateDependencies';
 import resolveAllDependencies from '../../../Util/resolveAllDependencies';
 import getCoreLanguage from '../../../Util/getCoreLanguage';
+import { runCreationScripts } from '../../../Util/runBuildScripts';
 
 const description = `Scaffolds a Dolittle bounded context.`;
 const help = [
@@ -58,8 +59,8 @@ class BoundedContext extends Command {
         let dependencies = seperateDependencies(
             [
                 ...boilerplate.dependencies, 
-                ...context.managers.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name, context.namespace),
-                ...context.managers.boundedContextsManager.createAdornmentDependencies(boilerplate.language, boilerplate.name, context.namespace)
+                ...context.managers.boundedContextsManager.createAdornmentDependencies(boilerplate.language, boilerplate.name, context.namespace),
+                ...context.managers.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name, context.namespace)
             ]
         );
         this.extendHelpDocs(dependencies.argument, usage, help);
@@ -71,14 +72,14 @@ class BoundedContext extends Command {
 
         let boilerplateContext = await resolveAllDependencies(context.managers.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
 
-        try {
-            context.managers.boundedContextsManager.createBoundedContext(boilerplateContext, boilerplate, context.cwd, context.namespace);
-        } catch (error) {
-            context.outputter.warn(`An error occured while creating bounded context.
-Make sure to initiate this command from a working directory with a application.json file.
-If there isn't a application.json file in the working directory look for information in the 'dolittle create' command group for information on how to create a dolittle application.`);
-            throw ApplicationConfigurationNotFoundError.new;
-        }
+        let boilerplatesAndDestinations = context.managers.boundedContextsManager.createBoundedContext(boilerplateContext, boilerplate, context.cwd, context.namespace);
+        runCreationScripts(boilerplatesAndDestinations, (data) => context.outputter.warn(data), (data) => context.outputter.print(data), _ => {});
+        
+//         context.outputter.warn(`An error occured while creating bounded context.
+// Make sure to initiate this command from a working directory with a application.json file.
+// If there isn't a application.json file in the working directory look for information in the 'dolittle create' command group for information on how to create a dolittle application.`);
+//         throw ApplicationConfigurationNotFoundError.new;
+        
     }
 }
 
