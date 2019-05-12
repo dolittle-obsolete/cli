@@ -31,7 +31,10 @@
     "@dolittle/build": "~6.2.1"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "alphatesting",
+    "@dolittle/tooling.common.utilities": "1.0.0-alpha.1",
+    "@dolittle/tooling.common.dependencies": "1.0.0-alpha.1",
+    "@dolittle/tooling.common.configurations": "1.0.0-alpha.1",
+    "@dolittle/tooling.common.boilerplates": "1.0.0-alpha.1",
     "chalk": "^2.4.2",
     "conf": "^2.2.0",
     "cross-spawn": "^6.0.5",
