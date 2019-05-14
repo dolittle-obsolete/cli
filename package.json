@@ -15,7 +15,6 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "main": "bin/dolittle.js",
   "files": [
     "bin"
   ],
@@ -23,30 +22,43 @@
   "bin": {
     "dolittle": "bin/dolittle.js"
   },
+  "main": "bin/cjs/index.js",
   "scripts": {
-    "build": "rm -rf bin && npx babel Source --ignore Source/*/for_* -d bin --source-maps inline",
-    "prepublish": "yarn build"
+    "ts:clean": "rimraf ./*.d.ts **/*.d.ts lib",
+    "build": "yarn clean && tsc ",
+    "clean": "rimraf bin && yarn ts:clean",
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
-    "@dolittle/build": "~6.2.1"
+    "@types/conf": "^3.0.0",
+    "@types/cross-spawn": "^6.0.0",
+    "@types/debug": "^4.1.4",
+    "@types/fs-extra": "^5.1.0",
+    "@types/inquirer": "^6.0.1",
+    "@types/latest-version": "^4.0.1",
+    "@types/minimist": "^1.2.0",
+    "@types/node": "12.0.0",
+    "@types/semver": "^6.0.0",
+    "@types/update-notifier": "^2.5.0",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@dolittle/tooling.common.utilities": "1.0.0-alpha.1",
-    "@dolittle/tooling.common.dependencies": "1.0.0-alpha.1",
-    "@dolittle/tooling.common.configurations": "1.0.0-alpha.1",
-    "@dolittle/tooling.common.boilerplates": "1.0.0-alpha.1",
+    "@dolittle/tooling.common.boilerplates": "alpha",
+    "@dolittle/tooling.common.configurations": "alpha",
+    "@dolittle/tooling.common.dependencies": "alpha",
+    "@dolittle/tooling.common.utilities": "alpha",
     "chalk": "^2.4.2",
-    "conf": "^2.2.0",
+    "conf": "^3.0.0",
     "cross-spawn": "^6.0.5",
     "debug": "^4.1.1",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.2",
     "is-online": "^8.2.0",
-    "latest-version": "^4.0.0",
+    "latest-version": "^5.1.0",
     "listr": "^0.14.3",
     "lodash": "^4.17.11",
     "minimist": "^1.2.0",
-    "omelette": "^0.4.12",
     "opn": "^5.4.0",
     "ora": "^3.1.0",
     "semver": "^5.6.0",

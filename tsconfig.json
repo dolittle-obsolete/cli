@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es5",
+        "declaration": false,
+        "stripInternal": true,
+        "downlevelIteration": true,
+    
+        "strict": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+    
+        "moduleResolution": "node",
+        "inlineSourceMap": true,
+        "inlineSources": true,
+
+    
+        "experimentalDecorators": true,
+        "rootDir": "Source",
+        "outDir": "bin",
+        "baseUrl": "./",
+        "paths": {
+            "@dolittle/cli": ["Source/index.ts"]
+        },
+        "sourceRoot": "./Source"
+    },
+    "exclude": ["**/*.d.ts", "**/*.js", "node_modules", "old"],
+    "include": ["**/*.ts"] 
+  }
+  

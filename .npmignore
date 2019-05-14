@@ -9,3 +9,5 @@ Source
 wallaby.js
 yalc.lock
 yarn.lock
+tsconfig.json
+ts
