@@ -7,13 +7,13 @@
 
 import fs from 'fs';
 import inquirer from 'inquirer';
+import askForCoreLanguage from './Actions/askForCoreLanguage';
+import { askToDownloadOrUpdateBoilerplates } from './Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import dolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
+import globals from './Globals';
 import outputter from './Outputter';
 import parser from './Parser';
-import {default as log, debug} from './Util/debug';
-import globals from './Globals';
-import dolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
-import {askToDownloadOrUpdateBoilerplates} from './Actions/Boilerplates/downloadOrUpdateBoilerplates';
-import askForCoreLanguage from './Actions/askForCoreLanguage';
+import { debug } from './Util/debug';
 
 const pkg = require('../package.json');
 

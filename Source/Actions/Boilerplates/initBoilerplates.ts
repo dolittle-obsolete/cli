@@ -1,5 +1,5 @@
-import { Outputter } from '../../Outputter';
 import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
+import { Outputter } from '../../Outputter';
 
 /*---------------------------------------------------------------------------------------------
 *  Copyright (c) Dolittle. All rights reserved.

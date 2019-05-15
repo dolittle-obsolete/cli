@@ -6,7 +6,6 @@
 import { Command } from '../Commands/Command';
 import { Outputter } from '../Outputter';
 
-
 /**
  * Checks whether or not there are missing arguments for a command. 
  * 

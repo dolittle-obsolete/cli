@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import {ChoiceType} from 'inquirer';
+
 export type NameSelectorCallback = (item: any) => string
 export type ValueSelectorCallback = (item: any) => any
 /**

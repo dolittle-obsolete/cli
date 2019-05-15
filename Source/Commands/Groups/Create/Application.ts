@@ -3,10 +3,14 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { Boilerplate } from '@dolittle/tooling.common.boilerplates';
+import { ArgumentDependencyResolver, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
+import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
+import { CliContext } from '../../../CliContext';
+import { ParserResult } from '../../../ParserResult';
+import requireArguments from '../../../Util/requireArguments';
 import { Command } from '../../Command';
 import { group } from './Create';
-import { ParserResult } from '../../../ParserResult';
-import { CliContext } from '../../../CliContext';
 
 const description = `Scaffolds a Dolittle application`;
 
@@ -45,21 +49,27 @@ class Application extends Command {
          * @type {BaseBoilerplate}
          */
         let boilerplate = null;
-        if (boilerplates.length > 1)
-            boilerplate = await chooseBoilerplate(boilerplates); 
+        if (boilerplates.length > 1) {
+            do{
+                boilerplate = await chooseBoilerplate(boilerplates); 
+            }while(!boilerplate)
+        }
         else boilerplate = boilerplates[0];
         
-        let dependencies = seperateDependencies(boilerplate.dependencies);
-        this.extendHelpDocs(dependencies.argument, usage);
+        let dependencies = boilerplate.dependencies;
+        let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
+        let argumentDependencies = argumentDependencyResolver? dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => _.userInputType && _.userInputType === 'argument');
+        
+        this.extendHelpDocs(argumentDependencies, usage);
 
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
             return;
         }
-        requireArguments(this, context.outputter, args, dependencies.argument.map(_ => `Missing '${_.name}'`));
+        requireArguments(this, context.outputter, args, ...argumentDependencies.map(_ => `Missing '${_.name}'`));
         
-        let boilerplateContext = await resolveAllDependencies(context.dependenciesManager, context.inquirer, boilerplate, context.cwd, args, dependencies);
-        context.applicationsManager.createApplication(boilerplateContext, context.cwd, boilerplate);
+        let boilerplateContext = await context.dependencyResolvers.resolve({}, dependencies, context.cwd, language, args)
+        context.applicationsManager.createApplication(boilerplateContext, context.cwd, <Boilerplate>boilerplate);
     }
 }
 

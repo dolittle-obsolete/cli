@@ -3,12 +3,12 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Outputter } from '../../Outputter';
+import { ICanFindOnlineBoilerplatePackages, IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
 import * as FsExtra from 'fs-extra';
 import semver from 'semver';
 import path from 'path';
+import { Outputter } from '../../Outputter';
 import requireInternet from '../../Util/requireInternet';
-import { ICanFindOnlineBoilerplatePackages, IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
 
 export type OutOfDatePackage = {
     name: string, version: string, latest: string

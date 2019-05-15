@@ -3,10 +3,14 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
+import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import { CliContext } from '../../../CliContext';
+import { ParserResult } from '../../../ParserResult';
+import requireInternet from '../../../Util/requireInternet';
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
-import { ParserResult } from '../../../ParserResult';
-import { CliContext } from '../../../CliContext';
+
 const description = `Checks whether you have boilerplates that are out of date.
 
 Lists installed boilerplates that are out of date with the latest version.
@@ -33,8 +37,8 @@ class Check extends Command {
             return;
         }
         await requireInternet(context.outputter);
-        let outOfDatePacakges = await checkBoilerplates(context.outputter, context.managers.boilerplatesManager, context.fileSystem);
-        askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.managers.boilerplatesManager, context.outputter);    
+        let outOfDatePacakges: any = await checkBoilerplates(context.outputter, context.boilerplateDiscoverers, context.onlineBoilerplateDiscoverer, context.fileSystem);
+        askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.boilerplateDiscoverers, context.outputter);    
     }
 }
 

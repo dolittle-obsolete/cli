@@ -22,14 +22,14 @@
   "bin": {
     "dolittle": "bin/dolittle.js"
   },
-  "main": "bin/cjs/index.js",
+  "main": "bin/index.js",
   "scripts": {
-    "ts:clean": "rimraf ./*.d.ts **/*.d.ts lib",
-    "build": "yarn clean && tsc ",
-    "clean": "rimraf bin && yarn ts:clean",
+    "build": "yarn clean && tsc",
+    "clean": "rimraf bin",
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
     "@types/conf": "^3.0.0",
     "@types/cross-spawn": "^6.0.0",
     "@types/debug": "^4.1.4",
@@ -53,6 +53,7 @@
     "cross-spawn": "^6.0.5",
     "debug": "^4.1.1",
     "dockerode": "^2.5.7",
+    "fs-extra": "^8.0.1",
     "inquirer": "^6.2.2",
     "is-online": "^8.2.0",
     "latest-version": "^5.1.0",

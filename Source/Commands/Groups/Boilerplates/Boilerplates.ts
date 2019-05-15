@@ -3,14 +3,14 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { CommandGroup } from '../CommandGroup';
 import { Command } from '../../Command';
+import { CommandGroup } from '../CommandGroup';
 import checkCommand from './Check';
 import dolittleCommand from './Dolittle';
+import initCommand from './Init';
 import installedCommand from './Installed';
 import listCommand from './List';
 import onlineCommand from './Online';
-import initCommand from './Init';
 
 export const group = 'boilerplates';
 /**
@@ -26,7 +26,7 @@ class Boilerplates extends CommandGroup {
      * @param {Command[]} commands
      * @memberof Boilerplates
      */
-    constructor(commands) {
+    constructor(commands: Command[]) {
         super(commands, group, 
             'Commands related to boilerplates.',
             `dolittle ${group} <command>`

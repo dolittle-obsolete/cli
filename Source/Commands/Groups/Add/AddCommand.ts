@@ -3,11 +3,17 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
+import { ArgumentDependencyResolver, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
+import { determineDestination } from '@dolittle/tooling.common.utilities';
+import chooseTemplate from '../../../Actions/Add/chooseTemplate';
+import { CliContext } from '../../../CliContext';
+import { ParserResult } from '../../../ParserResult';
+import getCoreLanguage from '../../../Util/getCoreLanguage';
+import requireArguments from '../../../Util/requireArguments';
 import { Command } from '../../Command';
 import { group } from './Add';
-import { ParserResult } from '../../../ParserResult';
-import { CliContext } from '../../../CliContext';
-import { ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
+import { MissingBoundedContextError } from './MissingBoundedContextError';
 
 export class AddCommand extends Command {
     private _artifactTemplates: ArtifactTemplate[];
@@ -49,28 +55,31 @@ export class AddCommand extends Command {
 
         if (templatesWithLanguage.length > 1) template = await chooseTemplate(templatesWithLanguage); 
 
-        let dependencies = seperateDependencies(template.allDependencies());
-        this.extendHelpDocs(dependencies.argument, this.#_usagePrefix);
+        let dependencies = template.allDependencies;
+        let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
+        let argumentDependencies = argumentDependencyResolver? dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => _.userInputType && _.userInputType === 'argument');
+        dependencies =  argumentDependencyResolver? dependencies.filter(_ => !(<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => !(_.userInputType && _.userInputType === 'argument'));
+        
+        this.extendHelpDocs(argumentDependencies, this._usagePrefix);
         
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
             return;
         }
-        requireArguments(this, context.outputter, args, dependencies.argument.map(_ => `Missing '${_.name}'`));
+        requireArguments(this, context.outputter, args, ...argumentDependencies.map(_ => `Missing '${_.name}'`));
         /**
          * @type {BoundedContext}
          */
         let boundedContext = context.boundedContextsManager.getNearestBoundedContextConfig(context.cwd);
         if (!boundedContext) throw MissingBoundedContextError.new;
-
-        let boilerplateContext = resolveArgumentDependencies(args, dependencies.argument, {});
-        let destinationAndName = helpers.determineDestination(template.area, template.boilerplate.language, boilerplateContext['name'], context.cwd, boundedContext.path, context.dolittleConfig);
-        boilerplateContext['name'] = destinationAndName.name;
+        
+        let boilerplateContext = await context.dependencyResolvers.resolve({}, argumentDependencies);
+        let destinationAndName = determineDestination(template.area, template.boilerplate.language, boilerplateContext['name'], context.cwd, boundedContext.path, context.dolittleConfig);
         context.folders.makeFolderIfNotExists(destinationAndName.destination);
+        boilerplateContext = await context.dependencyResolvers.resolve(boilerplateContext, dependencies, destinationAndName.destination, language, args);
+        boilerplateContext['name'] = destinationAndName.name;
         
-        boilerplateContext = resolveNonPromptDependencies(context.managers.dependenciesManager, dependencies.nonPrompt, destinationAndName.destination, template.boilerplate.language, boilerplateContext);
-        boilerplateContext = await resolvePromptDependencies(context.inquirer, dependencies.prompt, destinationAndName.destination, template.boilerplate.language, boilerplateContext);
         
-        context.managers.artifactsManager.createArtifact(boilerplateContext, template, destinationAndName.destination);
+        context.artifactTemplatesManager.createArtifact(boilerplateContext, template, destinationAndName.destination);
     }
 }

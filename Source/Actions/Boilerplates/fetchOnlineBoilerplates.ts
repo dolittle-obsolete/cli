@@ -3,9 +3,9 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { ICanFindOnlineBoilerplatePackages } from '@dolittle/tooling.common.boilerplates';
 import { Outputter } from '../../Outputter';
 import requireInternet from '../../Util/requireInternet';
-import { ICanFindOnlineBoilerplatePackages } from '@dolittle/tooling.common.boilerplates';
 
 /**
  * Fetches the online dolittle boilerplates from npmjs

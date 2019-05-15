@@ -3,24 +3,24 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Command } from './Command';
-import { CommandGroup } from './Groups/CommandGroup';
-import { Add } from './Groups/Add/Add';
-import { ParserResult } from '../ParserResult';
+import { IApplicationsManager, IArtifactTemplatesManager, IBoilerplateManagers, IBoundedContextsManager } from '@dolittle/tooling.common.boilerplates';
+import { ArgumentsNotMatchingDependenciesError, IDependenciesManager } from '@dolittle/tooling.common.dependencies';
+import chalk from 'chalk';
 import { CliContext } from '../CliContext';
+import { ParserResult } from '../ParserResult';
+import { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
+import { MissingCommandArgumentError } from '../Util/requireArguments';
+import { NotConnectedError } from '../Util/requireInternet';
+import checkCommand from './Check';
+import { Command } from './Command';
+import { Add } from './Groups/Add/Add';
 import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';
 import boilerplatesCommandGroup from './Groups/Boilerplates/Boilerplates';
-import createCommandGroup from './Groups/Create/Create';
-import initCommand from './Init';
-import checkCommand from './Check';
-import chalk from 'chalk';
+import { CommandGroup } from './Groups/CommandGroup';
 import { ApplicationConfigurationNotFoundError } from './Groups/Create/BoundedContext';
-import { IApplicationsManager, IBoundedContextsManager, IArtifactTemplatesManager, IBoilerplateManagers } from '@dolittle/tooling.common.boilerplates';
-import { IDependenciesManager, ArgumentsNotMatchingDependenciesError } from '@dolittle/tooling.common.dependencies';
-import { NotConnectedError } from 'Source/Util/requireInternet';
-import { MissingCommandArgumentError } from 'Source/Util/requireArguments';
-import { CoreLanguageNotFoundError } from 'Source/Util/getCoreLanguage';
+import createCommandGroup from './Groups/Create/Create';
 import { ICommandManager } from './ICommandManager';
+import initCommand from './Init';
 
 const description = 
 `${chalk.bold('Welcome to the Dolittle CLI!')}

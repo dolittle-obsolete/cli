@@ -3,8 +3,8 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { CommandGroup } from '../CommandGroup';
 import { Command } from '../../Command';
+import { CommandGroup } from '../CommandGroup';
 import applicationCommand from './Application';
 import boundedContextCommand from './BoundedContext';
 

@@ -3,13 +3,15 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Command } from './Command';
-import { CliContext } from '../CliContext';
-import { ParserResult } from '../ParserResult';
-import { Outputter } from '../Outputter';
+import chalk from 'chalk';
 import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
-import chalk from 'chalk';
+import { CliContext } from '../CliContext';
+import { Outputter } from '../Outputter';
+import { ParserResult } from '../ParserResult';
+import { getLatestVersion, isCompatibleUpgrade, isGreaterVersion } from '../Util/packageVersion';
+import requireInternet from '../Util/requireInternet';
+import { Command } from './Command';
 
 const pkg = require('../../package.json');
 const description = `Checks the Dolittle CLI by comparing the version of the CLI tool with the version tagged with 'latest' on NPM.

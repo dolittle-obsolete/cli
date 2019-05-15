@@ -3,12 +3,12 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import initBoilerplates from './initBoilerplates';
+import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
 import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import { Outputter } from '../../Outputter';
 import requireInternet from '../../Util/requireInternet';
-import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
+import initBoilerplates from './initBoilerplates';
 
 export type BoilerplatePackageInfo = {
     name: string, version: string, latest?: string

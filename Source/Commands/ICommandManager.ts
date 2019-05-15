@@ -1,11 +1,12 @@
-import { Command } from "./Command";
-import { ParserResult } from "Source/ParserResult";
-import { CliContext } from "Source/CliContext";
-
 /*---------------------------------------------------------------------------------------------
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
+
+import { ParserResult } from "..//ParserResult";
+import { CliContext } from "../CliContext";
+import { Command } from "./Command";
+
 
 /**
  * Represents a manager for commands

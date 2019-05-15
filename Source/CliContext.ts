@@ -3,12 +3,12 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Outputter } from "./Outputter";
-import {ProjectConfig} from '@dolittle/tooling.common.configurations';
-import {IBoilerplateDiscoverers, BoilerplatesConfig, IApplicationsManager, IArtifactTemplatesManager, IBoundedContextsManager, IBoilerplateManagers, ICanFindOnlineBoilerplatePackages} from "@dolittle/tooling.common.boilerplates"
+import { BoilerplatesConfig, IApplicationsManager, IArtifactTemplatesManager, IBoilerplateDiscoverers, IBoilerplateManagers, IBoundedContextsManager, ICanFindOnlineBoilerplatePackages } from "@dolittle/tooling.common.boilerplates";
+import { ProjectConfig } from '@dolittle/tooling.common.configurations';
 import { IDependencyResolvers } from "@dolittle/tooling.common.dependencies";
-import * as FsExtra from 'fs-extra'
 import { Folders } from "@dolittle/tooling.common.utilities";
+import * as FsExtra from 'fs-extra';
+import { Outputter } from "./Outputter";
 
 /**
  * The context needed by commands to perform their actions

@@ -3,9 +3,9 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import Outputter from './Outputter';
+import { Dependency, ICanResolveSyncDependencies, IDependenciesManager, MissingCoreLanguage, MissingDestinationPath } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
-import { ICanResolveSyncDependencies, Dependency, IDependenciesManager, MissingCoreLanguage, MissingDestinationPath } from '@dolittle/tooling.common.dependencies';
+import Outputter from './Outputter';
 
 export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
     

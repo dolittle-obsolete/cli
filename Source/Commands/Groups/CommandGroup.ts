@@ -4,10 +4,10 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import {Command} from '../Command';
+import chalk from 'chalk';
 import { CliContext } from '../../CliContext';
 import { ParserResult } from '../../ParserResult';
-import chalk from 'chalk';
+import { Command } from '../Command';
 
 /**
  * Base class for {CommandGroup} commands

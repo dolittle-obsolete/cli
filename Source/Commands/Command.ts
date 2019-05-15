@@ -3,10 +3,10 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import chalk from 'chalk';
-import { ParserResult } from 'Source/ParserResult';
-import { CliContext } from 'Source/CliContext';
 import { Dependency } from '@dolittle/tooling.common.dependencies';
+import chalk from 'chalk';
+import { CliContext } from '../CliContext';
+import { ParserResult } from '../ParserResult';
 
 /**
  * The base class of a command
@@ -109,9 +109,8 @@ export abstract class Command {
 
     /**
      * Extends the help docs with the given dependencies
-     * @param {Dependency[]} argumentDependencies
      */
-    extendHelpDocs(argumentDependencies: Dependency[], usagePrefix: string, helpPrefix: string) {
+    extendHelpDocs(argumentDependencies: Dependency[], usagePrefix?: string, helpPrefix?: string) {
         const usageText = argumentDependencies.map(_ => `<${_.name}>`).join(' ');
         const helpText = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
 

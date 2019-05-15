@@ -3,10 +3,10 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import path from 'path';
-import * as FsExtra from 'fs-extra';
-import { Outputter } from '../../Outputter';
 import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
+import * as FsExtra from 'fs-extra';
+import path from 'path';
+import { Outputter } from '../../Outputter';
 
 /**
  * Finds and gets the boilerplates installed on the local machine
@@ -17,7 +17,7 @@ import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
  * @param {typeof FsExtra} filesystem
  * @returns A list of the boilerplate and package configurations for each boilerplate
  */
-export default async function installedBoilerplates(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers, filesystem: typeof FsExtra) {
+export default async function installedBoilerplates(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers, filesystem: typeof FsExtra)  {
     let spinner = outputter.spinner('Getting installed boilerplates:\n').start();
     try {
         let paths = boilerplateDiscoverers.boilerplatePaths;

@@ -3,9 +3,9 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
 import inquirer from 'inquirer';
 import mapToInquirerChoices from '../../Util/mapToInquirerChoices';
-import { ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
 
 /**
  * Prompts the user to choose a template

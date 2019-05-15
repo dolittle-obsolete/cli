@@ -3,8 +3,8 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { CreatedApplicationDetails, CreatedArtifactTemplateDetails, CreatedBoundedContextDetails, runScriptsSync } from '@dolittle/tooling.common.boilerplates';
 import { Outputter } from '../Outputter';
-import {CreatedBoundedContextDetails, CreatedApplicationDetails, CreatedArtifactTemplateDetails, Script, BaseBoilerplate, runScriptsSync} from '@dolittle/tooling.common.boilerplates';
 
 export function runCreationScripts(createdDetails: CreatedApplicationDetails[] | CreatedArtifactTemplateDetails[] | CreatedBoundedContextDetails[],
     outputter: Outputter, onStderr: (data: string) => void, onStdout: (data: string) => void, onError: (error: string | Error) => void) {

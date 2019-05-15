@@ -5,8 +5,8 @@
 
 import latestVersion from 'latest-version';
 import semver from 'semver';
-import requireInternet from './requireInternet';
 import { Outputter } from '../Outputter';
+import requireInternet from './requireInternet';
 
 /**
  * Gets the latest version of a package from npmjs.com

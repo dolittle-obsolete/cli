@@ -3,9 +3,9 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Command } from './Command';
 import { CliContext } from '../CliContext';
 import { ParserResult } from '../ParserResult';
+import { Command } from './Command';
 
 const description = `<To be implemented> Initializes the Dolittle CLI by choosing a deafult core language and a default namespace.
 

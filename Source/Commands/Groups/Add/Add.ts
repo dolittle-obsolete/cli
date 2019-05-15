@@ -3,10 +3,10 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { ArtifactTemplate, IArtifactTemplatesManager } from '@dolittle/tooling.common.boilerplates';
+import { groupBy } from '@dolittle/tooling.common.utilities';
 import { DiscoverableGroup } from '../DiscoverableGroup';
 import { AddCommand } from './AddCommand';
-import { IArtifactTemplatesManager, ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
-import { groupBy } from '@dolittle/tooling.common.utilities/helpers';
 
 export const group = 'add';
 

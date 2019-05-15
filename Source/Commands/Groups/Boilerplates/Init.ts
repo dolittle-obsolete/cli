@@ -3,10 +3,11 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import initBoilerplates from '../../..//Actions/Boilerplates/initBoilerplates';
+import { CliContext } from '../../../CliContext';
+import { ParserResult } from '../../../ParserResult';
 import { Command } from '../../Command';
 import { group } from './Boilerplates';
-import { ParserResult } from '../../../ParserResult';
-import { CliContext } from '../../../CliContext';
 
 class Init extends Command {
     /**
@@ -27,7 +28,7 @@ class Init extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await initBoilerplates(context.outputter, context.managers.boilerplatesManager);
+        await initBoilerplates(context.outputter, context.boilerplateDiscoverers);
     }
 }
 

@@ -13,7 +13,7 @@ import { ParserResult } from '../ParserResult';
  * @param {any} projectConfigObject The actual object of the ProjectConfig
  * @returns {string} The core programming language
  */
-export default function getCoreLanguage(parserResult: ParserResult, projectConfigObject: any) {
+export default function getCoreLanguage(parserResult: ParserResult, projectConfigObject: any): string {
     try {
         let language = parserResult.coreLang? parserResult.coreLang : projectConfigObject.coreLanguage;
         if (!language) throw CoreLanguageNotFoundError.new;
