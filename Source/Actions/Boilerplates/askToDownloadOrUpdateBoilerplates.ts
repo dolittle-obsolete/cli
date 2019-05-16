@@ -64,5 +64,5 @@ async function askWhichBoilerplates(boilerplates: BoilerplatePackageInfo[]) {
         ]);
         return answers['boilerplates'];
     }
-    return boilerplates.map(_ => `${_.name}@${_.version}`);
+    return boilerplates.map(_ => `${_.name}@${_.latest || _.version}`);
 }
