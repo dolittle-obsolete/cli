@@ -5,8 +5,6 @@
 
 import inquirer, {Question} from 'inquirer';
 
-function prompt(questions: Question[]) {
+export default function prompt(questions: Question[]) {
     return inquirer.prompt(questions);
 }
-
-export default prompt;

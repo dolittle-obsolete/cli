@@ -28,5 +28,3 @@ export class Outputter {
         return ora(opts);
     }
 }
-
-export default new Outputter();

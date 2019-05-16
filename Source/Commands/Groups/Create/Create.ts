@@ -5,10 +5,8 @@
 
 import { Command } from '../../Command';
 import { CommandGroup } from '../CommandGroup';
-import applicationCommand from './Application';
-import boundedContextCommand from './BoundedContext';
-
-export const group = 'create';
+import { Application } from './Application';
+import { BoundedContext } from './BoundedContext';
 
 const description = `Commands related to scaffolding Dolittle appliation structures.
 
@@ -27,10 +25,12 @@ class Create extends CommandGroup {
      * @memberof Create
      */
     constructor(commands: Command[]) {
-        super(commands, group, description,
-            `dolittle ${group} <command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
+        super(commands, 'create', description,
+            `dolittle create <command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
         );
     }
 }
 
-export default new Create([applicationCommand, boundedContextCommand]);
+export default new Create([
+    new Application(), new BoundedContext()
+]);

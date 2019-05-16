@@ -44,5 +44,3 @@ export class Parser {
 
     }
 }
-
-export default new Parser();

@@ -3,26 +3,20 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import initBoilerplates from '../../..//Actions/Boilerplates/initBoilerplates';
+import initBoilerplates from '../../../Actions/Boilerplates/initBoilerplatesSystem';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import { Command } from '../../Command';
-import { group } from './Boilerplates';
 
-class Init extends Command {
+export class Init extends Command {
     /**
      * Creates an instance of {Check}.
      * @memberof Installed
      */
     constructor() {
-        super('init', 'Initializes the boilerplates system', 'dolittle boilerplates init', group);
+        super('init', 'Initializes the boilerplates system', 'dolittle boilerplates init', 'boilerplates');
     }
 
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -31,5 +25,3 @@ class Init extends Command {
         await initBoilerplates(context.outputter, context.boilerplateDiscoverers);
     }
 }
-
-export default new Init();

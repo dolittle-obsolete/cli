@@ -9,7 +9,7 @@ import inquirer from 'inquirer';
 import { CliContext } from '../CliContext';
 import { Outputter } from '../Outputter';
 import { ParserResult } from '../ParserResult';
-import { getLatestVersion, isCompatibleUpgrade, isGreaterVersion } from '../Util/packageVersion';
+import { getLatestVersion, isCompatibleUpgrade, isGreaterVersion } from '../Util/packageVersionFunctions';
 import requireInternet from '../Util/requireInternet';
 import { Command } from './Command';
 
@@ -22,16 +22,12 @@ The version text is color coded:
 
 If there is an update to the CLI you will get to choose whether to download the latest one from NPM.
 `;
-class Check extends Command {
+export class Check extends Command {
     constructor() {
         super('check', description, 
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
+
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -88,5 +84,3 @@ class Check extends Command {
         return answers['update'];
     }
 }
-
-export default new Check();

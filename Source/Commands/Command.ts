@@ -75,7 +75,7 @@ export abstract class Command {
      * @memberof Command
      */
     constructor(name: string, description: string, usage: string, group?: string, help?: string, shortDescription?: string) {
-    this.name = name;
+        this.name = name;
         this.description = description;
         this.usage = usage;
         this.group = group;

@@ -11,7 +11,6 @@ import { ParserResult } from '../ParserResult';
 import { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
 import { MissingCommandArgumentError } from '../Util/requireArguments';
 import { NotConnectedError } from '../Util/requireInternet';
-import checkCommand from './Check';
 import { Command } from './Command';
 import { Add } from './Groups/Add/Add';
 import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';
@@ -20,7 +19,8 @@ import { CommandGroup } from './Groups/CommandGroup';
 import { ApplicationConfigurationNotFoundError } from './Groups/Create/BoundedContext';
 import createCommandGroup from './Groups/Create/Create';
 import { ICommandManager } from './ICommandManager';
-import initCommand from './Init';
+import { Init } from './Init';
+import { Check } from './Check';
 
 const description = 
 `${chalk.bold('Welcome to the Dolittle CLI!')}
@@ -163,8 +163,8 @@ export class CommandManager implements ICommandManager {
         if (!this._isInitialized) {
             this._isInitialized = true;
             this._commands.push(...[
-                initCommand,
-                checkCommand
+                new Init(),
+                new Check()
             ]);
             
             let addCommandGroup = new Add(this._artifactTemplatesManager);

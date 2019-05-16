@@ -3,34 +3,28 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import askToDownloadOrUpdateBoilerplates from '../../../Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
-import installedBoilerplates from '../../../Actions/Boilerplates/installedBoilerplates';
+import installedBoilerplates from '../../../Actions/Boilerplates/listInstalledBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
-import { isCompatibleUpgrade, isGreaterVersion } from '../../../Util/packageVersion';
+import { isCompatibleUpgrade, isGreaterVersion } from '../../../Util/packageVersionFunctions';
 import requireInternet from '../../../Util/requireInternet';
 import { Command } from '../../Command';
-import { group } from './Boilerplates';
 
-class Online extends Command {
+export class Online extends Command {
     /**
      * Creates an instance of {Online}.
      * @memberof Online
      */
     constructor() {
-        super('online', 'Lists boilerplates found on npm', 'dolittle boilerplates online [<keywords>...] [-l | --limit]', group, 
+        super('online', 'Lists boilerplates found on npm', 'dolittle boilerplates online [<keywords>...] [-l | --limit]', 'boilerplates', 
             [
                 '\tkeywords: Additional keywords used in the npmjs search',
                 '\t-l | --limit: The maximum limit of fetched npm packages. Cannot exceed 250 or be lower that 0'
             ].join('\n'));
     }
 
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -64,5 +58,3 @@ class Online extends Command {
         await askToDownloadOrUpdateBoilerplates(boilerplatesToDownload, context.boilerplateDiscoverers, context.outputter);  
     }
 }
-
-export default new Online();

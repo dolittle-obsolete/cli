@@ -10,9 +10,8 @@ import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import getCoreLanguage from '../../../Util/getCoreLanguage';
 import requireArguments from '../../../Util/requireArguments';
-import { runCreationScripts } from '../../../Util/runBuildScripts';
+import { runCreationScripts } from '../../../Util/runScripts';
 import { Command } from '../../Command';
-import { group } from './Create';
 
 const description = `Scaffolds a Dolittle bounded context.`;
 const help = [
@@ -21,23 +20,18 @@ const help = [
 ].join('\n');
 const usage = 'dolittle create boundedcontext [--coreLang]';
 
-class BoundedContext extends Command {
+export class BoundedContext extends Command {
     
     /**
      * Creates an instance of {BoundedContext}.
      * @memberof Installed
      */
     constructor() {
-        super('boundedcontext', description, usage, group,
+        super('boundedcontext', description, usage, 'create',
             help, 'Scaffolds a Dolittle bounded context'
         );
     }
 
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
     async action(parserResult: ParserResult, context: CliContext) {
         let projectConfigObj = context.projectConfig.store;
         let args = parserResult.getCommandArgs();
@@ -48,13 +42,10 @@ class BoundedContext extends Command {
             context.outputter.warn(`No bounded context boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.namespace + '\'' : ''} `);
             return;
         }
-        /**
-         * @type {BaseBoilerplate}
-         */
-        let boilerplate = null;
+        let boilerplate: Boilerplate | null = null;
         if (boilerplates.length > 1) {
             do {
-                boilerplate = await chooseBoilerplate(boilerplates);
+                boilerplate = <Boilerplate> await chooseBoilerplate(boilerplates);
             } while(!boilerplate)
 
         }

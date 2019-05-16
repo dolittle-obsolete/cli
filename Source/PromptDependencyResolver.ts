@@ -5,20 +5,16 @@
 
 import { Dependency, ICanResolveSyncDependencies, IDependenciesManager, MissingCoreLanguage, MissingDestinationPath } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
-import Outputter from './Outputter';
+import { Outputter } from './Outputter';
 
 export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
     
-    private _dependenciesManager: IDependenciesManager;
-    private _dolittleConfig: any;
     /**
      * Initializes a new instance of {Inquirer}
      * @param {IDependenciesManager} dependenciesManager
      * @param {any} dolittleConfig
      */
-    constructor(dependenciesManager: IDependenciesManager, dolittleConfig: any) {
-        this._dependenciesManager = dependenciesManager;
-        this._dolittleConfig = dolittleConfig;   
+         constructor(private _dependenciesManager: IDependenciesManager, private _dolittleConfig: any, private _outputter: Outputter) {
     }
     canResolve(dependency: Dependency): boolean {
         return dependency.userInputType !== undefined && dependency.userInputType !== 'argument';
@@ -64,7 +60,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
                 questions.push(...this.createPrompt(dep));
             } 
             else {
-                Outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);
+                this._outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);
                 throw new Error(`Invalid type '${dep.type}'`);
             }
         });
@@ -88,7 +84,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
             return this.createCheckboxPrompt(dependency, dependency.promptMessage || 'Input', items);
         }
         else {
-            Outputter.warn(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
+            this._outputter.warn(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
             throw new Error(`Invalid userInputType '${inputType}'`)
         }
     }

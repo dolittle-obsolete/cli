@@ -3,27 +3,21 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import installedBoilerplates from '../../../Actions/Boilerplates/installedBoilerplates';
+import installedBoilerplates from '../../../Actions/Boilerplates/listInstalledBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import { Command } from '../../Command';
-import { group } from './Boilerplates';
 
-class Installed extends Command {
+export class Installed extends Command {
     
     /**
      * Creates an instance of {Online}.
      * @memberof Installed
      */
     constructor() {
-        super('installed', 'Lists installed boilerplates', 'dolittle boilerplates installed', group);
+        super('installed', 'Lists installed boilerplates', 'dolittle boilerplates installed', 'boilerplates');
     }
 
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -39,5 +33,3 @@ class Installed extends Command {
         boilerplates.forEach(_ => context.outputter.print(_.packageJson.name));
     }
 }
-
-export default new Installed();

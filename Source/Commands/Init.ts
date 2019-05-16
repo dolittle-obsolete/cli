@@ -15,16 +15,12 @@ const help = [
     '\t--coreLanguage: The default core language'
 
 ].join('\n');
-class Init extends Command {
+export class Init extends Command {
     constructor() {
         super('init', description, 
             'dolittle init [-n | --namespace] [-c | --coreLanguage]', undefined, help, 'Initializes the Dolittle CLI');
     }
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
+    
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -34,5 +30,3 @@ class Init extends Command {
         
     }
 }
-
-export default new Init();

@@ -10,7 +10,6 @@ import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import requireArguments from '../../../Util/requireArguments';
 import { Command } from '../../Command';
-import { group } from './Create';
 
 const description = `Scaffolds a Dolittle application`;
 
@@ -21,21 +20,16 @@ const usage = 'dolittle create application';
  * @class Application
  * @extends {Command}
  */
-class Application extends Command {
+export class Application extends Command {
     /**
      * Creates an instance of {Check}.
      * @memberof Installed
      */
     constructor() {
-        super('application', description, usage, group,
+        super('application', description, usage, 'create',
             '', 'Scaffolds a Dolittle application');
     }
 
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
     async action(parserResult: ParserResult, context: CliContext) {
         let args = parserResult.getCommandArgs();
         const language = 'any';
@@ -45,14 +39,11 @@ class Application extends Command {
             context.outputter.warn(`No application boilerplates found for language '${language}'${context.namespace? ' under namespace \'' + context.namespace + '\'' : ''} `);
             return;
         }
-        /**
-         * @type {BaseBoilerplate}
-         */
-        let boilerplate = null;
+        let boilerplate: Boilerplate | null = null;
         if (boilerplates.length > 1) {
-            do{
-                boilerplate = await chooseBoilerplate(boilerplates); 
-            }while(!boilerplate)
+            do {
+                boilerplate = <Boilerplate> await chooseBoilerplate(boilerplates); 
+            } while (!boilerplate)
         }
         else boilerplate = boilerplates[0];
         
@@ -72,5 +63,3 @@ class Application extends Command {
         context.applicationsManager.createApplication(boilerplateContext, context.cwd, <Boilerplate>boilerplate);
     }
 }
-
-export default new Application();

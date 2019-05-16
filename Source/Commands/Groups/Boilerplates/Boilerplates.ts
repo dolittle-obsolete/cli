@@ -5,14 +5,13 @@
 
 import { Command } from '../../Command';
 import { CommandGroup } from '../CommandGroup';
-import checkCommand from './Check';
-import dolittleCommand from './Dolittle';
-import initCommand from './Init';
-import installedCommand from './Installed';
-import listCommand from './List';
-import onlineCommand from './Online';
+import { Check } from './Check';
+import { Dolittle } from './Dolittle';
+import { Init } from './Init';
+import { Installed } from './Installed';
+import { List } from './List';
+import { Online } from './Online';
 
-export const group = 'boilerplates';
 /**
  * The Boilerplates {CommandGroup}
  *
@@ -27,11 +26,13 @@ class Boilerplates extends CommandGroup {
      * @memberof Boilerplates
      */
     constructor(commands: Command[]) {
-        super(commands, group, 
+        super(commands, 'boilerplates', 
             'Commands related to boilerplates.',
-            `dolittle ${group} <command>`
+            `dolittle boilerplates <command>`
         );
     }
 }
 
-export default new Boilerplates([checkCommand, dolittleCommand, installedCommand, listCommand, onlineCommand, initCommand]);
+export default new Boilerplates([
+    new Check(), new Dolittle(), new Init(), new Installed(), new List(), new Online()
+]);

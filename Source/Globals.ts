@@ -10,8 +10,9 @@ import updateNotifier from 'update-notifier';
 import { CliContext } from './CliContext';
 import { CommandManager } from './Commands/CommandManager';
 import { ICommandManager } from './Commands/ICommandManager';
-import outputter from './Outputter';
 import { PromptDependencyResolver } from './PromptDependencyResolver';
+import { Outputter } from './Outputter';
+import { Parser } from './Parser';
 
 const pkg = require('../package.json');
 const notifier = updateNotifier(
@@ -27,18 +28,22 @@ const notifier = updateNotifier(
  * @class Globals
  */
 class Globals {
+    readonly parser: Parser;
     readonly commandManager: ICommandManager;
     readonly cliContext: CliContext;
+    private readonly _outputter: Outputter;
 
     /**
      * Creates an instance of {Globals}.
      * @memberof Globals
      */
     constructor () {
+        this.parser = new Parser();
+        this._outputter = new Outputter();
         this.initialize();
         this.commandManager = new CommandManager(applicationsManager, boundedContextsManager, artifactTemplatesManager, dependenciesManager, boilerplateManagers);
         this.cliContext = new CliContext(
-            process.cwd(), outputter, dolittleConfig, projectConfig, boilerplatesConfig, applicationsManager, artifactTemplatesManager,
+            process.cwd(), this._outputter, dolittleConfig, projectConfig, boilerplatesConfig, applicationsManager, artifactTemplatesManager,
             boundedContextsManager,dependencyResolvers, boilerplateManagers, boilerplateDiscoverers, onlineBoilerplateFinders[0], folders, fileSystem
         );
     }
@@ -46,12 +51,12 @@ class Globals {
         this.installHandlers();
         logger.transports.forEach((t: any) => t.silent = true); // Turn off winston logging
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
-        dependencyResolvers.addResolvers(new PromptDependencyResolver(dependenciesManager, dolittleConfig));
+        dependencyResolvers.addResolvers(new PromptDependencyResolver(dependenciesManager, dolittleConfig, this._outputter));
     }
     
     private installHandlers() {
         process.on('unhandledRejection', (reason, _) => {
-            outputter.error(<Error>reason);
+            this._outputter.error(<Error>reason);
             process.exit(1);
         });
     }

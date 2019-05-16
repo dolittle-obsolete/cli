@@ -8,7 +8,7 @@ import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import { Outputter } from '../../Outputter';
 import requireInternet from '../../Util/requireInternet';
-import initBoilerplates from './initBoilerplates';
+import initBoilerplatesSystem from './initBoilerplatesSystem';
 
 export type BoilerplatePackageInfo = {
     name: string, version: string, latest?: string
@@ -21,7 +21,7 @@ export type BoilerplatePackageInfo = {
  * @param {BoilerplatePackageInfo[]} boilerplates
  * @param {Outputter} outputter
  */
-export async function askToDownloadOrUpdateBoilerplates(boilerplates: BoilerplatePackageInfo[], boilerplateDiscoverers: IBoilerplateDiscoverers, outputter: Outputter) {
+export default async function askToDownloadOrUpdateBoilerplates(boilerplates: BoilerplatePackageInfo[], boilerplateDiscoverers: IBoilerplateDiscoverers, outputter: Outputter) {
     await requireInternet(outputter);
     if (boilerplates.length && boilerplates.length > 0) {
         const shouldDownload = await askToDownload();
@@ -33,7 +33,7 @@ export async function askToDownloadOrUpdateBoilerplates(boilerplates: Boilerplat
                     spawn.sync('npm', ['i', '-g', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
                 else 
                     spawn.sync('yarn', ['global', 'add', ...packageNames], {cwd: process.cwd(), stdio: 'inherit'});
-                await initBoilerplates(outputter, boilerplateDiscoverers);
+                await initBoilerplatesSystem(outputter, boilerplateDiscoverers);
             }
         }
     }

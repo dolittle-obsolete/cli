@@ -15,7 +15,7 @@ import { Outputter } from '../../Outputter';
  * @param {BoilerplatesManager} boilerplatesManager
  * 
  */
-export default async function listBoilerplates(outputter: Outputter, boilerplateManagers: IBoilerplateManagers) {
+export default async function listBoilerplatesInUse(outputter: Outputter, boilerplateManagers: IBoilerplateManagers) {
     let spinner = outputter.spinner('Listing boilerplates in use:\n').start();
     try {
         let boilerplates = boilerplateManagers.boilerplates;

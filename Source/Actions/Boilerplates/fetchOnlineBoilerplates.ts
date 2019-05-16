@@ -16,7 +16,7 @@ import requireInternet from '../../Util/requireInternet';
  * @param {number} [limit=250]
  * @returns
  */
-async function onlineBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBoilerplatePackages, outputter: Outputter, keywords: string[] = [], limit: number = 250) {
+export default async function fetchOnlineBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBoilerplatePackages, outputter: Outputter, keywords: string[] = [], limit: number = 250) {
     await requireInternet(outputter);
     let spinner = outputter.spinner('Getting boilerplates (this might take a while, depending on your internet connection): ').start();
     let boilerplates = await onlineBoilerplatesDiscoverer.discoverLatestOnlineBoilerplates(keywords, limit)
@@ -29,5 +29,3 @@ async function onlineBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBo
         });
     return boilerplates;
 }
-
-export default onlineBoilerplates;

@@ -15,7 +15,7 @@ import requireInternet from '../../Util/requireInternet';
  * @param {Outputter} outputter
  * @returns
  */
-async function dolittleBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBoilerplatePackages, outputter: Outputter) {
+export default async function fetchDolittleBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBoilerplatePackages, outputter: Outputter) {
     await requireInternet(outputter);
     let spinner = outputter.spinner('Getting dolittle boilerplates (this might take a while, depending on your internet connection): ').start();
     let boilerplates = await onlineBoilerplatesDiscoverer.discoverLatestOnlineDolittleBoilerplates()
@@ -28,5 +28,3 @@ async function dolittleBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnline
         });
     return boilerplates;
 }
-
-export default dolittleBoilerplates;

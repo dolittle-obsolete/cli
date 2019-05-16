@@ -12,12 +12,12 @@ import { ParserResult } from '../../../ParserResult';
 import getCoreLanguage from '../../../Util/getCoreLanguage';
 import requireArguments from '../../../Util/requireArguments';
 import { Command } from '../../Command';
-import { group } from './Add';
 import { MissingBoundedContextError } from './MissingBoundedContextError';
 
 export class AddCommand extends Command {
     private _artifactTemplates: ArtifactTemplate[];
     private _usagePrefix: string;
+    
     /**
      * Creates an instance of {AddCommand}.
      * @param {string} artifactType
@@ -26,15 +26,11 @@ export class AddCommand extends Command {
      */
     constructor(artifactType: string, artifactTemplates: ArtifactTemplate[]) {
         if (!artifactTemplates || artifactTemplates.length === 0) throw new Error('No artifact templates given to add command');
-        super(artifactType, artifactTemplates[0].description, 'dolittle add ' + artifactType, group);
+        super(artifactType, artifactTemplates[0].description, 'dolittle add ' + artifactType, 'add');
         this._artifactTemplates = artifactTemplates;
         this._usagePrefix = `dolittle add ${artifactType}`;
     }
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
+
     async action(parserResult: ParserResult, context: CliContext ) {
         let projectConfigObj = context.projectConfig.store;
         let language = getCoreLanguage(parserResult, projectConfigObj);

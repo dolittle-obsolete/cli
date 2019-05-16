@@ -4,28 +4,23 @@
 *--------------------------------------------------------------------------------------------*/
 
 import dolittleBoilerplates from '../../..//Actions/Boilerplates/fetchDolittleBoilerplates';
-import installedBoilerplates from '../../..//Actions/Boilerplates/installedBoilerplates';
-import { isCompatibleUpgrade, isGreaterVersion } from '../../..//Util/packageVersion';
+import installedBoilerplates from '../../../Actions/Boilerplates/listInstalledBoilerplates';
+import { isCompatibleUpgrade, isGreaterVersion } from '../../../Util/packageVersionFunctions';
 import requireInternet from '../../..//Util/requireInternet';
-import { askToDownloadOrUpdateBoilerplates } from '../../../Actions/Boilerplates/downloadOrUpdateBoilerplates';
+import askToDownloadOrUpdateBoilerplates from '../../../Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import { Command } from '../../Command';
-import { group } from './Boilerplates';
 
-class Dolittle extends Command {
+export class Dolittle extends Command {
     /**
      * Creates an instance of {Dolittle}.
      * @memberof Dolittle
      */
     constructor() {
-        super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'dolittle boilerplates dolittle', group);
+        super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'dolittle boilerplates dolittle', 'boilerplates');
     }
-    /**
-     * @inheritdoc
-     * @param {ParserResult} parserResult
-     * @param {CliContext} context
-     */
+    
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
@@ -56,4 +51,3 @@ class Dolittle extends Command {
     }
     
 }
-export default new Dolittle();

@@ -17,7 +17,7 @@ import { Outputter } from '../../Outputter';
  * @param {typeof FsExtra} filesystem
  * @returns A list of the boilerplate and package configurations for each boilerplate
  */
-export default async function installedBoilerplates(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers, filesystem: typeof FsExtra)  {
+export default async function listInstalledBoilerplates(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers, filesystem: typeof FsExtra)  {
     let spinner = outputter.spinner('Getting installed boilerplates:\n').start();
     try {
         let paths = boilerplateDiscoverers.boilerplatePaths;

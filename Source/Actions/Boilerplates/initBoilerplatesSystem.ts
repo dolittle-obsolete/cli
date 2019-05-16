@@ -10,7 +10,7 @@ import { Outputter } from '../../Outputter';
  * Initializes the boilerplates system in the common tooling
  * @param {Outputter} outputter
  */
-export default async function initBoilerplates(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers) {
+export default async function initBoilerplatesSystem(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers) {
     let spinner = outputter.spinner('Initializing boilerplates system').start();
     try {
         boilerplateDiscoverers.discover();

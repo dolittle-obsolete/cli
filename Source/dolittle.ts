@@ -8,11 +8,9 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './Actions/askForCoreLanguage';
-import { askToDownloadOrUpdateBoilerplates } from './Actions/Boilerplates/downloadOrUpdateBoilerplates';
-import dolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
+import askToDownloadOrUpdateBoilerplates from './Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
+import fetchDolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
 import globals from './Globals';
-import outputter from './Outputter';
-import parser from './Parser';
 import { debug } from './Util/debug';
 
 const pkg = require('../package.json');
@@ -21,7 +19,7 @@ runDolittleCli();
 
 async function runDolittleCli() {
     
-    let parseResult = parser.parse();
+    let parseResult = globals.parser.parse();
     if (!parseResult.debug)
         debug.disable();
 
@@ -42,8 +40,8 @@ async function runDolittleCli() {
             let boilerplatePackages = [];
             let shouldDownload = await askToFindBoilerplates();
             if (shouldDownload) {
-                boilerplatePackages = await dolittleBoilerplates(globals.cliContext.onlineBoilerplateDiscoverer, outputter);
-                await askToDownloadOrUpdateBoilerplates(boilerplatePackages, globals.cliContext.boilerplateDiscoverers, outputter);
+                boilerplatePackages = await fetchDolittleBoilerplates(globals.cliContext.onlineBoilerplateDiscoverer, globals.cliContext.outputter);
+                await askToDownloadOrUpdateBoilerplates(boilerplatePackages, globals.cliContext.boilerplateDiscoverers, globals.cliContext.outputter);
             }
         }
     }
@@ -55,7 +53,7 @@ async function askToFindBoilerplates() {
     return answers['download'];
 }
 function printCliVersion() {
-    outputter.print(`${pkg.name} v${pkg.version}`);
+    globals.cliContext.outputter.print(`${pkg.name} v${pkg.version}`);
 }
 
 function hasBoilerplates() {
