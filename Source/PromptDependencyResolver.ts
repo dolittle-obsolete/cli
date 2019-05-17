@@ -77,7 +77,6 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
                 : choices;
         if (dependency.customInput) items.push(dependency.customInput);
         if (inputType === 'chooseOne') {
-            
             return this.createListPrompt(dependency, dependency.promptMessage || 'Input', items);
         }
         else if (inputType === 'chooseMultiple') {

@@ -3,9 +3,8 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { Boilerplate } from '@dolittle/tooling.common.boilerplates';
+import { Boilerplate, chooseBoilerplate } from '@dolittle/tooling.common.boilerplates';
 import { ArgumentDependencyResolver, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
-import chooseBoilerplate from '../../../Actions/chooseBoilerplate';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import getCoreLanguage from '../../../Util/getCoreLanguage';
@@ -45,7 +44,7 @@ export class BoundedContext extends Command {
         let boilerplate: Boilerplate | null = null;
         if (boilerplates.length > 1) {
             do {
-                boilerplate = <Boilerplate> await chooseBoilerplate(boilerplates);
+                boilerplate = <Boilerplate | null> await chooseBoilerplate(boilerplates, context.dependencyResolvers);
             } while(!boilerplate)
 
         }

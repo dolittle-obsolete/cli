@@ -3,14 +3,13 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { requireInternet, isCompatibleUpgrade, isGreaterVersion } from '@dolittle/tooling.common.utilities';
 import dolittleBoilerplates from '../../..//Actions/Boilerplates/fetchDolittleBoilerplates';
 import installedBoilerplates from '../../../Actions/Boilerplates/listInstalledBoilerplates';
-import { isCompatibleUpgrade, isGreaterVersion } from '../../../Util/packageVersionFunctions';
-import requireInternet from '../../..//Util/requireInternet';
-import askToDownloadOrUpdateBoilerplates from '../../../Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import { Command } from '../../Command';
+import { askToDownloadOrUpdateBoilerplates } from '@dolittle/tooling.common.boilerplates';
 
 export class Dolittle extends Command {
     /**
@@ -20,13 +19,15 @@ export class Dolittle extends Command {
     constructor() {
         super('dolittle', 'Lists dolittle\'s boilerplates found on npm', 'dolittle boilerplates dolittle', 'boilerplates');
     }
-    
+
     async action(parserResult: ParserResult, context: CliContext) {
         if (parserResult.help) {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await requireInternet(context.outputter);
+        let spinner = context.outputter.spinner().start();
+        await requireInternet((data: string) => spinner.text = data, (data: string) => spinner.warn(data));
+        spinner.stop();
         let boilerplates = await dolittleBoilerplates(context.onlineBoilerplateDiscoverer, context.outputter);
         let localBoilerplates = await installedBoilerplates(context.outputter, context.boilerplateDiscoverers, context.fileSystem);
         let newAvailableBoilerplates = boilerplates.filter(boilerplate => !localBoilerplates.map(_ => _.packageJson.name).includes(boilerplate.name));
@@ -47,7 +48,7 @@ export class Dolittle extends Command {
         context.outputter.print(upgradeableBoilerplates.map((_: any) => `${_.name} v${_.localVersion} --> v${_.version}`).join('\t\n'));
             
         let boilerplatesToDownload = newAvailableBoilerplates.concat(<any>upgradeableBoilerplates);
-        await askToDownloadOrUpdateBoilerplates(boilerplatesToDownload, context.boilerplateDiscoverers, context.outputter);    
+        await askToDownloadOrUpdateBoilerplates(boilerplatesToDownload, context.boilerplateDiscoverers, context.dependencyResolvers);    
     }
     
 }

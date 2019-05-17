@@ -3,10 +3,9 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { ArtifactTemplate } from '@dolittle/tooling.common.boilerplates';
+import { ArtifactTemplate, chooseTemplate } from '@dolittle/tooling.common.boilerplates';
 import { ArgumentDependencyResolver, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
 import { determineDestination } from '@dolittle/tooling.common.utilities';
-import chooseTemplate from '../../../Actions/Add/chooseTemplate';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
 import getCoreLanguage from '../../../Util/getCoreLanguage';
@@ -47,9 +46,13 @@ export class AddCommand extends Command {
 
         let args = parserResult.getCommandArgs();
         
-        let template = templatesWithLanguage[0];
+        let template: ArtifactTemplate | null = templatesWithLanguage[0];
 
-        if (templatesWithLanguage.length > 1) template = await chooseTemplate(templatesWithLanguage); 
+        if (templatesWithLanguage.length > 1) {
+            do {
+                template = await chooseTemplate(templatesWithLanguage, context.dependencyResolvers); 
+            } while(!template)
+        }
 
         let dependencies = template.allDependencies;
         let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
@@ -63,9 +66,6 @@ export class AddCommand extends Command {
             return;
         }
         requireArguments(this, context.outputter, args, ...argumentDependencies.map(_ => `Missing '${_.name}'`));
-        /**
-         * @type {BoundedContext}
-         */
         let boundedContext = context.boundedContextsManager.getNearestBoundedContextConfig(context.cwd);
         if (!boundedContext) throw MissingBoundedContextError.new;
         

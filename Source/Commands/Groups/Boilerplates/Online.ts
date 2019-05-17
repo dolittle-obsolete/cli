@@ -2,15 +2,13 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-
-import askToDownloadOrUpdateBoilerplates from '../../../Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import onlineBoilerplates from '../../../Actions/Boilerplates/fetchOnlineBoilerplates';
 import installedBoilerplates from '../../../Actions/Boilerplates/listInstalledBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
-import { isCompatibleUpgrade, isGreaterVersion } from '../../../Util/packageVersionFunctions';
-import requireInternet from '../../../Util/requireInternet';
 import { Command } from '../../Command';
+import { requireInternet, isCompatibleUpgrade, isGreaterVersion } from '@dolittle/tooling.common.utilities';
+import { askToDownloadOrUpdateBoilerplates } from '@dolittle/tooling.common.boilerplates';
 
 export class Online extends Command {
     /**
@@ -30,7 +28,9 @@ export class Online extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await requireInternet(context.outputter);
+        let spinner = context.outputter.spinner().start();
+        await requireInternet((data: string) => spinner.text = data, (data: string) => spinner.warn(data));
+        spinner.stop();
         let keywords = parserResult.getCommandArgs();
         let limit = parserResult.extraOpts['l']? parserResult.extraOpts['l'] : parserResult.extraOpts['limit'];
 
@@ -55,6 +55,6 @@ export class Online extends Command {
         context.outputter.print(upgradeableBoilerplates.map((_: any) => `${_.name} v${_.localVersion} --> v${_.version}`).join('\t\n'));
         
         let boilerplatesToDownload = newAvailableBoilerplates.concat(<any>upgradeableBoilerplates);
-        await askToDownloadOrUpdateBoilerplates(boilerplatesToDownload, context.boilerplateDiscoverers, context.outputter);  
+        await askToDownloadOrUpdateBoilerplates(boilerplatesToDownload, context.boilerplateDiscoverers, context.dependencyResolvers);  
     }
 }

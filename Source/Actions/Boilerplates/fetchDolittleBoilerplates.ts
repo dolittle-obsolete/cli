@@ -3,9 +3,8 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { ICanFindOnlineBoilerplatePackages } from '@dolittle/tooling.common.boilerplates';
+import { ICanFindOnlineBoilerplatePackages, fetchDolittleBoilerplates as _fetchDolittleBoilerplates } from '@dolittle/tooling.common.boilerplates';
 import { Outputter } from '../../Outputter';
-import requireInternet from '../../Util/requireInternet';
 
 
 /**
@@ -16,15 +15,11 @@ import requireInternet from '../../Util/requireInternet';
  * @returns
  */
 export default async function fetchDolittleBoilerplates(onlineBoilerplatesDiscoverer: ICanFindOnlineBoilerplatePackages, outputter: Outputter) {
-    await requireInternet(outputter);
-    let spinner = outputter.spinner('Getting dolittle boilerplates (this might take a while, depending on your internet connection): ').start();
-    let boilerplates = await onlineBoilerplatesDiscoverer.discoverLatestOnlineDolittleBoilerplates()
-        .then(boilerplates => {
-            spinner.succeed(`Found ${boilerplates.length} dolittle boilerplates`);
-            return boilerplates;
-        }).catch(error => {
-            spinner.fail(`An error occured ${error.message? error.message : error}`);
-            throw error;
-        });
+
+    let spinner = outputter.spinner().start();
+    let boilerplates = await _fetchDolittleBoilerplates(onlineBoilerplatesDiscoverer,
+        (data: string) => spinner.text = data,
+        (data: string) => spinner.fail(data));
+    if (spinner.isSpinning) spinner.succeed();
     return boilerplates;
 }

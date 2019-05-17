@@ -1,4 +1,4 @@
-import { IBoilerplateDiscoverers } from '@dolittle/tooling.common.boilerplates';
+import { IBoilerplateDiscoverers, initBoilerplatesSystem as _initBoilerplatesSystem } from '@dolittle/tooling.common.boilerplates';
 import { Outputter } from '../../Outputter';
 
 /*---------------------------------------------------------------------------------------------
@@ -11,13 +11,11 @@ import { Outputter } from '../../Outputter';
  * @param {Outputter} outputter
  */
 export default async function initBoilerplatesSystem(outputter: Outputter, boilerplateDiscoverers: IBoilerplateDiscoverers) {
-    let spinner = outputter.spinner('Initializing boilerplates system').start();
-    try {
-        boilerplateDiscoverers.discover();
-        spinner.succeed('Boilerplates system initialized');
-    } catch (error) {
-        spinner.fail(`An error occured: ${error.message? error.message : error}`);
-        throw error;
-    }
+    let spinner = outputter.spinner().start();
+    await _initBoilerplatesSystem(boilerplateDiscoverers, 
+        (data: string) => spinner.text = data,
+        (data: string) => spinner.fail(data)
+    );
+    if (spinner.isSpinning) spinner.succeed();
     
 }

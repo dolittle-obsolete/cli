@@ -3,12 +3,12 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { askToDownloadOrUpdateBoilerplates } from '@dolittle/tooling.common.boilerplates';
 import checkBoilerplates from '../../../Actions/Boilerplates/checkBoilerplates';
-import askToDownloadOrUpdateBoilerplates from '../../../Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
-import requireInternet from '../../../Util/requireInternet';
 import { Command } from '../../Command';
+import { requireInternet } from '@dolittle/tooling.common.utilities';
 
 const description = `Checks whether you have boilerplates that are out of date.
 
@@ -30,8 +30,10 @@ export class Check extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await requireInternet(context.outputter);
+        let spinner = context.outputter.spinner().start();
+        await requireInternet((data: string) => spinner.text = data, (data: string) => spinner.warn(data));
+        spinner.stop();
         let outOfDatePacakges: any = await checkBoilerplates(context.outputter, context.boilerplateDiscoverers, context.onlineBoilerplateDiscoverer, context.fileSystem);
-        askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.boilerplateDiscoverers, context.outputter);    
+        askToDownloadOrUpdateBoilerplates(outOfDatePacakges, context.boilerplateDiscoverers, context.dependencyResolvers, undefined, (data: string) => context.outputter.warn(data));    
     }
 }

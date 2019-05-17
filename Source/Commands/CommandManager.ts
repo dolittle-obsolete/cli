@@ -5,12 +5,12 @@
 
 import { IApplicationsManager, IArtifactTemplatesManager, IBoilerplateManagers, IBoundedContextsManager } from '@dolittle/tooling.common.boilerplates';
 import { ArgumentsNotMatchingDependenciesError, IDependenciesManager } from '@dolittle/tooling.common.dependencies';
+import { NotConnectedError } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { CliContext } from '../CliContext';
 import { ParserResult } from '../ParserResult';
 import { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
-import { MissingCommandArgumentError } from '../Util/requireArguments';
-import { NotConnectedError } from '../Util/requireInternet';
+import { MissingCommandArgumentError } from '../Util/requireArguments'
 import { Command } from './Command';
 import { Add } from './Groups/Add/Add';
 import { MissingBoundedContextError } from './Groups/Add/MissingBoundedContextError';

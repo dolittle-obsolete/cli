@@ -5,10 +5,10 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { askToDownloadOrUpdateBoilerplates } from "@dolittle/tooling.common.boilerplates";
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './Actions/askForCoreLanguage';
-import askToDownloadOrUpdateBoilerplates from './Actions/Boilerplates/askToDownloadOrUpdateBoilerplates';
 import fetchDolittleBoilerplates from './Actions/Boilerplates/fetchDolittleBoilerplates';
 import globals from './Globals';
 import { debug } from './Util/debug';
@@ -41,7 +41,7 @@ async function runDolittleCli() {
             let shouldDownload = await askToFindBoilerplates();
             if (shouldDownload) {
                 boilerplatePackages = await fetchDolittleBoilerplates(globals.cliContext.onlineBoilerplateDiscoverer, globals.cliContext.outputter);
-                await askToDownloadOrUpdateBoilerplates(boilerplatePackages, globals.cliContext.boilerplateDiscoverers, globals.cliContext.outputter);
+                await askToDownloadOrUpdateBoilerplates(boilerplatePackages, globals.cliContext.boilerplateDiscoverers, globals.cliContext.dependencyResolvers);
             }
         }
     }

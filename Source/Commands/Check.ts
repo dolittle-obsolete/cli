@@ -3,14 +3,13 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
+import { requireInternet, getLatestVersionFromNpm, isCompatibleUpgrade, isGreaterVersion } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import spawn from 'cross-spawn';
 import inquirer from 'inquirer';
 import { CliContext } from '../CliContext';
 import { Outputter } from '../Outputter';
 import { ParserResult } from '../ParserResult';
-import { getLatestVersion, isCompatibleUpgrade, isGreaterVersion } from '../Util/packageVersionFunctions';
-import requireInternet from '../Util/requireInternet';
 import { Command } from './Command';
 
 const pkg = require('../../package.json');
@@ -33,10 +32,15 @@ export class Check extends Command {
             context.outputter.print(this.helpDocs);
             return;
         }
-        await requireInternet(context.outputter);
+        let spinner = context.outputter.spinner().start();
+        await requireInternet((data: string) => spinner.text = data, (data: string) => spinner.warn(data));
+        spinner.stop();
         const currentVersion = pkg.version;
         const pkgName = pkg.name;
-        const latestVersion = await getLatestVersion(pkg.name, context.outputter);
+        spinner = context.outputter.spinner().start();
+        const latestVersion = await getLatestVersionFromNpm(pkg.name, (data: string) => spinner.text = data, (data: string) => spinner.fail(data));
+        if (spinner.isSpinning) spinner.stop();
+        
         const sameVersion = currentVersion === latestVersion;
         const compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
         const majorUpgrade = isGreaterVersion(latestVersion, currentVersion);
