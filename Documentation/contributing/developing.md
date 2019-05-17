@@ -5,7 +5,7 @@ keywords: Tools
 author: einari, woksin
 ---
 
-In order to be able to [extend](extending) the CLI tool with new capabilities, its vital to know how to get it all running.
+In order to be able to [extend](../extending) the CLI tool with new capabilities, its vital to know how to get it all running.
 
 ## Building
 
