@@ -8,10 +8,10 @@ import args from 'args';
 import { usagePrefix } from './helpers';
 import globals from './globals.js';
 
-const USAGE = 'dolittle veracity [command] [args]';
 args
-    .command('create', 'Create something from one of the boilerplates');
+    .command('show', 'Show information')
+    .command('get', 'Get details');
     
-
+args.parse(process.argv);
 
 if( !args.sub.length ) args.showHelp();

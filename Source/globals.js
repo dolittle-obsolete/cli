@@ -15,6 +15,8 @@ import updateNotifier from 'update-notifier';
 class globals {
     #commandManager;
     #inquirer;
+    #edgeAPI;
+
     /**
      * Perform initialization
      */
@@ -30,8 +32,20 @@ class globals {
         
         this.#inquirer = new Inquirer(dependenciesManager, logger);
         this.#commandManager = new CommandManager(folders, applicationsManager, boundedContextsManager, artifactsManager, dependenciesManager, this.#inquirer, logger, dolittleConfig)
+
+        this.#edgeAPI = 'https://edge.dolittle.studio';
+        //this.#edgeAPI = 'http://localhost:5000';
         this.notifyUpdate();
     }
+
+    /**
+     * Gets the edge API endpoint
+     * @returns {string}
+     */
+    get edgeAPI() {
+        return this.#edgeAPI;
+    }
+
     /**
      * Gets the {InquirerManager
      * @returns {InquirerManager}}
@@ -39,6 +53,7 @@ class globals {
     get inquirerManager() {
         return this.#inquirer;
     }
+
     /**
      * Gets the {CommandManager}
      * @returns {CommandManager}

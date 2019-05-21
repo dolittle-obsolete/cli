@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "4.1.0",
+  "version": "4.1.0-edge-alpha.5",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -37,6 +37,11 @@
     "dolittle-add-intconcept": "bin/dolittle-add-intconcept.js",
     "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
     "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js",
+    "dolittle-edge": "bin/dolittle-edge.js",
+    "dolittle-edge-show": "bin/dolittle-edge-show.js",
+    "dolittle-edge-show-locations": "bin/dolittle-edge-show-locations.js",
+    "dolittle-edge-get": "bin/dolittle-edge-get.js",
+    "dolittle-edge-get-location": "bin/dolittle-edge-get-location.js",
     "dolittle-run": "bin/dolittle-run.js",
     "dolittle-veracity": "bin/dolittle-veracity.js",
     "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
@@ -53,8 +58,11 @@
   "dependencies": {
     "@dolittle/tooling.common": "^4.1.1",
     "args": "^5.0.0",
+    "console.table": "^0.10.0",
+    "dateformat": "^3.0.3",
     "dockerode": "^2.5.7",
     "inquirer": "^6.2.0",
+    "request": "^2.88.0",
     "update-notifier": "^2.5.0"
   }
 }

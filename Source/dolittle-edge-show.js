@@ -8,10 +8,11 @@ import args from 'args';
 import { usagePrefix } from './helpers';
 import globals from './globals.js';
 
-const USAGE = 'dolittle veracity [command] [args]';
+const USAGE = 'dolittle edge show [command] [options]';
 args
-    .command('create', 'Create something from one of the boilerplates');
+    .command('locations', 'Show all locations');
+    //.command('nodes', 'Show nodes at a specific location');
     
-
+    args.parse(process.argv, {value: usagePrefix + USAGE, name: 'dolittle edge show'});
 
 if( !args.sub.length ) args.showHelp();
