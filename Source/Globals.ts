@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { applicationsManager, artifactTemplatesManager, boilerplateDiscoverers, boilerplateManagers, boilerplatesConfig, boundedContextsManager, onlineBoilerplateFinders, projectConfig } from '@dolittle/tooling.common.boilerplates';
-import { dependenciesManager, dependencyResolvers } from '@dolittle/tooling.common.dependencies';
+import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
 import { dolittleConfig, fileSystem, folders, logger } from '@dolittle/tooling.common.utilities';
 import updateNotifier from 'update-notifier';
 import { CliContext } from './CliContext';
@@ -41,7 +41,7 @@ class Globals {
         this.parser = new Parser();
         this._outputter = new Outputter();
         this.initialize();
-        this.commandManager = new CommandManager(applicationsManager, boundedContextsManager, artifactTemplatesManager, dependenciesManager, boilerplateManagers);
+        this.commandManager = new CommandManager(applicationsManager, boundedContextsManager, artifactTemplatesManager, boilerplateManagers);
         this.cliContext = new CliContext(
             process.cwd(), this._outputter, dolittleConfig, projectConfig, boilerplatesConfig, applicationsManager, artifactTemplatesManager,
             boundedContextsManager,dependencyResolvers, boilerplateManagers, boilerplateDiscoverers, onlineBoilerplateFinders[0], folders, fileSystem
@@ -51,7 +51,7 @@ class Globals {
         this.installHandlers();
         logger.transports.forEach((t: any) => t.silent = true); // Turn off winston logging
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
-        dependencyResolvers.addResolvers(new PromptDependencyResolver(dependenciesManager, dolittleConfig, this._outputter));
+        dependencyResolvers.addResolvers(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this._outputter));
     }
     
     private installHandlers() {

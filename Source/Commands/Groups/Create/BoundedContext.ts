@@ -55,9 +55,8 @@ export class BoundedContext extends Command {
                 ...context.boundedContextsManager.createAdornmentDependencies(boilerplate.language, boilerplate.name, context.namespace),
                 ...context.boundedContextsManager.createInteractionDependencies(boilerplate.language, boilerplate.name, context.namespace)
             ];
-        let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
-        let argumentDependencies = argumentDependencyResolver? dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => _.userInputType && _.userInputType === 'argument');
-            
+        let argumentDependencyResolver = <ArgumentDependencyResolver>context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
+        let argumentDependencies = dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_));
 
         this.extendHelpDocs(argumentDependencies, usage, help);
         if (parserResult.help) {

@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { ArtifactTemplate, chooseTemplate } from '@dolittle/tooling.common.boilerplates';
-import { ArgumentDependencyResolver, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
+import { ArgumentDependencyResolver, ICanResolveDependencies, promptDependencyType } from '@dolittle/tooling.common.dependencies';
 import { determineDestination } from '@dolittle/tooling.common.utilities';
 import { CliContext } from '../../../CliContext';
 import { ParserResult } from '../../../ParserResult';
@@ -55,9 +55,9 @@ export class AddCommand extends Command {
         }
 
         let dependencies = template.allDependencies;
-        let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
-        let argumentDependencies = argumentDependencyResolver? dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => _.userInputType && _.userInputType === 'argument');
-        dependencies =  argumentDependencyResolver? dependencies.filter(_ => !(<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => !(_.userInputType && _.userInputType === 'argument'));
+        let argumentDependencyResolver = <ArgumentDependencyResolver>context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
+        let argumentDependencies = dependencies.filter(_ => argumentDependencyResolver.canResolve(_));
+        dependencies = dependencies.filter(_ => !argumentDependencyResolver.canResolve(_));
         
         this.extendHelpDocs(argumentDependencies, this._usagePrefix);
         
@@ -69,7 +69,7 @@ export class AddCommand extends Command {
         let boundedContext = context.boundedContextsManager.getNearestBoundedContextConfig(context.cwd);
         if (!boundedContext) throw MissingBoundedContextError.new;
         
-        let boilerplateContext = await context.dependencyResolvers.resolve({}, argumentDependencies);
+        let boilerplateContext = await context.dependencyResolvers.resolve({}, argumentDependencies, undefined, undefined, args);
         let destinationAndName = determineDestination(template.area, template.boilerplate.language, boilerplateContext['name'], context.cwd, boundedContext.path, context.dolittleConfig);
         context.folders.makeFolderIfNotExists(destinationAndName.destination);
         boilerplateContext = await context.dependencyResolvers.resolve(boilerplateContext, dependencies, destinationAndName.destination, language, args);

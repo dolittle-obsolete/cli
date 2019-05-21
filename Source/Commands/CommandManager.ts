@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { IApplicationsManager, IArtifactTemplatesManager, IBoilerplateManagers, IBoundedContextsManager } from '@dolittle/tooling.common.boilerplates';
-import { ArgumentsNotMatchingDependenciesError, IDependenciesManager } from '@dolittle/tooling.common.dependencies';
+import { ArgumentsNotMatchingDependenciesError } from '@dolittle/tooling.common.dependencies';
 import { NotConnectedError } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { CliContext } from '../CliContext';
@@ -55,8 +55,7 @@ export class CommandManager implements ICommandManager {
     
     constructor(
         private _applicationsManager: IApplicationsManager, private _boundedContextsManager: IBoundedContextsManager, 
-        private _artifactTemplatesManager: IArtifactTemplatesManager, private _dependenciesManager: IDependenciesManager, 
-        private _boilerplateManagers: IBoilerplateManagers 
+        private _artifactTemplatesManager: IArtifactTemplatesManager, private _boilerplateManagers: IBoilerplateManagers 
     ) {
         this._commands = [];
         this._commandGroups = [];

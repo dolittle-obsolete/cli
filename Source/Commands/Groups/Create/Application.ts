@@ -47,9 +47,8 @@ export class Application extends Command {
         else boilerplate = boilerplates[0];
         
         let dependencies = boilerplate.dependencies;
-        let argumentDependencyResolver = context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
-        let argumentDependencies = argumentDependencyResolver? dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_)) : dependencies.filter(_ => _.userInputType && _.userInputType === 'argument');
-        
+        let argumentDependencyResolver = <ArgumentDependencyResolver>context.dependencyResolvers.resolvers.find(_ => _ instanceof ArgumentDependencyResolver);
+        let argumentDependencies = dependencies.filter(_ => (<ICanResolveDependencies>argumentDependencyResolver).canResolve(_));
         this.extendHelpDocs(argumentDependencies, usage);
 
         if (parserResult.help) {
