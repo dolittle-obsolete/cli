@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -45,10 +45,10 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@dolittle/tooling.common.boilerplates": "5.*",
-    "@dolittle/tooling.common.configurations": "5.*",
-    "@dolittle/tooling.common.dependencies": "5.*",
-    "@dolittle/tooling.common.utilities": "5.*",
+    "@dolittle/tooling.common.boilerplates": "5.0.*",
+    "@dolittle/tooling.common.configurations": "5.0.*",
+    "@dolittle/tooling.common.dependencies": "5.0.*",
+    "@dolittle/tooling.common.utilities": "5.0.*",
     "chalk": "^2.4.2",
     "conf": "^3.0.0",
     "cross-spawn": "^6.0.5",
