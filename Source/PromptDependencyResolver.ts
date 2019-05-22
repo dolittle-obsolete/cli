@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, promptDependencyType, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, PromptDependency, inputUserInputType, confirmUserInputType } from '@dolittle/tooling.common.dependencies';
+import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, promptDependencyType, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, PromptDependency, inputUserInputType, confirmUserInputType, discoverDependencyType } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './Outputter';
 
@@ -35,10 +35,10 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
     private createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string): InqiurerQuestion[] {
         let questions: InqiurerQuestion[] = [];
         dependencies.forEach(dep => {
-            if (dep instanceof DiscoverAndPromptDependency) {
+                if (dep instanceof DiscoverAndPromptDependency || dep.type === discoverDependencyType && (<any>dep).userInputType !== undefined) {
                 if (!destinationPath) throw MissingDestinationPath.new;
                 if (!language) throw MissingCoreLanguage.new;
-                let discoveryResult = this._discoverResolver.resolve(dep, destinationPath, language, this._dolittleConfig);
+                let discoveryResult = this._discoverResolver.resolve(<DiscoverAndPromptDependency>dep, destinationPath, language, this._dolittleConfig);
                 let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                     [discoveryResult]
                     : discoveryResult.length === 0?
@@ -51,9 +51,9 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
                                 }))
                             : discoveryResult;
                 
-                questions.push(...this.createPrompt(dep, choices))    
+                questions.push(...this.createPrompt(<DiscoverAndPromptDependency>dep, choices))    
             }
-            else if (dep instanceof PromptDependency ) questions.push(...this.createPrompt(dep));
+            else if (dep instanceof PromptDependency || dep.type === promptDependencyType && (<any>dep).userInputType !== undefined) questions.push(...this.createPrompt(<PromptDependency>dep));
             
             else {
                 this._outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);
