@@ -8,7 +8,7 @@ import { CommandGroup } from '../CommandGroup';
 import { Application } from './Application';
 import { BoundedContext } from './BoundedContext';
 
-const description = `Commands related to scaffolding Dolittle appliation structures.
+const description = `Commands related to scaffolding Dolittle application structures.
 
 Quickly get up and running by scaffolding bounded context and application skeletons.`;
 /**
@@ -26,7 +26,7 @@ class Create extends CommandGroup {
      */
     constructor(commands: Command[]) {
         super(commands, 'create', description,
-            `dolittle create <command>`, '', 'Commands related to scaffolding Dolittle appliation structures', 
+            `dolittle create <command>`, '', 'Commands related to scaffolding Dolittle application structures', 
         );
     }
 }
