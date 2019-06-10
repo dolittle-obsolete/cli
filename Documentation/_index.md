@@ -4,6 +4,7 @@ description: Learn about the Dolittle CLI
 keywords: Tools
 author: einari, woksin
 weight: 2
+repository: https://github.com/dolittle-tools/cli
 ---
 
 The dolittle CLI tool will be a convenience tool for developers working on the dolittle platform to quickly develop applications on dolittle.
