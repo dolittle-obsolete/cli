@@ -5,7 +5,6 @@
 
 import { IBoilerplateDiscoverers,  listInstalledBoilerplates as _listInstalledBoilerplates} from '@dolittle/tooling.common.boilerplates';
 import * as FsExtra from 'fs-extra';
-import path from 'path';
 import { Outputter } from '../../Outputter';
 
 /**
