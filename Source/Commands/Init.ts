@@ -2,10 +2,11 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-
-import { CliContext } from '../CliContext';
-import { ParserResult } from '../ParserResult';
-import { Command } from './Command';
+import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
+import { CliCommand } from './CliCommand';
+import { Outputter } from '../Outputter';
+import { BusyIndicator } from '../BusyIndicator';
+import hasHelpOption from '../Util/hasHelpOption';
 
 const description = `<To be implemented> Initializes the Dolittle CLI by choosing a deafult core language and a default namespace.
 
@@ -15,18 +16,20 @@ const help = [
     '\t--coreLanguage: The default core language'
 
 ].join('\n');
-export class Init extends Command {
+export class Init extends CliCommand {
     constructor() {
         super('init', description, 
             'dolittle init [-n | --namespace] [-c | --coreLanguage]', undefined, help, 'Initializes the Dolittle CLI');
     }
-    
-    async action(parserResult: ParserResult, context: CliContext) {
-        if (parserResult.help) {
-            context.outputter.print(this.helpDocs);
+
+    async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, string>, namespace?: string, 
+            outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator) {
+        if (hasHelpOption(commandOptions)) {
+            outputter.print(this.helpDocs);
             return;
         }
-        let projectConfigObj = context.projectConfig.store;
-        
+    }
+    getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[] | undefined, commandOptions?: Map<string, string> | undefined, namespace?: string | undefined): import("@dolittle/tooling.common.dependencies").IDependency[] {
+        throw new Error("Method not implemented.");
     }
 }

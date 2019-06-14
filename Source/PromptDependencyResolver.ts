@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, promptDependencyType, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, PromptDependency, inputUserInputType, confirmUserInputType, discoverDependencyType } from '@dolittle/tooling.common.dependencies';
+import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, promptDependencyType, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, PromptDependency, inputUserInputType, confirmUserInputType, discoverDependencyType, dependencyIsPromptDependency, dependencyIsDiscoverDependency } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './Outputter';
 
@@ -17,7 +17,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
          constructor(private _discoverResolver: IDependencyDiscoverResolver, private _dolittleConfig: any, private _outputter: Outputter) {
     }
     canResolve(dependency: IDependency): boolean {
-        return  (<any>dependency).userInputType !== undefined && (<any>dependency).userInputType !== argumentUserInputType;
+        return  dependencyIsPromptDependency(dependency) && dependency.userInputType !== argumentUserInputType;
     }
     
     resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
@@ -35,9 +35,9 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
     private createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string): InqiurerQuestion[] {
         let questions: InqiurerQuestion[] = [];
         dependencies.forEach(dep => {
-                if (dep instanceof DiscoverAndPromptDependency || dep.type === discoverDependencyType && (<any>dep).userInputType !== undefined) {
-                if (!destinationPath) throw MissingDestinationPath.new;
-                if (!language) throw MissingCoreLanguage.new;
+            if (dep instanceof DiscoverAndPromptDependency || dependencyIsDiscoverDependency(dep) && (<any>dep).userInputType !== undefined) {
+                if (!destinationPath) throw new MissingDestinationPath();
+                if (!language) throw new MissingCoreLanguage();
                 let discoveryResult = this._discoverResolver.resolve(<DiscoverAndPromptDependency>dep, destinationPath, language, this._dolittleConfig);
                 let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                     [discoveryResult]
@@ -48,12 +48,13 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
                                 {
                                     name: `${item.namespace}.${item.value}`, 
                                     value: {namespace: item.namespace, value: item.value} 
-                                }))
-                            : discoveryResult;
-                
-                questions.push(...this.createPrompt(<DiscoverAndPromptDependency>dep, choices))    
+                                })
+                            )
+                        : discoveryResult;
+            
+            questions.push(...this.createPrompt(<DiscoverAndPromptDependency>dep, choices));
             }
-            else if (dep instanceof PromptDependency || dep.type === promptDependencyType && (<any>dep).userInputType !== undefined) questions.push(...this.createPrompt(<PromptDependency>dep));
+            else if (dependencyIsPromptDependency(dep)) questions.push(...this.createPrompt(dep));
             
             else {
                 this._outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);

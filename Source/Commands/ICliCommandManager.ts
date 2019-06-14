@@ -3,15 +3,16 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { ParserResult } from "..//ParserResult";
-import { CliContext } from "../CliContext";
-import { Command } from "./Command";
+import { ProjectConfig } from "@dolittle/tooling.common.boilerplates";
+import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
+import { ParserResult } from "../ParserResult";
+import { CliCommand } from "./CliCommand";
 
 
 /**
  * Represents a manager for commands
  */
-export interface ICommandManager {
+export interface ICliCommandManager {
     
     /**
      * All the commands available
@@ -19,7 +20,7 @@ export interface ICommandManager {
      * @readonly
      * @memberof CommandManager
      */
-    allCommands: Command[]
+    allCommands: CliCommand[]
     /**
      * The help message
      *
@@ -31,8 +32,7 @@ export interface ICommandManager {
      * Starting point of command execution
      *
      * @param {ParserResult} parserResult
-     * @param {CliContext} cliContext
      * @memberof CommandManager
      */
-    execute(parserResult: ParserResult, cliContext: CliContext): Promise<void>
+    execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages): Promise<void>
 }

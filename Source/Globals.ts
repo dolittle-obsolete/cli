@@ -2,17 +2,16 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-
-import { applicationsManager, artifactTemplatesManager, boilerplateDiscoverers, boilerplateManagers, boilerplatesConfig, boundedContextsManager, onlineBoilerplateFinders, projectConfig } from '@dolittle/tooling.common.boilerplates';
+import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
-import { dolittleConfig, fileSystem, folders, logger } from '@dolittle/tooling.common.utilities';
+import {turnOffLogging, logger} from '@dolittle/tooling.common.logging'
 import updateNotifier from 'update-notifier';
-import { CliContext } from './CliContext';
-import { CommandManager } from './Commands/CommandManager';
-import { ICommandManager } from './Commands/ICommandManager';
+import { CliCommandManager } from './Commands/CliCommandManager';
+import { ICliCommandManager } from './Commands/ICliCommandManager';
 import { PromptDependencyResolver } from './PromptDependencyResolver';
 import { Outputter } from './Outputter';
 import { Parser } from './Parser';
+import { dolittleConfig } from '@dolittle/tooling.common.configurations';
 
 const pkg = require('../package.json');
 const notifier = updateNotifier(
@@ -29,8 +28,7 @@ const notifier = updateNotifier(
  */
 class Globals {
     readonly parser: Parser;
-    readonly commandManager: ICommandManager;
-    readonly cliContext: CliContext;
+    readonly cliCommandManager: ICliCommandManager;
     private readonly _outputter: Outputter;
 
     /**
@@ -41,17 +39,13 @@ class Globals {
         this.parser = new Parser();
         this._outputter = new Outputter();
         this.initialize();
-        this.commandManager = new CommandManager(applicationsManager, boundedContextsManager, artifactTemplatesManager, boilerplateManagers);
-        this.cliContext = new CliContext(
-            process.cwd(), this._outputter, dolittleConfig, projectConfig, boilerplatesConfig, applicationsManager, artifactTemplatesManager,
-            boundedContextsManager,dependencyResolvers, boilerplateManagers, boilerplateDiscoverers, onlineBoilerplateFinders[0], folders, fileSystem
-        );
+        this.cliCommandManager = new CliCommandManager(commandManager, dependencyResolvers);
     }
     private initialize() {
         this.installHandlers();
-        logger.transports.forEach((t: any) => t.silent = true); // Turn off winston logging
+        turnOffLogging();
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
-        dependencyResolvers.addResolvers(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this._outputter));
+        dependencyResolvers.add(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this._outputter));
     }
     
     private installHandlers() {
