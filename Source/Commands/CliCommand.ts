@@ -68,14 +68,14 @@ export class CliCommand extends Command {
     async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string,
             outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
                 if (this._derivedCommand) {
-                    this.extendHelpDocs(this.usage, this.help);
+                    this.extendHelpDocs(this.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace), 
+                                        this.usage, this.help);
                     if (hasHelpOption(commandOptions)) {
                         outputter.print(this.helpDocs);
                         return;
                     }
-                    this._derivedCommand.action(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
+                    await this._derivedCommand.action(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
                 }
-
     }
 
     getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[], commandOptions?: Map<string, any>, namespace?: string) {
@@ -99,8 +99,8 @@ export class CliCommand extends Command {
     /**
      * Extends the help docs with the given dependencies
      */
-    extendHelpDocs(usagePrefix?: string, helpPrefix?: string) {
-        let argumentDependencies: IPromptDependency[] = this.dependencies.filter(_ => dependencyIsPromptDependency(_) && _.userInputType === argumentUserInputType) as IPromptDependency[];
+    extendHelpDocs(dependencies: IDependency[], usagePrefix?: string, helpPrefix?: string) {
+        let argumentDependencies: IPromptDependency[] = dependencies.filter(_ => dependencyIsPromptDependency(_) && _.userInputType === argumentUserInputType) as IPromptDependency[];
         const usageText = argumentDependencies.map(_ => _.optional? `[--${_.name}]`: `<${_.name}>`).join(' ');
         const helpText = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
 

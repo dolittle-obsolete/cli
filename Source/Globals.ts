@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
-import {turnOffLogging, logger} from '@dolittle/tooling.common.logging'
+import {turnOffLogging} from '@dolittle/tooling.common.logging'
 import updateNotifier from 'update-notifier';
 import { CliCommandManager } from './Commands/CliCommandManager';
 import { ICliCommandManager } from './Commands/ICliCommandManager';
@@ -49,10 +49,10 @@ class Globals {
     }
     
     private installHandlers() {
-        process.on('unhandledRejection', (reason, _) => {
-            this._outputter.error(<Error>reason);
-            process.exit(1);
-        });
+        // process.on('unhandledRejection', (reason, _) => {
+        //     this._outputter.error(<Error>reason);
+        //     process.exit(1);
+        // });
     }
 }
 

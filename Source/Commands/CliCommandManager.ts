@@ -53,7 +53,6 @@ export class CliCommandManager implements ICliCommandManager {
             new Init(),
             new Check(this._dependencyResolvers)
         ];
-        this.createCliCommands();
     }
     
     get allCommands() {
@@ -76,6 +75,8 @@ export class CliCommandManager implements ICliCommandManager {
     }
     
     async execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages) {
+        this.createCliCommands();
+
         if (!parserResult.firstArg) {
             if (!parserResult.help) outputter.warn('No command is given');
             outputter.print(this.helpDocs);
@@ -105,22 +106,7 @@ export class CliCommandManager implements ICliCommandManager {
             await command.action(process.cwd(), getCoreLanguage(parserResult, projectConfig.store), [parserResult.firstArg, ...parserResult.restArgs], commandOptions, undefined, outputter, new BusyIndicator());
         } catch (error) {
             outputter.warn('Could not execute the command');
-            if (error instanceof NotConnectedToInternet) {
-                outputter.warn('No internet connection could be established');
-                process.exit(1);
-            }
-            else if (error instanceof MissingCommandArgumentError) {
-                outputter.warn('Missing required argument');
-                process.exit(1);
-            }
-            else if (error instanceof ArgumentsNotMatchingDependencies) {
-                outputter.warn('Command arguments not matching boilerplate dependencies');
-                process.exit(1);
-            }
-            else if (error instanceof CoreLanguageNotFoundError) {
-                outputter.warn('Could not get core language.')
-                process.exit(1);
-            }
+            outputter.print(command.helpDocs);
         }
     }
 
@@ -151,30 +137,5 @@ export class CliCommandManager implements ICliCommandManager {
 
             return CliNamespace.fromNamespace(namespace, cliCommands, cliCommandGroups);
         }));
-
-        // for (let i = 0; i < this._commandManager.commands.length; i++) {
-        //     this._commandManager.commands[i] = CliCommand.fromCommand(this._commandManager.commands[i]);
-        // }
-        // for (let i = 0; i < this._commandManager.commandGroups.length; i++) {
-        //     let commandGroup = this._commandManager.commandGroups[i];
-        //     for (let j = 0; j < commandGroup.commands.length; j++) {
-        //         let command = commandGroup.commands[j];
-        //         this._commandManager.commandGroups[i].commands[j] = CliCommand.fromCommand(command, commandGroup.name);
-        //     }
-        // }
-        // for (let i = 0; i < this._commandManager.namespaces.length; i++) {
-        //     let namespace = this._commandManager.namespaces[i];
-        //     for (let j = 0; j < namespace.commands.length; j++) {
-        //         let command = namespace.commands[j];
-        //         this._commandManager.namespaces[i].commands[j] = CliCommand.fromCommand(command, undefined, namespace.name);
-        //     }
-        //     for (let j = 0; j < namespace.commandGroups.length; j++) {
-        //         let commandGroup = namespace.commandGroups[i];
-        //         for (let k = 0; k < commandGroup.commands.length; k++) {
-        //             let command = commandGroup.commands[k];
-        //             this._commandManager.namespaces[i].commandGroups[j].commands[k] = CliCommand.fromCommand(command, commandGroup.name, namespace.name);
-        //         }
-        //     }
-        // }
     }
 }

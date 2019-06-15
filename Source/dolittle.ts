@@ -6,7 +6,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig } from "@dolittle/tooling.common.boilerplates";
-import '@dolittle/tooling.common.plugins';
+import {initPluginSystem, plugins} from '@dolittle/tooling.common.plugins';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './askForCoreLanguage';
@@ -14,6 +14,8 @@ import globals from './Globals';
 import { BusyIndicator } from "./BusyIndicator";
 import { Outputter } from "./Outputter";
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";
+import { NullBusyIndicator } from "@dolittle/tooling.common.utilities";
+import { commandManager } from "@dolittle/tooling.common.commands";
 
 const pkg = require('../package.json');
 const outputter = new Outputter();
@@ -21,7 +23,6 @@ const busyIndicator = new BusyIndicator();
 runDolittleCli();
 
 async function runDolittleCli() {
-
     let parseResult = globals.parser.parse();
 
     if (parseResult.version) {
@@ -46,7 +47,7 @@ async function runDolittleCli() {
             }
         }
     }
-    
+    await initPluginSystem(plugins, new NullBusyIndicator(), commandManager);
     await globals.cliCommandManager.execute(parseResult, projectConfig, outputter);
 }
 async function askToFindBoilerplates() {
