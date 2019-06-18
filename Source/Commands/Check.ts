@@ -23,12 +23,12 @@ If there is an update to the CLI you will get to choose whether to download the 
 `;
 export class Check extends CliCommand {
 
-    constructor(private _dependencyResolvers: IDependencyResolvers) {
+    constructor() {
         super('check', description, 
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
 
-    async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, string>, namespace?: string, 
+    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, string>, namespace?: string, 
                 outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
         if (hasHelpOption(commandOptions)) {
             outputter.print(this.helpDocs);
@@ -47,7 +47,7 @@ export class Check extends CliCommand {
         this.output(outputter, pkgName, currentVersion, latestVersion, sameVersion, compatibleUpgrade, majorUpgrade);
         
         if (compatibleUpgrade || majorUpgrade) {
-            const update = await this.askWhetherToUpdate(majorUpgrade);
+            const update = await this.askWhetherToUpdate(dependencyResolvers, majorUpgrade);
             let downloadPackageInfo: DownloadPackageInfo = {name: pkgName, version: latestVersion};
             if (update) {
                 downloadPackagesFromNpmSync([downloadPackageInfo], busyIndicator);
@@ -83,13 +83,13 @@ export class Check extends CliCommand {
             outputter.print(`${pkgName} ${versionText} --> ${latestVersionText}`);
     }
 
-    private async askWhetherToUpdate(majorUpgrade: boolean) {
+    private async askWhetherToUpdate(dependencyResolvers: IDependencyResolvers, majorUpgrade: boolean) {
         let dep = new PromptDependency(
             'update',
             'Whether to update CLI or not',
             'confirm',
             `There is a ${majorUpgrade? 'major update' : 'minor update'} to the CLI. Do you wish to update to latest?`);
-        let answers: {update: boolean} = await this._dependencyResolvers.resolve({}, [dep]);
+        let answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
         return answers.update;
     }
 }

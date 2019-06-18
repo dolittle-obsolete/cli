@@ -4,13 +4,13 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
+import './turnOffLogging';
+import globals from './Globals';
 import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig } from "@dolittle/tooling.common.boilerplates";
 import {initPluginSystem, plugins} from '@dolittle/tooling.common.plugins';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './askForCoreLanguage';
-import globals from './Globals';
 import { BusyIndicator } from "./BusyIndicator";
 import { Outputter } from "./Outputter";
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";

@@ -9,6 +9,7 @@ import { Outputter } from '../Outputter';
 import { BusyIndicator } from '../BusyIndicator';
 import { CliCommandGroup } from './CliCommandGroup';
 import { INamespace } from '@dolittle/tooling.common.commands';
+import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 
 /**
  * Base class for {CliNamespace} commands
@@ -54,30 +55,27 @@ export class CliNamespace extends CliCommand {
         return res.join('\n');
 
     }
-    async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
-        console.log(`Inside ${this.name} namespace`);
-        console.log(currentWorkingDirectory);
-        console.log(commandArguments);
-        console.log(commandOptions);
-        console.log(namespace);
+    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+        let firstArgument = commandArguments[0];
+        if (!firstArgument || firstArgument === '') {
+            outputter.print(this.helpDocs);
+            return;
+        }
 
-        console.log('Commands: ');
-        this.commands.forEach(_ => console.log(_.name));
-        console.log('Command groups: ');
-        this.commandGroups.forEach(_ => console.log(_.name));
-        // if (!parserResult.firstArg) {
-        //     context.outputter.print(this.helpDocs);
-        //     return;
-        // }
-        // let command = this.commands.filter(_ => _.name === parserResult.firstArg)[0];
-        // if (command) {
-        //     parserResult.firstArg = parserResult.restArgs.shift() || '';
-        //     await command.action(parserResult, context);
-        // }
-        // else {
-        //     context.outputter.warn(`No such sub command as '${parserResult.firstArg}'`);
-        //     context.outputter.print();
-        //     context.outputter.print(this.helpDocs);
-        // }
+        const isCommandGroup = this.commandGroups.map(_ => _.name).includes(firstArgument);
+        const isBasicCommand = this.commands.map(_ => _.name).includes(firstArgument);
+        let command: CliCommand | undefined
+        if (isBasicCommand) command = this.commands.find(_ => _.name === firstArgument);
+        else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === firstArgument);
+
+        if (command) {
+            commandArguments.shift();
+            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
+        }
+        else {
+            outputter.warn(`No such sub command as '${firstArgument}'`);
+            outputter.print();
+            outputter.print(this.helpDocs);
+        }
     }
 }

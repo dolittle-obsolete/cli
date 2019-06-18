@@ -4,7 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
-import {turnOffLogging} from '@dolittle/tooling.common.logging'
 import updateNotifier from 'update-notifier';
 import { CliCommandManager } from './Commands/CliCommandManager';
 import { ICliCommandManager } from './Commands/ICliCommandManager';
@@ -18,7 +17,6 @@ const notifier = updateNotifier(
     {
         pkg, 
         updateCheckInterval: 1000 * 60 * 60 * 24, // A day
-
     }
 );
 /**
@@ -43,7 +41,6 @@ class Globals {
     }
     private initialize() {
         this.installHandlers();
-        turnOffLogging();
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
         dependencyResolvers.add(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this._outputter));
     }

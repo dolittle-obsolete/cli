@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import { CliCommand } from './CliCommand';
 import { Outputter } from '../Outputter';
 import { BusyIndicator } from '../BusyIndicator';
+import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 
 /**
  * Base class for {CliCommandGroup} commands
@@ -47,16 +48,16 @@ export class CliCommandGroup extends CliCommand {
         return res.join('\n');
 
     }
-    async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
-        let firstArgument = commandArguments.shift();
-        if (!firstArgument) {
+    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+        let firstArgument = commandArguments[0];
+        if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);
             return;
         }
-        let command = this.commands.filter(_ => _.name === firstArgument)[0];
+        let command = this.commands.find(_ => _.name === firstArgument);
         if (command) {
             commandArguments.shift();
-            await command.action(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
+            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
         }
         else {
             outputter.warn(`No such sub command as '${firstArgument}'`);

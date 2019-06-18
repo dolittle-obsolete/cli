@@ -51,7 +51,7 @@ export class CliCommandManager implements ICliCommandManager {
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers) {
         this._commands = [
             new Init(),
-            new Check(this._dependencyResolvers)
+            new Check()
         ];
     }
     
@@ -103,8 +103,9 @@ export class CliCommandManager implements ICliCommandManager {
                 commandOptions.set(key, parserResult.extraOpts[key]);
             });
             if (parserResult.help) commandOptions.set('help', 'true');
-            await command.action(process.cwd(), getCoreLanguage(parserResult, projectConfig.store), [parserResult.firstArg, ...parserResult.restArgs], commandOptions, undefined, outputter, new BusyIndicator());
+            await command.action(this._dependencyResolvers, process.cwd(), getCoreLanguage(parserResult, projectConfig.store), [parserResult.firstArg, ...parserResult.restArgs], commandOptions, undefined, outputter, new BusyIndicator());
         } catch (error) {
+            outputter.error(error);
             outputter.warn('Could not execute the command');
             outputter.print(command.helpDocs);
         }
@@ -125,8 +126,8 @@ export class CliCommandManager implements ICliCommandManager {
 
         this._namespaces.push(...namespaces.map(namespace => {
 
-            let commands = this._commandManager.commands;
-            let commandGroups = this._commandManager.commandGroups;
+            let commands = namespace.commands;
+            let commandGroups = namespace.commandGroups;
 
             let cliCommands = commands.map(_ => CliCommand.fromCommand(_, undefined, namespace.name));
             let cliCommandGroups = commandGroups.map(commandGroup => {

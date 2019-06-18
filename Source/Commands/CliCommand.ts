@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Command, ICommand } from '@dolittle/tooling.common.commands';
-import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency } from '@dolittle/tooling.common.dependencies';
+import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { Outputter } from '../Outputter';
@@ -65,7 +65,7 @@ export class CliCommand extends Command {
         this.help = help;
     }
 
-    async action(currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string,
+    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string,
             outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
                 if (this._derivedCommand) {
                     this.extendHelpDocs(this.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace), 
@@ -74,7 +74,7 @@ export class CliCommand extends Command {
                         outputter.print(this.helpDocs);
                         return;
                     }
-                    await this._derivedCommand.action(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
+                    await this._derivedCommand.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
                 }
     }
 
