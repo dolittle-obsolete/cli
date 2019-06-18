@@ -17,7 +17,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
          constructor(private _discoverResolver: IDependencyDiscoverResolver, private _dolittleConfig: any, private _outputter: Outputter) {
     }
     canResolve(dependency: IDependency): boolean {
-        return  dependencyIsPromptDependency(dependency) && dependency.userInputType !== argumentUserInputType;
+        return  (dependency as any).userInputType !== undefined && (dependency as any).userInputType !== argumentUserInputType;
     }
     
     resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
