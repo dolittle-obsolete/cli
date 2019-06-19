@@ -67,15 +67,15 @@ export class CliCommand extends Command {
 
     async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string,
             outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
-                if (this._derivedCommand) {
-                    this.extendHelpDocs(this.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace), 
-                                        this.usage, this.help);
-                    if (hasHelpOption(commandOptions)) {
-                        outputter.print(this.helpDocs);
-                        return;
-                    }
-                    await this._derivedCommand.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
-                }
+        if (this._derivedCommand) {
+            this.extendHelpDocs(this.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace), 
+                                this.usage, this.help);
+            if (hasHelpOption(commandOptions)) {
+                outputter.print(this.helpDocs);
+                return;
+            }
+            await this._derivedCommand.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
+        }
     }
 
     getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[], commandOptions?: Map<string, any>, namespace?: string) {

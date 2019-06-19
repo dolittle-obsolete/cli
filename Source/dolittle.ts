@@ -7,22 +7,22 @@
 import './turnOffLogging';
 import globals from './Globals';
 import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig } from "@dolittle/tooling.common.boilerplates";
-import {initPluginSystem, plugins} from '@dolittle/tooling.common.plugins';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './askForCoreLanguage';
-import { BusyIndicator } from "./BusyIndicator";
-import { Outputter } from "./Outputter";
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";
-import { NullBusyIndicator } from "@dolittle/tooling.common.utilities";
-import { commandManager } from "@dolittle/tooling.common.commands";
+import { ICliCommandManager } from './Commands/ICliCommandManager';
+import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
+import { nodeModulesPath } from '@dolittle/tooling.common.packages';
+import { CliCommand } from './Commands/CliCommand';
+import { CliCommandGroup } from './Commands/CliCommandGroup';
+import { CliNamespace } from './Commands/CliNamespace';
 
 const pkg = require('../package.json');
-const outputter = new Outputter();
-const busyIndicator = new BusyIndicator();
 runDolittleCli();
 
 async function runDolittleCli() {
+
     let parseResult = globals.parser.parse();
 
     if (parseResult.version) {
@@ -42,20 +42,25 @@ async function runDolittleCli() {
             let boilerplatePackages = [];
             let shouldDownload = await askToFindBoilerplates();
             if (shouldDownload) {
-                boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, busyIndicator);
-                await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, busyIndicator);
+                boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, globals.busyIndicator);
+                await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, globals.busyIndicator);
             }
         }
     }
-    await initPluginSystem(plugins, new NullBusyIndicator(), commandManager);
-    await globals.cliCommandManager.execute(parseResult, projectConfig, outputter);
+    let commandManager = await globals.getCommandManager();
+    // setupTabCompletion(commandManager, globals.outputter);
+    try {
+        await commandManager.execute(parseResult, projectConfig, globals.outputter);
+    } catch(error) {
+        globals.outputter.error(error)
+    }
 }
 async function askToFindBoilerplates() {
     let answers: any = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'No boilerplates matching the tooling version was found on your system.\nDo you want to find Dolittle\'s boilerplates?'}]);   
     return answers['download'];
 }
 function printCliVersion() {
-    outputter.print(`${pkg.name} v${pkg.version}`);
+    globals.outputter.print(`${pkg.name} v${pkg.version}`);
 }
 
 function hasBoilerplates() {
@@ -65,4 +70,48 @@ function hasBoilerplates() {
 function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
     return fs.existsSync(projectConfigObj.path);
+}
+
+function setupTabCompletion(commandManager: ICliCommandManager, outputter: ICanOutputMessages) {
+    const omelette = require('omelette');
+    let commands = commandManager.commands;
+    let commandGroups = commandManager.commandGroups;
+    let namespaces = commandManager.namespaces;
+    
+    
+    try {
+        let complete = omelette('dolittle|dol');
+        if (~process.argv.indexOf('--completion')) {
+            outputter.print('Creating cli completion')
+            let tree = createCommandTree(commands, commandGroups, namespaces);
+            complete.tree(tree);
+            complete.init();
+        }
+        if (~process.argv.indexOf('--setup')) {
+            complete.setupShellInitFile();
+            outputter.print('Setup cli auto completion');
+        }
+    } catch(error) {
+
+    }
+    
+}
+
+function createCommandTree(commands: CliCommand[], commandGroups: CliCommandGroup[], namespaces: CliNamespace[]): any {
+    let tree: any = {};
+    commands.forEach(cmd => {
+        tree[cmd.name] = [];
+    });
+    commandGroups.forEach(commandGroup => {
+        tree[commandGroup.name] = commandGroup.commands.map(_ => _.name);
+    });
+    namespaces.forEach(namespace => {
+        let subTree: any = {}
+        namespace.commands.forEach(_ => subTree[_.name] = []);
+        namespace.commandGroups.forEach(commandGroup => {
+            subTree[commandGroup.name] = commandGroup.commands.map(_ => _.name);
+        })
+        tree[namespace.name] = subTree;
+    })
+    return tree;
 }

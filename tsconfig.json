@@ -22,11 +22,13 @@
         "outDir": "bin",
         "baseUrl": "./",
         "paths": {
-            "@dolittle/cli": ["Source/index.ts"]
+            "@dolittle/cli": ["Source/index.ts"],
+            "*": ["Types/*"]
         },
-        "sourceRoot": "./Source"
+        "sourceRoot": "./Source",
+        "typeRoots": ["./Types/**"]
     },
-    "exclude": ["**/*.d.ts", "**/*.js", "node_modules", "old"],
+    "exclude": ["**/*.d.ts", "**/*.js", "node_modules"],
     "include": ["**/*.ts"] 
   }
   

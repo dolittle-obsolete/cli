@@ -48,18 +48,19 @@ export class CliCommandManager implements ICliCommandManager {
     private _commandGroups: CliCommandGroup[] = [];
     private _commands: CliCommand[];
     
+    
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers) {
         this._commands = [
             new Init(),
             new Check()
         ];
+
+        this.createCliCommands();
     }
     
-    get allCommands() {
-        let commands = this._commands;
-        this._commandGroups.forEach(_ => commands.push(..._.commands));
-        return commands;
-    }
+    get commands() { return this._commands; }
+    get commandGroups() { return this._commandGroups; }
+    get namespaces() { return this._namespaces; }
 
     get helpDocs() {
         let res = [
@@ -75,7 +76,6 @@ export class CliCommandManager implements ICliCommandManager {
     }
     
     async execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages) {
-        this.createCliCommands();
 
         if (!parserResult.firstArg) {
             if (!parserResult.help) outputter.warn('No command is given');
