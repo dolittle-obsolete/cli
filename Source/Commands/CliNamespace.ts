@@ -70,7 +70,7 @@ export class CliNamespace extends CliCommand {
 
         if (command) {
             commandArguments.shift();
-            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
+            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, this.name, outputter, busyIndicator);
         }
         else {
             outputter.warn(`No such sub command as '${firstArgument}'`);
