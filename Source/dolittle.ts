@@ -13,7 +13,6 @@ import askForCoreLanguage from './askForCoreLanguage';
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";
 import { ICliCommandManager } from './Commands/ICliCommandManager';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import { nodeModulesPath } from '@dolittle/tooling.common.packages';
 import { CliCommand } from './Commands/CliCommand';
 import { CliCommandGroup } from './Commands/CliCommandGroup';
 import { CliNamespace } from './Commands/CliNamespace';

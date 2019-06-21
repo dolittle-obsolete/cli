@@ -59,7 +59,7 @@ export class CliCommand extends Command {
      */
     constructor(name: string, description: string, usage: string, group?: string, help?: string, shortDescription?: string, dependencies?: IDependency[],
         private _derivedCommand?: ICommand) {
-        super(name, description, shortDescription, dependencies)
+        super(name, description, false, shortDescription, dependencies)
         this.usage = usage;
         this.group = group;
         this.help = help;

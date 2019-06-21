@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, promptDependencyType, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, PromptDependency, inputUserInputType, confirmUserInputType, discoverDependencyType, dependencyIsPromptDependency, dependencyIsDiscoverDependency } from '@dolittle/tooling.common.dependencies';
+import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './Outputter';
 
@@ -14,22 +14,19 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
      * @param {IDependenciesManager} dependenciesManager
      * @param {any} dolittleConfig
      */
-         constructor(private _discoverResolver: IDependencyDiscoverResolver, private _dolittleConfig: any, private _outputter: Outputter) {
-    }
+    constructor(private _discoverResolver: IDependencyDiscoverResolver, private _dolittleConfig: any, private _outputter: Outputter) { }
+    
     canResolve(dependency: IDependency): boolean {
         return  (dependency as any).userInputType !== undefined && (dependency as any).userInputType !== argumentUserInputType;
     }
     
-    resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
+    async resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
         let questions = this.createQuestions(dependencies, destinationPath, coreLanguage);
-        return inquirer.prompt(questions)
-            .then((answers: any) => {
-                Object.keys(answers).forEach(name => {
-                    context[name] = answers[name];
-                });
-                
-                return context;
-            });
+        let answers = await inquirer.prompt(questions);
+        Object.keys(answers).forEach(name => {
+            context[name] = answers[name];
+        });
+        return context;
     }
 
     private createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string): InqiurerQuestion[] {

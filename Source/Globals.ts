@@ -2,8 +2,8 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
+import {initializer} from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
-import {initPluginSystem, plugins} from '@dolittle/tooling.common.plugins';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
 import updateNotifier from 'update-notifier';
 import { CliCommandManager } from './Commands/CliCommandManager';
@@ -44,11 +44,9 @@ class Globals {
     }
 
     private async init() {
-
-        await initPluginSystem(plugins, this.busyIndicator, commandManager);
+        await initializer.initialize(this.busyIndicator);
         this._cliCommandManager = new CliCommandManager(commandManager, dependencyResolvers);
-    }
-    
+    }   
 }
 
 export default new Globals();
