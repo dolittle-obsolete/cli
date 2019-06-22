@@ -16,12 +16,16 @@ import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { CliCommand } from './Commands/CliCommand';
 import { CliCommandGroup } from './Commands/CliCommandGroup';
 import { CliNamespace } from './Commands/CliNamespace';
+import { pluginDiscoverers, pluginsConfig, fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdatePlugins, plugins } from '@dolittle/tooling.common.plugins';
 
+let defaultPlugins = [
+    '@dolittle/tooling.plugin.runtime'
+];
 const pkg = require('../package.json');
 runDolittleCli();
 
 async function runDolittleCli() {
-
+    let outputter = globals.outputter;
     let parseResult = globals.parser.parse();
 
     if (parseResult.version) {
@@ -34,16 +38,18 @@ async function runDolittleCli() {
 
         projectConfig.store = {coreLanguage};
     }
+    if (!hasDefaultPlugins()) {
+        outputter.warn('Default dolittle plugins not installed.');
+        let pluginPackages = await fetchDolittlePlugins(onlineDolittlePluginsFinder, globals.busyIndicator);
+        await askToDownloadOrUpdatePlugins(pluginPackages, plugins, dependencyResolvers, globals.busyIndicator);
+    
+    }
     if (!hasBoilerplates()) {
-        let boilerplatePaths = boilerplateDiscoverers.boilerplatePaths;
-        if (boilerplatePaths.length > 0) boilerplateDiscoverers.discover();
-        else {
-            let boilerplatePackages = [];
-            let shouldDownload = await askToFindBoilerplates();
-            if (shouldDownload) {
-                boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, globals.busyIndicator);
-                await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, globals.busyIndicator);
-            }
+        let boilerplatePackages = [];
+        let shouldDownload = await askToFindBoilerplates();
+        if (shouldDownload) {
+            boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, globals.busyIndicator);
+            await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, globals.busyIndicator);
         }
     }
     let commandManager = await globals.getCommandManager();
@@ -63,8 +69,18 @@ function printCliVersion() {
 }
 
 function hasBoilerplates() {
+    let boilerplatePaths = boilerplateDiscoverers.boilerplatePaths;
+    if (boilerplatePaths.length > 0) boilerplateDiscoverers.discover();
     let boilerplatesConfigObj = boilerplatesConfig.store;
     return Object.keys(boilerplatesConfigObj).length > 0;
+}
+function hasDefaultPlugins() {
+
+    let discoveredPlugins = pluginDiscoverers.discoveredPlugins;
+    if (discoveredPlugins.length) pluginDiscoverers.discover();
+    let pluginsConfigObj = pluginsConfig.store;
+    let pluginNames = Object.keys(pluginsConfigObj); 
+    return defaultPlugins.every(_ => pluginNames.includes(_));
 }
 function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
