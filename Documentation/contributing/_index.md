@@ -1,9 +1,8 @@
 ---
 title: Contributing
 description: Learn how to contribute to the CLI tool
-keywords: Tools
+keywords: Tools, CLI, contributing
 author: einari, woksin
 ---
 
-How to contribute to the dolittle cli tool.
-
+We're happy to receive [Pull requests](https://github.com/dolittle-tools/cli/pulls) and [Issues](https://github.com/dolittle-tools/cli/issues)

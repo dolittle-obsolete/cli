@@ -1,20 +1,22 @@
 ---
 title: CLI
 description: Learn about the Dolittle CLI
-keywords: Tools
+keywords: Tools, CLI 
 author: einari, woksin
-weight: 2
+weight: 1
+repository: https://github.com/dolittle-tools/cli
 ---
 
-The dolittle CLI tool will be a convenience tool for developers working on the dolittle platform to quickly develop applications on dolittle.
-
-Using boilerplates, custom templating and configuration and [handlebars](http://handlebarsjs.com/) to easily and quickly setup entire applications and artifacts like commands and queries and more.
-
-The cli tool is currently only configured to work with dolittle projects where the bounded-context.backend is configured with language = 'csharp'. The goal of the cli tool is to ultimately be language and framework agnostic. 
+The @dolittle/cli CLI tool is a command-line tool built upon the [Dolittle tooling platform](https://github.com/dolittle-tools/common).
 
 [Download the tool](installing)
 
-To get the tool fully initialized and ready for use simply do this command:
+To initialize the tool and see its currently available functionalities simply do this command:
 ```shell
 $ dolittle
+```
+
+Use -h or --help at any time to display help.
+```shell
+$ dolittle <any command> -h
 ```
