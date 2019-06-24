@@ -11,51 +11,45 @@ import chalk from 'chalk';
 import { ParserResult } from '../ParserResult';
 import getCoreLanguage, { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
 import { MissingCommandArgumentError } from '../Util/requireArguments'
-import { CliCommand } from './CliCommand';
-import { CliCommandGroup } from './CliCommandGroup';
-import { ICliCommandManager } from './ICliCommandManager';
+import { WrappedCommand } from './WrappedCommand';
+import { WrappedCommandGroup } from './WrappedCommandGroup';
+import { ICommands } from './ICommands';
 import { Init } from './Init';
 import { Check } from './Check';
-import { CliNamespace } from './CliNamespace';
+import { WrappedNamespace } from './WrappedNamespace';
 import { BusyIndicator } from '../BusyIndicator';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
-
-Developing on the Dolittle platform should be fast, easy and fun!
-
-This tool is meant for enhancing the experience of working with a Dolittle-based application while also giving the developer an interface into the Dolittle platform.
 
 Checkout the available commands and command groups to see what the CLI tool can do.
 For further information and help on each command and command group add '-h' or '--help' to the command.
 `;
 const help = [
-    '\tnamespace: <To be implemented>',
+'\tnamespace: A group of related commands and command groups',
 '\tcommand-group: A group of related commands.',
 '\tbasic-command: Basic / global commands not related to any of the command groups',
 '\t--help: Displays usage, help and description of a command or command group',
 '\t--version: Displays the version of the CLI tool',
-'\t--debug: <To be implemented>',
 '\t--coreLang: Sets the core language for a command',
-'\t--namespace: <To be implemented>',
 ].join('\n');
 
 /**
- * Represents a manager for commands
+ * Represents an implementation of {ICommands}
  */
-export class CliCommandManager implements ICliCommandManager {
+export class Commands implements ICommands {
 
-    private _namespaces: CliNamespace[] = []
-    private _commandGroups: CliCommandGroup[] = [];
-    private _commands: CliCommand[];
+    private _namespaces: WrappedNamespace[] = []
+    private _commandGroups: WrappedCommandGroup[] = [];
+    private _commands: WrappedCommand[];
     
     
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers) {
         this._commands = [
-            new Init(),
+            // new Init(),
             new Check()
         ];
 
-        this.createCliCommands();
+        this.createWrappedCommands();
     }
     
     get commands() { return this._commands; }
@@ -85,7 +79,7 @@ export class CliCommandManager implements ICliCommandManager {
         const isCommandGroup = this._commandGroups.map(_ => _.name).includes(parserResult.firstArg);
         const isBasicCommand = this._commands.map(_ => _.name).includes(parserResult.firstArg);
         const isFirstArgNamespace = this._namespaces.map(_ => _.name).includes(parserResult.firstArg);
-        let command: CliCommand | undefined
+        let command: WrappedCommand | undefined
         if (isBasicCommand) command = this._commands.find(_ => _.name === parserResult.firstArg);
         else if (isCommandGroup) command = this._commandGroups.find(_ => _.name === parserResult.firstArg);
         else if (isFirstArgNamespace) command = this._namespaces.find(_ => _.name === parserResult.firstArg);
@@ -111,17 +105,17 @@ export class CliCommandManager implements ICliCommandManager {
         }
     }
 
-    private createCliCommands() {
+    private createWrappedCommands() {
         let commands = this._commandManager.commands;
         let commandGroups = this._commandManager.commandGroups;
         let namespaces = this._commandManager.namespaces;
 
-        this._commands.push(...commands.map(_ => CliCommand.fromCommand(_)));
+        this._commands.push(...commands.map(_ => WrappedCommand.fromCommand(_)));
         
         this._commandGroups.push(...commandGroups.map(commandGroup => {
             let commands = commandGroup.commands;
-            let cliCommands = commands.map(_ => CliCommand.fromCommand(_, commandGroup.name));
-            return CliCommandGroup.fromCommandGroup(commandGroup, cliCommands);
+            let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, commandGroup.name));
+            return WrappedCommandGroup.fromCommandGroup(commandGroup, wrappedCommands);
         }));
 
         this._namespaces.push(...namespaces.map(namespace => {
@@ -129,14 +123,14 @@ export class CliCommandManager implements ICliCommandManager {
             let commands = namespace.commands;
             let commandGroups = namespace.commandGroups;
 
-            let cliCommands = commands.map(_ => CliCommand.fromCommand(_, undefined, namespace.name));
-            let cliCommandGroups = commandGroups.map(commandGroup => {
+            let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, undefined, namespace.name));
+            let wrappedCommandGroups = commandGroups.map(commandGroup => {
                 let commands = commandGroup.commands;
-                let cliCommands = commands.map(_ => CliCommand.fromCommand(_, commandGroup.name, namespace.name));
-                return CliCommandGroup.fromCommandGroup(commandGroup, cliCommands, namespace.name);
+                let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, commandGroup.name, namespace.name));
+                return WrappedCommandGroup.fromCommandGroup(commandGroup, wrappedCommands, namespace.name);
             });
 
-            return CliNamespace.fromNamespace(namespace, cliCommands, cliCommandGroups);
+            return WrappedNamespace.fromNamespace(namespace, wrappedCommands, wrappedCommandGroups);
         }));
     }
 }

@@ -12,16 +12,16 @@ import { BusyIndicator } from '../BusyIndicator';
 import hasHelpOption from '../Util/hasHelpOption';
 
 /**
- * The base class of a command
+ * The base class of a {Command} that is wrapped to fit the needs of the CLI. 
  *
  * @export
  * @class Command
  */
-export class CliCommand extends Command {
+export class WrappedCommand extends Command {
     
     static fromCommand(command: ICommand, commandGroup?: string, namespace?: string) {
         const usage = `dolittle${namespace? ' ' + namespace : ''}${commandGroup? ' ' + commandGroup : ''} ${command.name}`;
-        return new CliCommand(command.name, command.description, usage, commandGroup, undefined, command.shortDescription, command.dependencies, command);
+        return new WrappedCommand(command.name, command.description, usage, commandGroup, undefined, command.shortDescription, command.dependencies, command);
     }
  
     /**
@@ -48,7 +48,7 @@ export class CliCommand extends Command {
     help?: string
 
     /**
-     * Creates an instance of {Command}.
+     * Creates an instance of {WrappedCommand}.
      * @param {string} name
      * @param {string} description
      * @param {string} usage

@@ -6,36 +6,36 @@
 import { ProjectConfig } from "@dolittle/tooling.common.boilerplates";
 import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
 import { ParserResult } from "../ParserResult";
-import { CliCommand } from "./CliCommand";
-import { CliCommandGroup } from "./CliCommandGroup";
-import { CliNamespace } from "./CliNamespace";
+import { WrappedCommand } from "./WrappedCommand";
+import { WrappedCommandGroup } from "./WrappedCommandGroup";
+import { WrappedNamespace } from "./WrappedNamespace";
 
 
 /**
- * Represents a manager for commands
+ * Defines a system that knows about {WrappedCommand} commands
  */
-export interface ICliCommandManager {
+export interface ICommands {
     
     /**
      * All the commands available
      *
      * @readonly
      */
-    commands: CliCommand[]
+    commands: WrappedCommand[]
 
     /**
      * All the command groups available
      *
      * @readonly
      */
-    commandGroups: CliCommandGroup[]
+    commandGroups: WrappedCommandGroup[]
 
     /**
      * All the namespaces available
      *
      * @readonly
      */
-    namespaces: CliNamespace[]
+    namespaces: WrappedNamespace[]
 
     /**
      * The help message

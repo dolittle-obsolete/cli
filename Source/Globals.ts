@@ -6,8 +6,8 @@ import {initializer} from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
 import updateNotifier from 'update-notifier';
-import { CliCommandManager } from './Commands/CliCommandManager';
-import { ICliCommandManager } from './Commands/ICliCommandManager';
+import { Commands } from './Commands/Commands';
+import { ICommands } from './Commands/ICommands';
 import { PromptDependencyResolver } from './PromptDependencyResolver';
 import { Outputter } from './Outputter';
 import { Parser } from './Parser';
@@ -32,20 +32,20 @@ class Globals {
     readonly outputter: ICanOutputMessages = new Outputter();
     readonly busyIndicator: IBusyIndicator = new BusyIndicator();
     
-    private _cliCommandManager!: ICliCommandManager;
+    private _commandsSystem!: ICommands;
     
     constructor() {
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
         dependencyResolvers.add(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this.outputter));
     }
-    async getCommandManager() {
-        if (!this._cliCommandManager) await this.init();
-        return this._cliCommandManager;
+    async getCommandsSystem() {
+        if (!this._commandsSystem) await this.init();
+        return this._commandsSystem;
     }
 
     private async init() {
         await initializer.initialize(this.busyIndicator);
-        this._cliCommandManager = new CliCommandManager(commandManager, dependencyResolvers);
+        this._commandsSystem = new Commands(commandManager, dependencyResolvers);
     }   
 }
 

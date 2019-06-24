@@ -2,54 +2,47 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import { ICommandGroup } from '@dolittle/tooling.common.commands';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { CliCommand } from './CliCommand';
+import { WrappedCommand } from './WrappedCommand';
 import { Outputter } from '../Outputter';
 import { BusyIndicator } from '../BusyIndicator';
-import { CliCommandGroup } from './CliCommandGroup';
-import { INamespace } from '@dolittle/tooling.common.commands';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 
 /**
- * Base class for {CliNamespace} commands
+ * Base class for {WrappedCommandGroup} commands
  *
  * @export
- * @class CliNamespace
- * @extends {CliCommand}
+ * @class WrappedCommandGroup
+ * @extends {Command}
  */
-export class CliNamespace extends CliCommand {
+export class WrappedCommandGroup extends WrappedCommand {
     
-    readonly commands: CliCommand[] = [];
-    readonly commandGroups: CliCommandGroup[] = [];
+    readonly commands: WrappedCommand[] = [];
 
-    static fromNamespace(namespace: INamespace, commands: CliCommand[], commandGroups: CliCommandGroup[]) {
-        const usage = `dolittle ${namespace.name} <command-group> <command>`;
-        return new CliNamespace(namespace.name, commands, commandGroups, namespace.description, usage, undefined, namespace.shortDescription);
+    static fromCommandGroup(commandGroup: ICommandGroup, commands: WrappedCommand[], namespace?: string) {
+        const usage = `dolittle ${commandGroup.name} <command>`;
+        return new WrappedCommandGroup(commandGroup.name, commands, commandGroup.description, usage, undefined, commandGroup.shortDescription);
     }
-
     /**
-     * Instantiates an instance of {CliNamespace}.
+     * Instantiates an instance of {WrappedCommandGroup}.
      * @param {string} name
-     * @param {CliCommand[]} commands
-     * @param {CliCommandGroup[]} commandGroups
+     * @param {WrappedCommand[]} commands
      * @param {string} description
      * @param {string} usage
      * @param {string} [help]
      * @param {string} [shortDescription]
      */
-    constructor(name: string, commands: CliCommand[], commandGroups: CliCommandGroup[], description: string, usage: string, help?: string, shortDescription?: string) {
-        super(name, description, usage, undefined, help, shortDescription);
-        this.commands = commands;
-        this.commandGroups = commandGroups;
-        
+    constructor(name: string, commands: WrappedCommand[], description: string, usage: string, help?: string, shortDescription?: string) {
+        super(name, description, usage, name, help, shortDescription);
+        this.commands = commands;   
     }
 
     get helpDocs() {
         let res = [chalk.bold('Usage:'), `\t${this.usage}`];
         res.push('', this.description);
         if (this.commands.length > 0) res.push('', chalk.bold('Commands:'), this.commands.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
-        if (this.commandGroups.length > 0) res.push('', chalk.bold('Command groups:'), this.commandGroups.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
         if (this.help) res.push('', chalk.bold('Help:'), this.help);
         
         return res.join('\n');
@@ -61,16 +54,10 @@ export class CliNamespace extends CliCommand {
             outputter.print(this.helpDocs);
             return;
         }
-
-        const isCommandGroup = this.commandGroups.map(_ => _.name).includes(firstArgument);
-        const isBasicCommand = this.commands.map(_ => _.name).includes(firstArgument);
-        let command: CliCommand | undefined
-        if (isBasicCommand) command = this.commands.find(_ => _.name === firstArgument);
-        else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === firstArgument);
-
+        let command = this.commands.find(_ => _.name === firstArgument);
         if (command) {
             commandArguments.shift();
-            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, this.name, outputter, busyIndicator);
+            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
         }
         else {
             outputter.warn(`No such sub command as '${firstArgument}'`);
