@@ -6,13 +6,13 @@
 import { ProjectConfig } from "@dolittle/tooling.common.boilerplates";
 import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
 import { ParserResult } from "../ParserResult";
-import { WrappedCommand } from "./WrappedCommand";
-import { WrappedCommandGroup } from "./WrappedCommandGroup";
-import { WrappedNamespace } from "./WrappedNamespace";
+import { Command } from "./Command";
+import { CommandGroup } from "./CommandGroup";
+import { Namespace } from "./Namespace";
 
 
 /**
- * Defines a system that knows about {WrappedCommand} commands
+ * Defines a system that knows about {Command} commands
  */
 export interface ICommands {
     
@@ -21,21 +21,21 @@ export interface ICommands {
      *
      * @readonly
      */
-    commands: WrappedCommand[]
+    commands: Command[]
 
     /**
      * All the command groups available
      *
      * @readonly
      */
-    commandGroups: WrappedCommandGroup[]
+    commandGroups: CommandGroup[]
 
     /**
      * All the namespaces available
      *
      * @readonly
      */
-    namespaces: WrappedNamespace[]
+    namespaces: Namespace[]
 
     /**
      * The help message

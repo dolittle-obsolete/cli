@@ -11,12 +11,12 @@ import chalk from 'chalk';
 import { ParserResult } from '../ParserResult';
 import getCoreLanguage, { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
 import { MissingCommandArgumentError } from '../Util/requireArguments'
-import { WrappedCommand } from './WrappedCommand';
-import { WrappedCommandGroup } from './WrappedCommandGroup';
+import { Command } from './Command';
+import { CommandGroup } from './CommandGroup';
 import { ICommands } from './ICommands';
 import { Init } from './Init';
 import { Check } from './Check';
-import { WrappedNamespace } from './WrappedNamespace';
+import { Namespace } from './Namespace';
 import { BusyIndicator } from '../BusyIndicator';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
@@ -38,9 +38,9 @@ const help = [
  */
 export class Commands implements ICommands {
 
-    private _namespaces: WrappedNamespace[] = []
-    private _commandGroups: WrappedCommandGroup[] = [];
-    private _commands: WrappedCommand[];
+    private _namespaces: Namespace[] = []
+    private _commandGroups: CommandGroup[] = [];
+    private _commands: Command[];
     
     
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers) {
@@ -49,7 +49,7 @@ export class Commands implements ICommands {
             new Check()
         ];
 
-        this.createWrappedCommands();
+        this.createCommands();
     }
     
     get commands() { return this._commands; }
@@ -79,7 +79,7 @@ export class Commands implements ICommands {
         const isCommandGroup = this._commandGroups.map(_ => _.name).includes(parserResult.firstArg);
         const isBasicCommand = this._commands.map(_ => _.name).includes(parserResult.firstArg);
         const isFirstArgNamespace = this._namespaces.map(_ => _.name).includes(parserResult.firstArg);
-        let command: WrappedCommand | undefined
+        let command: Command | undefined
         if (isBasicCommand) command = this._commands.find(_ => _.name === parserResult.firstArg);
         else if (isCommandGroup) command = this._commandGroups.find(_ => _.name === parserResult.firstArg);
         else if (isFirstArgNamespace) command = this._namespaces.find(_ => _.name === parserResult.firstArg);
@@ -105,32 +105,32 @@ export class Commands implements ICommands {
         }
     }
 
-    private createWrappedCommands() {
+    private createCommands() {
         let commands = this._commandManager.commands;
         let commandGroups = this._commandManager.commandGroups;
         let namespaces = this._commandManager.namespaces;
 
-        this._commands.push(...commands.map(_ => WrappedCommand.fromCommand(_)));
+        this._commands.push(...commands.map(_ => Command.fromCommand(_)));
         
         this._commandGroups.push(...commandGroups.map(commandGroup => {
-            let commands = commandGroup.commands;
-            let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, commandGroup.name));
-            return WrappedCommandGroup.fromCommandGroup(commandGroup, wrappedCommands);
+            let baseCommands = commandGroup.commands;
+            let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name));
+            return CommandGroup.fromCommandGroup(commandGroup, commands);
         }));
 
         this._namespaces.push(...namespaces.map(namespace => {
 
-            let commands = namespace.commands;
-            let commandGroups = namespace.commandGroups;
+            let baseCommands = namespace.commands;
+            let baseCommandGroups = namespace.commandGroups;
 
-            let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, undefined, namespace.name));
-            let wrappedCommandGroups = commandGroups.map(commandGroup => {
-                let commands = commandGroup.commands;
-                let wrappedCommands = commands.map(_ => WrappedCommand.fromCommand(_, commandGroup.name, namespace.name));
-                return WrappedCommandGroup.fromCommandGroup(commandGroup, wrappedCommands, namespace.name);
+            let commands = baseCommands.map(_ => Command.fromCommand(_, undefined, namespace.name));
+            let commandGroups = baseCommandGroups.map(commandGroup => {
+                let baseCommands = commandGroup.commands;
+                let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name, namespace.name));
+                return CommandGroup.fromCommandGroup(commandGroup, commands, namespace.name);
             });
 
-            return WrappedNamespace.fromNamespace(namespace, wrappedCommands, wrappedCommandGroups);
+            return Namespace.fromNamespace(namespace, commands, commandGroups);
         }));
     }
 }

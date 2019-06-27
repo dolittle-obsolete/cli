@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { WrappedCommand } from '../Commands/WrappedCommand';
+import { Command } from '../Commands/Command';
 import { Outputter } from '../Outputter';
 
 /**
@@ -15,7 +15,7 @@ import { Outputter } from '../Outputter';
  * @param {string[]} args The given arguments. 
  * @param {...string} argumentMessages A list of error messages for when a required argument is missing.
  */
-export default function requireArguments(command: WrappedCommand, outputter: Outputter, args: string[], ...argumentMessages: string[]) {
+export default function requireArguments(command: Command, outputter: Outputter, args: string[], ...argumentMessages: string[]) {
     for (let i = 0; i < argumentMessages.length; i++) {
         let msg = argumentMessages[i];
         if (!args[i]) {

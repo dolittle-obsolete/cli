@@ -13,9 +13,9 @@ import askForCoreLanguage from './askForCoreLanguage';
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";
 import { ICommands } from './Commands/ICommands';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import { WrappedCommand } from './Commands/WrappedCommand';
-import { WrappedCommandGroup } from './Commands/WrappedCommandGroup';
-import { WrappedNamespace } from './Commands/WrappedNamespace';
+import { Command } from './Commands/Command';
+import { CommandGroup } from './Commands/CommandGroup';
+import { Namespace } from './Commands/Namespace';
 import { pluginDiscoverers, pluginsConfig, fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdatePlugins, plugins } from '@dolittle/tooling.common.plugins';
 
 let defaultPlugins = [
@@ -112,7 +112,7 @@ function setupTabCompletion(commandManager: ICommands, outputter: ICanOutputMess
     
 }
 
-function createCommandTree(commands: WrappedCommand[], commandGroups: WrappedCommandGroup[], namespaces: WrappedNamespace[]): any {
+function createCommandTree(commands: Command[], commandGroups: CommandGroup[], namespaces: Namespace[]): any {
     let tree: any = {};
     commands.forEach(cmd => {
         tree[cmd.name] = [];
