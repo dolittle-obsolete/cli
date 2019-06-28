@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Command, ICommand } from '@dolittle/tooling.common.commands';
+import { Command as BaseCommand, ICommand } from '@dolittle/tooling.common.commands';
 import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
@@ -12,16 +12,16 @@ import { BusyIndicator } from '../BusyIndicator';
 import hasHelpOption from '../Util/hasHelpOption';
 
 /**
- * The base class of a command
+ * The base class of a {Command} that is wrapped to fit the needs of the CLI. 
  *
  * @export
  * @class Command
  */
-export class CliCommand extends Command {
+export class Command extends BaseCommand {
     
     static fromCommand(command: ICommand, commandGroup?: string, namespace?: string) {
         const usage = `dolittle${namespace? ' ' + namespace : ''}${commandGroup? ' ' + commandGroup : ''} ${command.name}`;
-        return new CliCommand(command.name, command.description, usage, commandGroup, undefined, command.shortDescription, command.dependencies, command);
+        return new Command(command.name, command.description, usage, commandGroup, undefined, command.shortDescription, command.dependencies, command);
     }
  
     /**

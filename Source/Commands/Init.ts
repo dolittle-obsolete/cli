@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
-import { CliCommand } from './CliCommand';
+import { Command } from './Command';
 import { Outputter } from '../Outputter';
 import { BusyIndicator } from '../BusyIndicator';
 import hasHelpOption from '../Util/hasHelpOption';
@@ -17,7 +17,7 @@ const help = [
     '\t--coreLanguage: The default core language'
 
 ].join('\n');
-export class Init extends CliCommand {
+export class Init extends Command {
     constructor() {
         super('init', description, 
             'dolittle init [-n | --namespace] [-c | --coreLanguage]', undefined, help, 'Initializes the Dolittle CLI');

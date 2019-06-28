@@ -8,7 +8,7 @@ import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.uti
 import chalk from 'chalk';
 import { Outputter } from '../Outputter';
 import { BusyIndicator } from '../BusyIndicator';
-import { CliCommand } from './CliCommand';
+import { Command } from './Command';
 import hasHelpOption from '../Util/hasHelpOption';
 
 const pkg = require('../../package.json');
@@ -21,7 +21,7 @@ The version text is color coded:
 
 If there is an update to the CLI you will get to choose whether to download the latest one from NPM.
 `;
-export class Check extends CliCommand {
+export class Check extends Command {
 
     constructor() {
         super('check', description, 

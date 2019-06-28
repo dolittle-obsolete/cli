@@ -11,11 +11,11 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './askForCoreLanguage';
 import { dependencyResolvers } from "@dolittle/tooling.common.dependencies";
-import { ICliCommandManager } from './Commands/ICliCommandManager';
+import { ICommands } from './Commands/ICommands';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import { CliCommand } from './Commands/CliCommand';
-import { CliCommandGroup } from './Commands/CliCommandGroup';
-import { CliNamespace } from './Commands/CliNamespace';
+import { Command } from './Commands/Command';
+import { CommandGroup } from './Commands/CommandGroup';
+import { Namespace } from './Commands/Namespace';
 import { pluginDiscoverers, pluginsConfig, fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdatePlugins, plugins } from '@dolittle/tooling.common.plugins';
 
 let defaultPlugins = [
@@ -52,7 +52,7 @@ async function runDolittleCli() {
             await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, globals.busyIndicator);
         }
     }
-    let commandManager = await globals.getCommandManager();
+    let commandManager = await globals.getCommandsSystem();
     // setupTabCompletion(commandManager, globals.outputter);
     try {
         await commandManager.execute(parseResult, projectConfig, globals.outputter);
@@ -87,7 +87,7 @@ function hasProjectConfiguration() {
     return fs.existsSync(projectConfigObj.path);
 }
 
-function setupTabCompletion(commandManager: ICliCommandManager, outputter: ICanOutputMessages) {
+function setupTabCompletion(commandManager: ICommands, outputter: ICanOutputMessages) {
     const omelette = require('omelette');
     let commands = commandManager.commands;
     let commandGroups = commandManager.commandGroups;
@@ -112,7 +112,7 @@ function setupTabCompletion(commandManager: ICliCommandManager, outputter: ICanO
     
 }
 
-function createCommandTree(commands: CliCommand[], commandGroups: CliCommandGroup[], namespaces: CliNamespace[]): any {
+function createCommandTree(commands: Command[], commandGroups: CommandGroup[], namespaces: Namespace[]): any {
     let tree: any = {};
     commands.forEach(cmd => {
         tree[cmd.name] = [];
