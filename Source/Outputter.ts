@@ -11,6 +11,7 @@ export class Outputter implements ICanOutputMessages{
     print(...args: any[]) {
         console.log(...args);
     }
+
     warn(...args: any[]) {
         console.warn(...args.map(_ => chalk.yellow(_)));
     }
@@ -19,5 +20,9 @@ export class Outputter implements ICanOutputMessages{
         if (args && args.length > 0) {
             console.error(...args.map(_ => chalk.red(_)));
         }
+    }
+
+    table(data: any[]) {
+        console.table(data);
     }
 }
