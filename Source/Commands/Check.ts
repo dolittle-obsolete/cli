@@ -47,7 +47,7 @@ export class Check extends Command {
         this.output(outputter, pkgName, currentVersion, latestVersion, sameVersion, compatibleUpgrade, majorUpgrade);
         
         if (compatibleUpgrade || majorUpgrade) {
-            const update = await this.askWhetherToUpdate(dependencyResolvers, majorUpgrade);
+            const update = await this.askWhetherToUpdate(dependencyResolvers);
             let downloadPackageInfo: DownloadPackageInfo = {name: pkgName, version: latestVersion};
             if (update) {
                 downloadPackagesFromNpmSync([downloadPackageInfo], busyIndicator);
@@ -83,12 +83,12 @@ export class Check extends Command {
             outputter.print(`${pkgName} ${versionText} --> ${latestVersionText}`);
     }
 
-    private async askWhetherToUpdate(dependencyResolvers: IDependencyResolvers, majorUpgrade: boolean) {
+    private async askWhetherToUpdate(dependencyResolvers: IDependencyResolvers) {
         let dep = new PromptDependency(
             'update',
             'Whether to update CLI or not',
             'confirm',
-            `There is a ${majorUpgrade? 'major update' : 'minor update'} to the CLI. Do you wish to update to latest?`);
+            `There is a new version of the CLI. Do you wish to update to latest?`);
         let answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
         return answers.update;
     }
