@@ -1,12 +1,12 @@
 ---
 title: CLI Commands
 description: Learn about the different CLI commands
-keywords: Tools
+keywords: Tools, CLI, commands
 author: einari, woksin
 ---
 
 An overview of the dolittle cli commands.
 
-{{% notice warning %}}
-At the moment there is no input validation on the arguments given to the 'create' and 'add' commands. Note that there might be problems and undefined behavior if you decide to use arguments that consists of spaces (' ') and dashes ('-') and other special characters.
-{{% /notice %}}
+Unlike most command line tools, @dolittle/cli is mostly decoupled from the commands and functionalities it can provide. It instead relies on the [Dolittle tooling platform](https://www.github.com/dolittle-tools/common) and plugins to provide the functionalities / commands. 
+
+This mean that in of itself @dolittle/cli does not know about any commands that aren't strictly related to the CLI tool itself (like 'dolittle check').

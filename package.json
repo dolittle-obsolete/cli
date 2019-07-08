@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "4.2.0",
+  "version": "6.0.1",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io",
   "author": "Dolittle",
@@ -9,62 +9,52 @@
     "type": "git",
     "url": "https://github.com/dolittle-tools/cli.git"
   },
-  "main": "bin/dolittle.js",
-  "module": "bin/dolittle.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "files": [
     "bin"
   ],
   "preferGlobal": true,
   "bin": {
-    "dolittle": "bin/dolittle.js",
-    "dolittle-cluster": "bin/dolittle-cluster.js",
-    "dolittle-cluster-info": "bin/dolittle-cluster-info.js",
-    "dolittle-cluster-add": "bin/dolittle-cluster-add.js",
-    "dolittle-create": "bin/dolittle-create.js",
-    "dolittle-create-application": "bin/dolittle-create-application.js",
-    "dolittle-create-boundedcontext": "bin/dolittle-create-boundedcontext.js",
-    "dolittle-deploy": "bin/dolittle-deploy.js",
-    "dolittle-add": "bin/dolittle-add.js",
-    "dolittle-add-command": "bin/dolittle-add-command.js",
-    "dolittle-add-event": "bin/dolittle-add-event.js",
-    "dolittle-add-readmodel": "bin/dolittle-add-readmodel.js",
-    "dolittle-add-aggregateroot": "bin/dolittle-add-aggregateroot.js",
-    "dolittle-add-query": "bin/dolittle-add-query.js",
-    "dolittle-add-queryfor": "bin/dolittle-add-queryfor.js",
-    "dolittle-add-eventprocessor": "bin/dolittle-add-eventprocessor.js",
-    "dolittle-add-commandhandler": "bin/dolittle-add-commandhandler.js",
-    "dolittle-add-concept": "bin/dolittle-add-concept.js",
-    "dolittle-add-intconcept": "bin/dolittle-add-intconcept.js",
-    "dolittle-add-stringconcept": "bin/dolittle-add-stringconcept.js",
-    "dolittle-add-guidconcept": "bin/dolittle-add-guidconcept.js",
-    "dolittle-run": "bin/dolittle-run.js",
-    "dolittle-veracity": "bin/dolittle-veracity.js",
-    "dolittle-veracity-create": "bin/dolittle-veracity-create.js",
-    "dolittle-veracity-create-boundedcontext": "bin/dolittle-veracity-create-boundedcontext.js",
-    "dolittle-add-feature": "bin/dolittle-add-feature.js",
-    "dolittle-boilerplates": "bin/dolittle-boilerplates.js",
-    "dolittle-boilerplates-list": "bin/dolittle-boilerplates-list.js",
-    "dolittle-boilerplates-installed": "bin/dolittle-boilerplates-installed.js",
-    "dolittle-boilerplates-online": "bin/dolittle-boilerplates-online.js",
-    "dolittle-boilerplates-dolittle": "bin/dolittle-boilerplates-dolittle.js",
-    "dolittle-boilerplates-discover": "bin/dolittle-boilerplates-discover.js",
-    "dolittle-boilerplates-check": "bin/dolittle-boilerplates-check.js"
+    "dolittle": "bin/dolittle.js"
   },
+  "main": "bin/index.js",
   "scripts": {
-    "build": "rm -rf bin && npx babel Source --ignore **/for_* -d bin --source-maps inline",
+    "build": "yarn clean && tsc",
+    "clean": "rimraf bin",
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "@dolittle/build": "~6.2.1"
+    "@types/debug": "^4.1.4",
+    "@types/inquirer": "^6.0.1",
+    "@types/minimist": "^1.2.0",
+    "@types/node": "12.0.0",
+    "@types/update-notifier": "^2.5.0",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@dolittle/tooling.common": "^5.0.0-alpha.2",
-    "args": "^5.0.0",
-    "chalk": "^2.4.2",
-    "dockerode": "^2.5.7",
-    "inquirer": "^6.2.2",
-    "ora": "^3.1.0",
-    "semver": "^5.6.0",
-    "update-notifier": "^2.5.0"
+    "@dolittle/tooling.common": "6.*",
+    "@dolittle/tooling.common.boilerplates": "6.*",
+    "@dolittle/tooling.common.commands": "6.*",
+    "@dolittle/tooling.common.configurations": "6.*",
+    "@dolittle/tooling.common.dependencies": "6.*",
+    "@dolittle/tooling.common.files": "6.*",
+    "@dolittle/tooling.common.logging": "6.*",
+    "@dolittle/tooling.common.packages": "6.*",
+    "@dolittle/tooling.common.plugins": "6.*",
+    "@dolittle/tooling.common.utilities": "6.*",
+    "chalk": "2.4.2",
+    "conf": "3.0.0",
+    "debug": "4.1.1",
+    "inquirer": "6.4.1",
+    "minimist": "1.2.0",
+    "omelette": "0.4.12",
+    "ora": "3.4.0",
+    "update-notifier": "2.5.0"
   }
 }
