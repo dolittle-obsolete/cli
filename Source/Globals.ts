@@ -12,7 +12,7 @@ import { PromptDependencyResolver } from './PromptDependencyResolver';
 import { Outputter } from './Outputter';
 import { Parser } from './Parser';
 import { dolittleConfig } from '@dolittle/tooling.common.configurations';
-import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
+import { ICanOutputMessages, IBusyIndicator, NullBusyIndicator } from '@dolittle/tooling.common.utilities';
 import { BusyIndicator } from './BusyIndicator';
 
 const pkg = require('../package.json');
@@ -44,7 +44,7 @@ class Globals {
     }
 
     private async init() {
-        await initializer.initialize(this.busyIndicator);
+        await initializer.initialize(new NullBusyIndicator());
         this._commandsSystem = new Commands(commandManager, dependencyResolvers);
     }   
 }
