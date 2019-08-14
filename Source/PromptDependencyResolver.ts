@@ -29,7 +29,7 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
         return context;
     }
 
-    private async createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string): Promise<InqiurerQuestion[]> {
+    private async createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string) {
         let questions: InqiurerQuestion[] = [];
         for (let dep of dependencies) {
             if (dep instanceof DiscoverAndPromptDependency || dependencyIsDiscoverDependency(dep) && (<any>dep).userInputType !== undefined) {
@@ -78,14 +78,14 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
         }
     }
     
-    private createInputPrompt(name: string, message: string): InqiurerQuestion[]{
+    private createInputPrompt(name: string, message: string) {
         return [{
             type: 'input',
             name: name,
             message: message || ''
         }];
     }
-    private createListPrompt(dependency: IPromptDependency, message: string, choices: any[] = []): InqiurerQuestion[] {
+    private createListPrompt(dependency: IPromptDependency, message: string, choices: any[] = []) {
         if (! dependency.customInput) {
             return [
                 {
@@ -117,7 +117,7 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
             ];
         }
     }
-    private createCheckboxPrompt(dependency: IPromptDependency, message: string, choices: any[] = []): InqiurerQuestion[] {
+    private createCheckboxPrompt(dependency: IPromptDependency, message: string, choices: any[] = []) {
         if (! dependency.customInput) {
             return [
                 {

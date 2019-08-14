@@ -79,7 +79,7 @@ async function hasDefaultPlugins() {
         discoveredPlugins = await plugins.getPluginPackages();
     }
     
-    return defaultPlugins.every(_ => discoveredPlugins.map(_ => _.name).includes(_));
+    return defaultPlugins.every(_ => discoveredPlugins.map(_ => _.packageJson.name).includes(_));
 }
 function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
