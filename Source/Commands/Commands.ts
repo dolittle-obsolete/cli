@@ -4,8 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { ProjectConfig } from '@dolittle/tooling.common.boilerplates';
 import { ICommandManager } from '@dolittle/tooling.common.commands';
-import { IDependencyResolvers, ArgumentsNotMatchingDependencies } from '@dolittle/tooling.common.dependencies';
-import { NotConnectedToInternet } from '@dolittle/tooling.common.packages';
+import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
+
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { ParserResult } from '../ParserResult';
@@ -18,6 +18,7 @@ import { Init } from './Init';
 import { Check } from './Check';
 import { Namespace } from './Namespace';
 import { BusyIndicator } from '../BusyIndicator';
+import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
 
@@ -43,10 +44,11 @@ export class Commands implements ICommands {
     private _commands: Command[];
     
     
-    constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers) {
+    constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers, 
+        private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) {
         this._commands = [
             // new Init(),
-            new Check()
+            new Check(this._latestPackageVersionFinder, this._packageDownloader, this._connectionChecker)
         ];
 
         this.createCommands();

@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 import { PromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
-import { requireInternet, getLatestVersionFromNpm, isCompatibleUpgrade, isGreaterVersion, downloadPackagesFromNpmSync, DownloadPackageInfo } from '@dolittle/tooling.common.packages';
+import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { Outputter } from '../Outputter';
@@ -23,7 +23,7 @@ If there is an update to the CLI you will get to choose whether to download the 
 `;
 export class Check extends Command {
 
-    constructor() {
+    constructor(private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) {
         super('check', description, 
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
@@ -34,12 +34,10 @@ export class Check extends Command {
             outputter.print(this.helpDocs);
             return;
         }
-        await requireInternet(busyIndicator);
-        if (busyIndicator.isBusy) busyIndicator.stop()
+        await requireInternet(this._connectionChecker, busyIndicator);
         const currentVersion = pkg.version;
         const pkgName = pkg.name;
-        const latestVersion = await getLatestVersionFromNpm(pkg.name, busyIndicator);
-        if (busyIndicator.isBusy) busyIndicator.stop();
+        const latestVersion = await this._latestPackageVersionFinder.find(pkg.name);
         
         const sameVersion = currentVersion === latestVersion;
         const compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
@@ -50,8 +48,7 @@ export class Check extends Command {
             const update = await this.askWhetherToUpdate(dependencyResolvers);
             let downloadPackageInfo: DownloadPackageInfo = {name: pkgName, version: latestVersion};
             if (update) {
-                downloadPackagesFromNpmSync([downloadPackageInfo], busyIndicator);
-                if (busyIndicator.isBusy) busyIndicator.stop();
+                await this._packageDownloader.download([downloadPackageInfo]);
             }
         }
     }

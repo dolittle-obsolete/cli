@@ -4,9 +4,8 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import './turnOffLogging';
 import globals from './Globals';
-import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig } from "@dolittle/tooling.common.boilerplates";
+import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig, boilerplatesLoader } from "@dolittle/tooling.common.boilerplates";
 import fs from 'fs';
 import inquirer from 'inquirer';
 import askForCoreLanguage from './askForCoreLanguage';
@@ -16,7 +15,8 @@ import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { Command } from './Commands/Command';
 import { CommandGroup } from './Commands/CommandGroup';
 import { Namespace } from './Commands/Namespace';
-import { pluginDiscoverers, pluginsConfig, fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdatePlugins, plugins } from '@dolittle/tooling.common.plugins';
+import { fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdatePlugins, plugins } from '@dolittle/tooling.common.plugins';
+import { connectionChecker, npmPackageDownloader } from '@dolittle/tooling.common.packages';
 
 let defaultPlugins = [
     '@dolittle/tooling.plugin.runtime'
@@ -38,18 +38,17 @@ async function runDolittleCli() {
 
         projectConfig.store = {coreLanguage};
     }
-    if (!hasDefaultPlugins()) {
+    if (! (await hasDefaultPlugins())) {
         outputter.warn('Default dolittle plugins not installed.');
-        let pluginPackages = await fetchDolittlePlugins(onlineDolittlePluginsFinder, globals.busyIndicator);
-        await askToDownloadOrUpdatePlugins(pluginPackages, plugins, dependencyResolvers, globals.busyIndicator);
+        let pluginPackages = await fetchDolittlePlugins(onlineDolittlePluginsFinder, connectionChecker, globals.busyIndicator);
+        await askToDownloadOrUpdatePlugins(pluginPackages, plugins, dependencyResolvers, npmPackageDownloader, connectionChecker, globals.busyIndicator);
     
     }
     if (!hasBoilerplates()) {
-        let boilerplatePackages = [];
         let shouldDownload = await askToFindBoilerplates();
         if (shouldDownload) {
-            boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, globals.busyIndicator);
-            await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, dependencyResolvers, globals.busyIndicator);
+            let boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, connectionChecker, globals.busyIndicator);
+            await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, boilerplatesLoader, dependencyResolvers, npmPackageDownloader, connectionChecker, globals.busyIndicator);
         }
     }
     let commandManager = await globals.getCommandsSystem();
@@ -69,18 +68,18 @@ function printCliVersion() {
 }
 
 function hasBoilerplates() {
-    let boilerplatePaths = boilerplateDiscoverers.boilerplatePaths;
-    if (boilerplatePaths.length > 0) boilerplateDiscoverers.discover();
     let boilerplatesConfigObj = boilerplatesConfig.store;
     return Object.keys(boilerplatesConfigObj).length > 0;
 }
-function hasDefaultPlugins() {
+async function hasDefaultPlugins() {
 
-    let discoveredPlugins = pluginDiscoverers.discoveredPlugins;
-    if (discoveredPlugins.length) pluginDiscoverers.discover();
-    let pluginsConfigObj = pluginsConfig.store;
-    let pluginNames = Object.keys(pluginsConfigObj); 
-    return defaultPlugins.every(_ => pluginNames.includes(_));
+    let discoveredPlugins = await plugins.getPluginPackages();
+    if (discoveredPlugins.length === 0) {
+        await plugins.discoverNewPlugins();
+        discoveredPlugins = await plugins.getPluginPackages();
+    }
+    
+    return defaultPlugins.every(_ => discoveredPlugins.map(_ => _.name).includes(_));
 }
 function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
