@@ -43,6 +43,7 @@ export class Commands implements ICommands {
     private _commandGroups: CommandGroup[] = [];
     private _commands: Command[];
     
+    private _isInitialized = false;
     
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers, 
         private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) {
@@ -50,14 +51,23 @@ export class Commands implements ICommands {
             // new Init(),
             new Check(this._latestPackageVersionFinder, this._packageDownloader, this._connectionChecker)
         ];
-
-        this.createCommands();
     }
     
-    get commands() { return this._commands; }
-    get commandGroups() { return this._commandGroups; }
-    get namespaces() { return this._namespaces; }
+    get commands() { 
+        return this._commands;
+    }
+    get commandGroups() { 
+        return this._commandGroups;
+    }
+    get namespaces() { 
+        return this._namespaces;
+    }
 
+    get isInitialized() {
+        return this._isInitialized;
+    }
+
+    // init - creates commands from command manager
     get helpDocs() {
         let res = [
             chalk.bold('Usage:'),
@@ -70,9 +80,17 @@ export class Commands implements ICommands {
         if (help) res.push('', chalk.bold('Help:'), help);
         return res.join('\n');
     }
+
+    async initialize() {
+        this._isInitialized = true;
+        await this.createCommands();
+    }
     
     async execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages) {
-
+        if (!this.isInitialized) {
+            outputter.warn('Commands not initialized');
+            return;
+        }
         if (!parserResult.firstArg) {
             if (!parserResult.help) outputter.warn('No command is given');
             outputter.print(this.helpDocs);
@@ -107,32 +125,34 @@ export class Commands implements ICommands {
         }
     }
 
-    private createCommands() {
+    private async createCommands() {
         let commands = this._commandManager.commands;
         let commandGroups = this._commandManager.commandGroups;
         let namespaces = this._commandManager.namespaces;
 
         this._commands.push(...commands.map(_ => Command.fromCommand(_)));
         
-        this._commandGroups.push(...commandGroups.map(commandGroup => {
-            let baseCommands = commandGroup.commands;
+        let populateCommandGroups = Promise.all(commandGroups.map( async commandGroup => {
+            let baseCommands = await commandGroup.getCommands();
             let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name));
-            return CommandGroup.fromCommandGroup(commandGroup, commands);
+            this._commandGroups.push(await CommandGroup.fromCommandGroup(commandGroup, commands));
         }));
 
-        this._namespaces.push(...namespaces.map(namespace => {
+        let populateNamespaces = Promise.all(namespaces.map(async namespace => {
 
             let baseCommands = namespace.commands;
             let baseCommandGroups = namespace.commandGroups;
 
             let commands = baseCommands.map(_ => Command.fromCommand(_, undefined, namespace.name));
-            let commandGroups = baseCommandGroups.map(commandGroup => {
-                let baseCommands = commandGroup.commands;
+            let commandGroups = await Promise.all(baseCommandGroups.map(async commandGroup => {
+                let baseCommands = await commandGroup.getCommands();
                 let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name, namespace.name));
                 return CommandGroup.fromCommandGroup(commandGroup, commands, namespace.name);
-            });
+            }));
 
-            return Namespace.fromNamespace(namespace, commands, commandGroups);
+            this._namespaces.push(Namespace.fromNamespace(namespace, commands, commandGroups));
         }));
+
+        await Promise.all([populateCommandGroups, populateNamespaces]);
     }
 }

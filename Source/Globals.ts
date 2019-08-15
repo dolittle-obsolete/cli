@@ -49,6 +49,7 @@ class Globals {
     private async init() {
         await initializer.initialize(new NullBusyIndicator());
         this._commandsSystem = new Commands(commandManager, dependencyResolvers, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
+        await this._commandsSystem.initialize();
     }   
 }
 

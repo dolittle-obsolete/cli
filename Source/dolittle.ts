@@ -4,6 +4,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import './turnOffLogging';
 import globals from './Globals';
 import { askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo, projectConfig, boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig, boilerplatesLoader } from "@dolittle/tooling.common.boilerplates";
 import fs from 'fs';

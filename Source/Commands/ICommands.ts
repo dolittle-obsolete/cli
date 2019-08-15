@@ -42,8 +42,21 @@ export interface ICommands {
      *
      * @readonly
      */
-    helpDocs: string;
+    helpDocs: string
 
+    /**
+     * Whether the commands system has been initialized
+     *
+     * @type {boolean}
+     */
+    readonly isInitialized: boolean
+    
+    /**
+     * Initializes the commands system
+     *
+     * @returns {Promise<void>}
+     */
+    initialize(): Promise<void>
     /**
      * Starting point of command execution
      *
