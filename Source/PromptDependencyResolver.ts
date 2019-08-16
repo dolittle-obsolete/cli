@@ -3,11 +3,11 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IDependency, ICanResolveSyncDependencies, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency } from '@dolittle/tooling.common.dependencies';
+import { IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './Outputter';
 
-export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
+export class PromptDependencyResolver implements ICanResolveDependencies  {
     
     /**
      * Initializes a new instance of {Inquirer}
@@ -21,7 +21,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
     }
     
     async resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
-        let questions = this.createQuestions(dependencies, destinationPath, coreLanguage);
+        let questions = await this.createQuestions(dependencies, destinationPath, coreLanguage);
         let answers = await inquirer.prompt(questions);
         Object.keys(answers).forEach(name => {
             context[name] = answers[name];
@@ -29,13 +29,13 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
         return context;
     }
 
-    private createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string): InqiurerQuestion[] {
+    private async createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string) {
         let questions: InqiurerQuestion[] = [];
-        dependencies.forEach(dep => {
+        for (let dep of dependencies) {
             if (dep instanceof DiscoverAndPromptDependency || dependencyIsDiscoverDependency(dep) && (<any>dep).userInputType !== undefined) {
                 if (!destinationPath) throw new MissingDestinationPath();
                 if (!language) throw new MissingCoreLanguage();
-                let discoveryResult = this._discoverResolver.resolve(<DiscoverAndPromptDependency>dep, destinationPath, language, this._dolittleConfig);
+                let discoveryResult = await this._discoverResolver.resolve(<DiscoverAndPromptDependency>dep, destinationPath, language, this._dolittleConfig);
                 let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
                     [discoveryResult]
                     : discoveryResult.length === 0?
@@ -57,7 +57,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
                 this._outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);
                 throw new Error(`Invalid type '${dep.type}'`);
             }
-        });
+        }
         return questions;
     }
     private createPrompt(dependency: IPromptDependency, choices: any[] = []) {
@@ -78,14 +78,14 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
         }
     }
     
-    private createInputPrompt(name: string, message: string): InqiurerQuestion[]{
+    private createInputPrompt(name: string, message: string) {
         return [{
             type: 'input',
             name: name,
             message: message || ''
         }];
     }
-    private createListPrompt(dependency: IPromptDependency, message: string, choices: any[] = []): InqiurerQuestion[] {
+    private createListPrompt(dependency: IPromptDependency, message: string, choices: any[] = []) {
         if (! dependency.customInput) {
             return [
                 {
@@ -117,7 +117,7 @@ export class PromptDependencyResolver implements ICanResolveSyncDependencies  {
             ];
         }
     }
-    private createCheckboxPrompt(dependency: IPromptDependency, message: string, choices: any[] = []): InqiurerQuestion[] {
+    private createCheckboxPrompt(dependency: IPromptDependency, message: string, choices: any[] = []) {
         if (! dependency.customInput) {
             return [
                 {
