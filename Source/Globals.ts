@@ -16,6 +16,7 @@ import { ICanOutputMessages, IBusyIndicator, NullBusyIndicator } from '@dolittle
 import { BusyIndicator } from './BusyIndicator';
 import { loggers } from '@dolittle/tooling.common.logging';
 import { latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker } from '@dolittle/tooling.common.packages';
+import { ArgumentsDependencyResolver } from './ArgumentsDependencyResolver';
 
 const pkg = require('../package.json');
 const notifier = updateNotifier(
@@ -30,7 +31,7 @@ const notifier = updateNotifier(
  * @class Globals
  */
 class Globals {
-    readonly parser= new Parser();
+    readonly parsingResult = new Parser().parse();
     readonly outputter: ICanOutputMessages = new Outputter();
     readonly busyIndicator: IBusyIndicator = new BusyIndicator();
     
@@ -39,7 +40,10 @@ class Globals {
     constructor() {
         loggers.turnOffLogging();
         notifier.notify({isGlobal: true, message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'});
-        dependencyResolvers.add(new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this.outputter));
+        dependencyResolvers.add(
+            new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, this.outputter),
+            new ArgumentsDependencyResolver(this.parsingResult, this.outputter)
+        );
     }
     async getCommandsSystem() {
         if (!this._commandsSystem) await this.init();

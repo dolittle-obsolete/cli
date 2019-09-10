@@ -2,8 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-import { IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies } from '@dolittle/tooling.common.dependencies';
+import { IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies, IDependencyRuleFor } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './Outputter';
 
@@ -20,7 +19,7 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
         return  (dependency as any).userInputType !== undefined && (dependency as any).userInputType !== argumentUserInputType;
     }
     
-    async resolve(context: any, dependencies: IDependency[], destinationPath?: string, coreLanguage?: string, args?: string[]): Promise<any> {
+    async resolve(context: any, dependencies: IDependency[], additionalRules: IDependencyRuleFor<IDependency>[], destinationPath?: string, coreLanguage?: string): Promise<any> {
         let questions = await this.createQuestions(dependencies, destinationPath, coreLanguage);
         let answers = await inquirer.prompt(questions);
         Object.keys(answers).forEach(name => {

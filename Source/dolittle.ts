@@ -24,7 +24,10 @@ let defaultPlugins = [
 ];
 const pkg = require('../package.json');
 runDolittleCli();
-
+/**
+ * The starting point for the CLI
+ *
+ */
 async function runDolittleCli() {
     let outputter = globals.outputter;
     let parseResult = globals.parser.parse();

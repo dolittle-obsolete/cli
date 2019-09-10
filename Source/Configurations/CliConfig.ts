@@ -2,8 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-import Conf from 'conf';
+import { UserCacheConfig } from '@dolittle/tooling.common.configurations';
 import path from 'path';
 
 /**
@@ -13,7 +12,7 @@ import path from 'path';
  * @class CliConfig
  * @extends {Conf}
  */
-export class CliConfig extends Conf {
+export class CliConfig extends UserCacheConfig {
     /**
      * Creates an instance of {CliConfig}.
      * @param {string} configName The name of the configuration. Becomes the filename
@@ -22,12 +21,6 @@ export class CliConfig extends Conf {
      * @memberof CliConfig
      */
     constructor(configName: string, configFolder: string, defaultObj: {[key: string]: any}) {
-        super({
-            projectName: '.cli', 
-            configName,
-            cwd: path.join(configFolder, '.cli'),
-            defaults: defaultObj,
-            projectSuffix: ''
-        });
+        super(configName, defaultObj);
     }
 }

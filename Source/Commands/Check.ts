@@ -2,12 +2,12 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { PromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
+import { CommandContext, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
+import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@dolittle/tooling.common.dependencies';
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { Outputter } from '../Outputter';
-import { BusyIndicator } from '../BusyIndicator';
 import { Command } from './Command';
 import hasHelpOption from '../Util/hasHelpOption';
 
@@ -28,8 +28,7 @@ export class Check extends Command {
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
 
-    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, string>, namespace?: string, 
-                outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (hasHelpOption(commandOptions)) {
             outputter.print(this.helpDocs);
             return;
@@ -51,10 +50,6 @@ export class Check extends Command {
                 await this._packageDownloader.download([downloadPackageInfo]);
             }
         }
-    }
-
-    getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[], commandOptions?: Map<string, string>, namespace?: string) {
-        return this.dependencies;
     }
 
     private output(outputter: Outputter, pkgName: string, currentVersion: string, latestVersion: string, sameVersion?: boolean, compatibleUpgrade?: boolean, majorUpgrade?: boolean) {
@@ -84,7 +79,8 @@ export class Check extends Command {
         let dep = new PromptDependency(
             'update',
             'Whether to update CLI or not',
-            'confirm',
+            [],
+            confirmUserInputType,
             `There is a new version of the CLI. Do you wish to update to latest?`);
         let answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
         return answers.update;

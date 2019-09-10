@@ -3,13 +3,11 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
+import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
+import { CommandContext,INamespace, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import chalk from 'chalk';
 import { Command } from './Command';
-import { Outputter } from '../Outputter';
-import { BusyIndicator } from '../BusyIndicator';
 import { CommandGroup } from './CommandGroup';
-import { INamespace } from '@dolittle/tooling.common.commands';
-import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 
 /**
  * Base class for {Namespace} commands
@@ -55,7 +53,7 @@ export class Namespace extends Command {
         return res.join('\n');
 
     }
-    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         let firstArgument = commandArguments[0];
         if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);

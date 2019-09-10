@@ -2,13 +2,11 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { ICommandGroup } from '@dolittle/tooling.common.commands';
+import { ICommandGroup, CommandContext, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
+import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import chalk from 'chalk';
 import { Command } from './Command';
-import { Outputter } from '../Outputter';
-import { BusyIndicator } from '../BusyIndicator';
-import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 
 /**
  * Base class for {CommandGroup} commands
@@ -48,7 +46,7 @@ export class CommandGroup extends Command {
         return res.join('\n');
 
     }
-    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string, outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         let firstArgument = commandArguments[0];
         if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);

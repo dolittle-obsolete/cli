@@ -3,12 +3,10 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Command as BaseCommand, ICommand } from '@dolittle/tooling.common.commands';
+import { Command as BaseCommand, ICommand, CommandContext, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { Outputter } from '../Outputter';
-import { BusyIndicator } from '../BusyIndicator';
 import hasHelpOption from '../Util/hasHelpOption';
 
 /**
@@ -65,8 +63,7 @@ export class Command extends BaseCommand {
         this.help = help;
     }
 
-    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, any>, namespace?: string,
-            outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (this._derivedCommand) {
             this.extendHelpDocs(this.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace), 
                                 this.usage, this.help);
