@@ -6,8 +6,7 @@ import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.uti
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { CommandContext,INamespace, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import chalk from 'chalk';
-import { Command } from './Command';
-import { CommandGroup } from './CommandGroup';
+import { Command, CommandGroup } from './index';
 
 /**
  * Base class for {Namespace} commands

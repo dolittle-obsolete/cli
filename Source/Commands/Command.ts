@@ -7,7 +7,7 @@ import { Command as BaseCommand, ICommand, CommandContext, IFailedCommandOutputt
 import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import hasHelpOption from '../Util/hasHelpOption';
+import { hasHelpOption } from '../index';
 
 /**
  * The base class of a {Command} that is wrapped to fit the needs of the CLI. 
@@ -74,11 +74,6 @@ export class Command extends BaseCommand {
             await this._derivedCommand.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator)
         }
     }
-
-    getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[], commandOptions?: Map<string, any>, namespace?: string) {
-        return this._derivedCommand? this._derivedCommand.getAllDependencies(currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace) : this.dependencies;
-    }
-
     /**
      * Gets the message that should be printed when help is needed for a command
      *

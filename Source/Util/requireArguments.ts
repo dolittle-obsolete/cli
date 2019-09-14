@@ -2,8 +2,8 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { Command } from '../Commands/Command';
-import { Outputter } from '../Outputter';
+import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
+import { Command } from '../index';
 
 /**
  * Checks whether or not there are missing arguments for a command. 
@@ -14,7 +14,7 @@ import { Outputter } from '../Outputter';
  * @param {string[]} args The given arguments. 
  * @param {...string} argumentMessages A list of error messages for when a required argument is missing.
  */
-export default function requireArguments(command: Command, outputter: Outputter, args: string[], ...argumentMessages: string[]) {
+export function requireArguments(command: Command, outputter: ICanOutputMessages, args: string[], ...argumentMessages: string[]) {
     for (let i = 0; i < argumentMessages.length; i++) {
         let msg = argumentMessages[i];
         if (!args[i]) {

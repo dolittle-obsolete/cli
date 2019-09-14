@@ -7,9 +7,7 @@ import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@d
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { Outputter } from '../Outputter';
-import { Command } from './Command';
-import hasHelpOption from '../Util/hasHelpOption';
+import { Command, hasHelpOption } from '../index';
 
 const pkg = require('../../package.json');
 
@@ -52,7 +50,7 @@ export class Check extends Command {
         }
     }
 
-    private output(outputter: Outputter, pkgName: string, currentVersion: string, latestVersion: string, sameVersion?: boolean, compatibleUpgrade?: boolean, majorUpgrade?: boolean) {
+    private output(outputter: ICanOutputMessages, pkgName: string, currentVersion: string, latestVersion: string, sameVersion?: boolean, compatibleUpgrade?: boolean, majorUpgrade?: boolean) {
         if (sameVersion === undefined) sameVersion = currentVersion === latestVersion;
         if (compatibleUpgrade === undefined) compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
         if (majorUpgrade === undefined) majorUpgrade = isGreaterVersion(latestVersion, currentVersion);

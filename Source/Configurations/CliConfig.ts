@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { UserCacheConfig } from '@dolittle/tooling.common.configurations';
-import path from 'path';
 
 /**
  * Represents a config file that's used as a cache storage for the cli. 

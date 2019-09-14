@@ -5,20 +5,10 @@
 import { ProjectConfig } from '@dolittle/tooling.common.boilerplates';
 import { ICommandManager } from '@dolittle/tooling.common.commands';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
-
+import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { ParserResult } from '../ParserResult';
-import getCoreLanguage, { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
-import { MissingCommandArgumentError } from '../Util/requireArguments'
-import { Command } from './Command';
-import { CommandGroup } from './CommandGroup';
-import { ICommands } from './ICommands';
-import { Init } from './Init';
-import { Check } from './Check';
-import { Namespace } from './Namespace';
-import { BusyIndicator } from '../BusyIndicator';
-import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
+import { ParserResult, getCoreLanguage, ICommands, Namespace, CommandGroup, Command, Check, BusyIndicator } from '../index';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
 

@@ -6,7 +6,7 @@ import { ICommandGroup, CommandContext, IFailedCommandOutputter } from '@dolittl
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import chalk from 'chalk';
-import { Command } from './Command';
+import { Command } from '../index';
 
 /**
  * Base class for {CommandGroup} commands

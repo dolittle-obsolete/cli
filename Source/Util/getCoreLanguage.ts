@@ -2,7 +2,7 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { ParserResult } from '../ParserResult';
+import { ParserResult } from '../index';
 
 /**
  * Gets the core language in the context of a command
@@ -12,7 +12,7 @@ import { ParserResult } from '../ParserResult';
  * @param {any} projectConfigObject The actual object of the ProjectConfig
  * @returns {string} The core programming language
  */
-export default function getCoreLanguage(parserResult: ParserResult, projectConfigObject: any): string {
+export function getCoreLanguage(parserResult: ParserResult, projectConfigObject: any): string {
     try {
         let language = parserResult.coreLang? parserResult.coreLang : projectConfigObject.coreLanguage;
         if (!language) throw CoreLanguageNotFoundError.new;

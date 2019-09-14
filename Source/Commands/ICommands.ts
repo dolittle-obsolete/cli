@@ -5,10 +5,7 @@
 
 import { ProjectConfig } from "@dolittle/tooling.common.boilerplates";
 import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
-import { ParserResult } from "../ParserResult";
-import { Command } from "./Command";
-import { CommandGroup } from "./CommandGroup";
-import { Namespace } from "./Namespace";
+import { ParserResult, Command, CommandGroup, Namespace } from "../index";
 
 
 /**
