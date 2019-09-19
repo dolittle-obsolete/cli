@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import minimist from 'minimist';
-import { ParserResult } from './index';
+import { ParserResult } from './internal';
 
 /**
  * The parser of the CLI arguments.

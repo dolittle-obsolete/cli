@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { IDependency, argumentUserInputType, ICanResolveDependencies, IDependencyRuleFor } from '@dolittle/tooling.common.dependencies';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import { ParserResult } from './index';
+import { ParserResult } from './internal';
 
 export class ArgumentsDependencyResolver implements ICanResolveDependencies  {
     

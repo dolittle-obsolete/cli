@@ -4,8 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { ProjectConfigObject } from "@dolittle/tooling.common";
-import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
-import { ParserResult, Command, CommandGroup, Namespace } from "../index";
+import { ParserResult, Command, CommandGroup, Namespace } from "../internal";
 
 
 /**

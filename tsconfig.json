@@ -22,7 +22,7 @@
         "outDir": "bin",
         "baseUrl": "./",
         "paths": {
-            "@dolittle/cli": ["Source/index.ts"],
+            "@dolittle/cli": ["Source/internal.ts"],
             "*": ["Types/*"]
         },
         "sourceRoot": "./Source",

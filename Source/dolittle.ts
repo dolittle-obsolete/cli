@@ -4,6 +4,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import './turnOffLogging';
 import { 
     askToDownloadOrUpdateBoilerplates, fetchDolittleBoilerplates, BoilerplatePackageInfo,
     boilerplateDiscoverers, onlineDolittleBoilerplatesFinder, boilerplatesConfig,
@@ -20,7 +21,7 @@ import { fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdat
 import { ICanOutputMessages, IBusyIndicator, NullBusyIndicator } from '@dolittle/tooling.common.utilities';
 import inquirer from 'inquirer';
 import updateNotifier from 'update-notifier';
-import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, Commands, ICommands } from './index';
+import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, Commands, ICommands } from './internal';
 
 // Setup constants
 
@@ -52,6 +53,7 @@ runDolittleCli();
  *
  */
 async function runDolittleCli() {
+    console.log('HELLO');
     notifier.notify(
         {
             isGlobal: true, 
@@ -75,6 +77,7 @@ function handleIfCheckingVersion() {
         process.exit(0);
     }
 }
+
 async function handleIfMissingPrerequsites() {
     if (!hasProjectConfiguration()) {
         let coreLanguage;
@@ -99,13 +102,12 @@ async function handleIfMissingPrerequsites() {
 }
 
 async function setupToolingSystem() {
-    loggers.turnOffLogging();
     dependencyResolvers.add(
         new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter)
     );
     await initializer.initialize(new NullBusyIndicator());
-        commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
-        await commands.initialize();
+    commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
+    await commands.initialize();
 }
 
 async function askToFindBoilerplates() {

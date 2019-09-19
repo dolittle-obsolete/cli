@@ -7,7 +7,7 @@ import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@d
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { Command, ParserResult, FailedCommandOutputter } from '../index';
+import { Command, ParserResult, FailedCommandOutputter } from '../internal';
 
 const pkg = require('../../package.json');
 

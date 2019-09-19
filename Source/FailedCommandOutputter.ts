@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { IFailedCommandOutputter, ICommand, CommandContext } from '@dolittle/tooling.common.commands';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import { Command } from './index';
+import { Command } from './internal';
 
 export class FailedCommandOutputter implements IFailedCommandOutputter  {
     

@@ -37,7 +37,6 @@
     "rimraf": "^2.6.3",
     "typescript": "^3.4.5",
 
-
     "@dolittle/tooling.common": "8.*",
     "@dolittle/tooling.common.boilerplates": "8.*",
     "@dolittle/tooling.common.commands": "8.*",

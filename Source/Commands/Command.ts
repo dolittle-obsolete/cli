@@ -7,7 +7,7 @@ import { Command as BaseCommand, ICommand, CommandContext, IFailedCommandOutputt
 import { IDependency, dependencyIsPromptDependency, argumentUserInputType, IPromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { IBusyIndicator, ICanOutputMessages, Exception } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { ParserResult, FailedCommandOutputter } from '../index';
+import { ParserResult, FailedCommandOutputter, ArgumentsDependencyResolver } from '../internal';
 
 /**
  * The base class of a {Command} that is wrapped to fit the needs of the CLI. 
@@ -67,14 +67,15 @@ export class Command extends BaseCommand {
             outputter.print(this.helpDoc);
             return;
         }
-        await this.onAction(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
+        dependencyResolvers.add(new ArgumentsDependencyResolver(parserResult, outputter));
+        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
         
     }
 
     async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (!this._derivedCommand) throw new Exception('Something unexpected happened. A bad command.');
         try {
-            await this._derivedCommand.action(commandContext, dependencyResolvers,failedCommandOutputter, outputter, busyIndicator);    
+            await this._derivedCommand.action(commandContext, dependencyResolvers, failedCommandOutputter, outputter, busyIndicator);    
         }
         catch {
 

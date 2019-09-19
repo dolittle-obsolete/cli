@@ -11,6 +11,19 @@ export * from './Parser';
 export * from './ParserResult';
 export * from './PromptDependencyResolver';
 
-export * from './commands/index';
-export * from './configurations/index';
-export * from './util/index';
+// util
+export * from './util/CoreLanguageNotFound';
+export * from './util/getCoreLanguage';
+
+// configurations
+export * from './configurations/CliConfig';
+
+// commands
+
+export * from './commands/Command';
+export * from './commands/CommandGroup';
+export * from './commands/Namespace';
+export * from './commands/Check';
+
+export * from './commands/ICommands';
+export * from './commands/Commands';

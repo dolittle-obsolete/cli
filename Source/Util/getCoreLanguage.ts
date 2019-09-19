@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 import { ProjectConfigObject } from '@dolittle/tooling.common';
-import { ParserResult, CoreLanguageNotFound } from '../index';
+import { ParserResult, CoreLanguageNotFound } from '../internal';
 
 /**
  * Gets the core language in the context of a command

@@ -8,7 +8,7 @@ import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { ParserResult, getCoreLanguage, ICommands, Namespace, CommandGroup, Command, Check, BusyIndicator, ArgumentsDependencyResolver } from '../index';
+import { ParserResult, getCoreLanguage, ICommands, Namespace, CommandGroup, Command, Check } from '../internal';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
 

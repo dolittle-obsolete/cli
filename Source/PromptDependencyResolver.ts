@@ -8,7 +8,7 @@ import {
     dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies, IDependencyRuleFor
 } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
-import { Outputter } from './index';
+import { Outputter } from './internal';
 
 export class PromptDependencyResolver implements ICanResolveDependencies  {
     
