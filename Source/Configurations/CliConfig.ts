@@ -12,8 +12,14 @@ export type CliConfigObject = {
      */
     ignoreBoilerplatePrompt: boolean
 }
-
-export class CliConfig extends UserCacheConfig<CliConfigObject> {
+/**
+ * Keys defined in {CliConfigObject}
+ *
+ * @export
+ * @class CliConfig
+ * @extends {UserCacheConfig}
+ */
+export class CliConfig extends UserCacheConfig {
     
     constructor() {
         super('cli', {ignoreBoilerplatePrompt: false});
