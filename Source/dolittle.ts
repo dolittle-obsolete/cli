@@ -10,7 +10,7 @@ import {
     boilerplatesLoader 
 } from "@dolittle/tooling.common.boilerplates";
 import { dolittleConfig } from '@dolittle/tooling.common.configurations';
-import { initializer, projectConfig } from '@dolittle/tooling.common';
+import { initializer, projectConfig, ProjectConfigObject } from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from "@dolittle/tooling.common.dependencies";
 import { fileSystem } from "@dolittle/tooling.common.files";
@@ -20,7 +20,7 @@ import { fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdat
 import { ICanOutputMessages, IBusyIndicator, NullBusyIndicator } from '@dolittle/tooling.common.utilities';
 import inquirer from 'inquirer';
 import updateNotifier from 'update-notifier';
-import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, ArgumentsDependencyResolver, Commands, ICommands, } from './index';
+import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, Commands, ICommands } from './index';
 
 // Setup constants
 
@@ -60,12 +60,11 @@ async function runDolittleCli() {
     );
     handleIfCheckingVersion();
     await handleIfMissingPrerequsites();
-    
 
     await setupToolingSystem();
     // setupTabCompletion(commandManager, globals.outputter);
     try {
-        await commands.execute(parsingResult, projectConfig, outputter);
+        await commands.execute(parsingResult, projectConfig.store as ProjectConfigObject);
     } catch(error) {
         outputter.error(error)
     }
@@ -89,6 +88,7 @@ async function handleIfMissingPrerequsites() {
         await askToDownloadOrUpdatePlugins(pluginPackages, plugins, dependencyResolvers, npmPackageDownloader, connectionChecker, busyIndicator);
     
     }
+    // Should only ask for boilerplates once
     if (!hasBoilerplates()) {
         let shouldDownload = await askToFindBoilerplates();
         if (shouldDownload) {
@@ -96,21 +96,23 @@ async function handleIfMissingPrerequsites() {
             await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, boilerplatesLoader, dependencyResolvers, npmPackageDownloader, connectionChecker, busyIndicator);
         }
     }
-} 
+}
+
 async function setupToolingSystem() {
     loggers.turnOffLogging();
     dependencyResolvers.add(
-        new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter),
-        new ArgumentsDependencyResolver(parsingResult, outputter)
+        new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter)
     );
     await initializer.initialize(new NullBusyIndicator());
-        commands = new Commands(commandManager, dependencyResolvers, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
+        commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
         await commands.initialize();
 }
+
 async function askToFindBoilerplates() {
     let answers: any = await inquirer.prompt([{type: 'confirm', default: false, name: 'download', message: 'No boilerplates matching the tooling version was found on your system.\nDo you want to find Dolittle\'s boilerplates?'}]);   
     return answers['download'];
 }
+
 function printCliVersion() {
     outputter.print(`${pkg.name} v${pkg.version}`);
 }
@@ -119,6 +121,7 @@ function hasBoilerplates() {
     let boilerplatesConfigObj = boilerplatesConfig.store;
     return Object.keys(boilerplatesConfigObj).length > 0;
 }
+
 async function hasDefaultPlugins() {
     let discoveredPlugins = await plugins.getPluginPackages();
     if (discoveredPlugins.length === 0) {
@@ -128,6 +131,7 @@ async function hasDefaultPlugins() {
     
     return defaultPlugins.every(_ => discoveredPlugins.map(_ => _.packageJson.name).includes(_));
 }
+
 async function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
     return fileSystem.exists(projectConfigObj.path);

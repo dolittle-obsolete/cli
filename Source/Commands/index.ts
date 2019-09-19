@@ -8,5 +8,4 @@ export * from './Check';
 export * from './Command';
 export * from './CommandGroup';
 export * from './Commands';
-export * from './Init';
 export * from './Namespace';

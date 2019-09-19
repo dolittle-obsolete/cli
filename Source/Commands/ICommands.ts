@@ -3,7 +3,7 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { ProjectConfig } from "@dolittle/tooling.common.boilerplates";
+import { ProjectConfigObject } from "@dolittle/tooling.common";
 import { ICanOutputMessages } from "@dolittle/tooling.common.utilities";
 import { ParserResult, Command, CommandGroup, Namespace } from "../index";
 
@@ -58,5 +58,5 @@ export interface ICommands {
      * Starting point of command execution
      *
      */
-    execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages): Promise<void>
+    execute(parserResult: ParserResult, projectConfigObject: ProjectConfigObject): Promise<void>
 }

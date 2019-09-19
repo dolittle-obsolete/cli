@@ -6,7 +6,7 @@ import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.uti
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import { CommandContext,INamespace, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import chalk from 'chalk';
-import { Command, CommandGroup } from './index';
+import { Command, CommandGroup, ParserResult } from '../index';
 
 /**
  * Base class for {Namespace} commands
@@ -52,13 +52,12 @@ export class Namespace extends Command {
         return res.join('\n');
 
     }
-    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
-        let firstArgument = commandArguments[0];
+    async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+        let firstArgument = parserResult.firstArg;
         if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);
             return;
         }
-
         const isCommandGroup = this.commandGroups.map(_ => _.name).includes(firstArgument);
         const isBasicCommand = this.commands.map(_ => _.name).includes(firstArgument);
         let command: Command | undefined
@@ -66,13 +65,17 @@ export class Namespace extends Command {
         else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === firstArgument);
 
         if (command) {
-            commandArguments.shift();
-            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, this.name, outputter, busyIndicator);
+            parserResult.firstArg = parserResult.restArgs.shift() || '';
+            await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
         }
         else {
-            outputter.warn(`No such sub command as '${firstArgument}'`);
+            outputter.warn(`Sub command or command group: '${firstArgument}' does not exist`);
             outputter.print();
             outputter.print(this.helpDocs);
         }
     }
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+    
+    }
+
 }

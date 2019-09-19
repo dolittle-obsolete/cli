@@ -2,9 +2,13 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies, IDependencyRuleFor } from '@dolittle/tooling.common.dependencies';
+import { 
+    IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, 
+    argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, 
+    dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies, IDependencyRuleFor
+} from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
-import { Outputter } from './Outputter';
+import { Outputter } from './index';
 
 export class PromptDependencyResolver implements ICanResolveDependencies  {
     

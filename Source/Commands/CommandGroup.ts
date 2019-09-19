@@ -6,7 +6,7 @@ import { ICommandGroup, CommandContext, IFailedCommandOutputter } from '@dolittl
 import { IBusyIndicator, ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
 import chalk from 'chalk';
-import { Command } from '../index';
+import { Command, ParserResult } from '../index';
 
 /**
  * Base class for {CommandGroup} commands
@@ -46,21 +46,24 @@ export class CommandGroup extends Command {
         return res.join('\n');
 
     }
-    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
-        let firstArgument = commandArguments[0];
+    async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+        let firstArgument = parserResult.firstArg;
         if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);
             return;
         }
         let command = this.commands.find(_ => _.name === firstArgument);
         if (command) {
-            commandArguments.shift();
-            await command.action(dependencyResolvers, currentWorkingDirectory, coreLanguage, commandArguments, commandOptions, namespace, outputter, busyIndicator);
+            parserResult.firstArg = parserResult.restArgs.shift() || '';
+            await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
         }
         else {
-            outputter.warn(`No such sub command as '${firstArgument}'`);
+            outputter.warn(`Sub command: '${firstArgument}' does not exist`);
             outputter.print();
             outputter.print(this.helpDocs);
         }
+    }
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+        
     }
 }

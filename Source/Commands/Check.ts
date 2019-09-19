@@ -7,7 +7,7 @@ import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@d
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { Command, hasHelpOption } from '../index';
+import { Command, ParserResult, FailedCommandOutputter } from '../index';
 
 const pkg = require('../../package.json');
 
@@ -25,12 +25,15 @@ export class Check extends Command {
         super('check', description, 
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
-
-    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
-        if (hasHelpOption(commandOptions)) {
-            outputter.print(this.helpDocs);
+    async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+        if (parserResult.help) {
+            outputter.print(this.helpDoc);
             return;
         }
+        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
+    
+    }
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         await requireInternet(this._connectionChecker, busyIndicator);
         const currentVersion = pkg.version;
         const pkgName = pkg.name;

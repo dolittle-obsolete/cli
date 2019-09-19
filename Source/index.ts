@@ -5,6 +5,7 @@
 export * from './ArgumentsDependencyResolver';
 export * from './askForCoreLanguage';
 export * from './BusyIndicator';
+export * from './FailedCommandOutputter';
 export * from './Outputter';
 export * from './Parser';
 export * from './ParserResult';
