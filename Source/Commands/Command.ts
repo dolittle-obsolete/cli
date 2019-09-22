@@ -64,7 +64,7 @@ export class Command extends BaseCommand {
     async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (!this._derivedCommand) throw new Exception('Something unexpected happened. A bad command.');
         if (parserResult.help) {
-            outputter.print(this.helpDoc);
+            outputter.print(this.getHelpDoc());
             return;
         }
         dependencyResolvers.add(new ArgumentsDependencyResolver(parserResult, outputter));
@@ -82,9 +82,9 @@ export class Command extends BaseCommand {
         }
     }
 
-    get helpDoc() {
+    getHelpDoc(additionalDependencies: IDependency[] = []) {
         if (this._derivedCommand) {
-            this.extendHelpDocs(this._derivedCommand.dependencies)
+            this.extendHelpDocs(this._derivedCommand.dependencies.concat(additionalDependencies))
             let res = [chalk.bold('Usage:'), `\t${this.usage}`];
             res.push('', this.description);
             if (this.help) res.push('', chalk.bold('Help:'), this.help);

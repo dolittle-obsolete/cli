@@ -9,7 +9,7 @@ import {
     boilerplatesLoader 
 } from "@dolittle/tooling.common.boilerplates";
 import { dolittleConfig } from '@dolittle/tooling.common.configurations';
-import { initializer, projectConfig, ProjectConfigObject } from '@dolittle/tooling.common';
+import { initializer, projectConfig, ProjectConfigObject, HostPackage } from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from "@dolittle/tooling.common.dependencies";
 import { fileSystem } from "@dolittle/tooling.common.files";
@@ -18,16 +18,11 @@ import { fetchDolittlePlugins, onlineDolittlePluginsFinder, askToDownloadOrUpdat
 import { ICanOutputMessages, IBusyIndicator, NullBusyIndicator } from '@dolittle/tooling.common.utilities';
 import inquirer from 'inquirer';
 import updateNotifier from 'update-notifier';
-import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, Commands, ICommands } from './internal';
+import {askForCoreLanguage, Outputter, Parser, BusyIndicator, PromptDependencyResolver, Commands, ICommands, CliConfig, CliConfigObject } from './internal';
 
 // Setup constants
 
-let defaultPlugins = [
-    '@dolittle/tooling.plugin.runtime'
-];
-
 const pkg = require('../package.json');
-
 const notifier = updateNotifier(
     {
         pkg, 
@@ -35,11 +30,13 @@ const notifier = updateNotifier(
     }
 );
 
+let commands: ICommands; 
 const outputter: ICanOutputMessages = new Outputter();
 const busyIndicator: IBusyIndicator = new BusyIndicator();
 const parsingResult = new Parser().parse();
 
-let commands: ICommands; 
+let cliConfig = new CliConfig();
+cliConfig.store;
 
 // Run CLI procedure
 runDolittleCli();
@@ -49,7 +46,6 @@ runDolittleCli();
  *
  */
 async function runDolittleCli() {
-    console.log('HELLO');
     notifier.notify(
         {
             isGlobal: true, 
@@ -81,18 +77,17 @@ async function handleIfMissingPrerequsites() {
 
         projectConfig.store = {coreLanguage};
     }
-    if (! (await hasDefaultPlugins())) {
-        outputter.warn('Default dolittle plugins not installed.');
-        let pluginPackages = await fetchDolittlePlugins(onlineDolittlePluginsFinder, connectionChecker, busyIndicator);
-        await askToDownloadOrUpdatePlugins(pluginPackages, plugins, dependencyResolvers, npmPackageDownloader, connectionChecker, busyIndicator);
-    
-    }
     // Should only ask for boilerplates once
-    if (!hasBoilerplates()) {
+    if (!hasBoilerplates() && !cliConfig.store.ignoreBoilerplatePrompt) {
         let shouldDownload = await askToFindBoilerplates();
         if (shouldDownload) {
             let boilerplatePackages = await fetchDolittleBoilerplates(onlineDolittleBoilerplatesFinder, connectionChecker, busyIndicator);
             await askToDownloadOrUpdateBoilerplates(boilerplatePackages as BoilerplatePackageInfo[], boilerplateDiscoverers, boilerplatesLoader, dependencyResolvers, npmPackageDownloader, connectionChecker, busyIndicator);
+        }
+        else {
+            let cliConfigObject: CliConfigObject = cliConfig.store as any;
+            cliConfigObject.ignoreBoilerplatePrompt = true;
+            cliConfig.store = cliConfigObject;
         }
     }
 }
@@ -101,7 +96,7 @@ async function setupToolingSystem() {
     dependencyResolvers.add(
         new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter)
     );
-    await initializer.initialize(new NullBusyIndicator());
+    await initializer.initialize(pkg as HostPackage, dependencyResolvers, busyIndicator);
     commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
     await commands.initialize();
 }
@@ -120,15 +115,6 @@ function hasBoilerplates() {
     return Object.keys(boilerplatesConfigObj).length > 0;
 }
 
-async function hasDefaultPlugins() {
-    let discoveredPlugins = await plugins.getPluginPackages();
-    if (discoveredPlugins.length === 0) {
-        await plugins.discoverNewPlugins();
-        discoveredPlugins = await plugins.getPluginPackages();
-    }
-    
-    return defaultPlugins.every(_ => discoveredPlugins.map(_ => _.packageJson.name).includes(_));
-}
 
 async function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
