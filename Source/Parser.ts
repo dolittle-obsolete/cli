@@ -39,7 +39,7 @@ export class Parser {
             boolean: ['h', 'help', 'v', 'version', 'd', 'debug']
         });
         const [firstArg, ...restArgs] = _;
-        return new ParserResult(firstArg, restArgs, help || h, version || v, debug || d, coreLang, extraArgs || [], extraOptions);
+        return new ParserResult(firstArg, restArgs, help || h, version || v, debug || d, coreLang, extraOptions);
 
     }
 }
