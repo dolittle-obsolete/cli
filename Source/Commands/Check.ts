@@ -27,7 +27,7 @@ export class Check extends Command {
     }
     async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (parserResult.help) {
-            outputter.print(this.helpDoc);
+            outputter.print(this.getHelpDoc());
             return;
         }
         await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
