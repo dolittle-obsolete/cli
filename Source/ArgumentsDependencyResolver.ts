@@ -2,7 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IDependency, argumentUserInputType, ICanResolveDependencies, IDependencyRuleFor, dependencyResolvers, IPromptDependency, CannotResolveDependency, RuleNotRespected } from '@dolittle/tooling.common.dependencies';
+import { IDependency, argumentUserInputType, ICanResolveDependencies, IDependencyRuleFor, IPromptDependency, CannotResolveDependency, RuleNotRespected, IsNotEmpty } from '@dolittle/tooling.common.dependencies';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { ParserResult } from './internal';
 
@@ -24,13 +24,14 @@ export class ArgumentsDependencyResolver implements ICanResolveDependencies  {
             else {
                 value = this._parsingResult.firstArg;
 
-                this._parsingResult.firstArg = this._parsingResult.restArgs.shift() || '';
+                this._parsingResult.firstArg = this._parsingResult.restArgs.shift();
             }
 
             if (value === undefined) throw new CannotResolveDependency(_);
 
             _.rules.forEach(rule => {
                 if (! rule.isRespected(value)) throw new RuleNotRespected(_, rule);
+                
             });
             context[_.name] = value;
         });

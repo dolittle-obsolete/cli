@@ -22,7 +22,7 @@ export class ParserResult {
      * @param {{[args: string]: any}} extraOpts
      * @memberof ParserResult
      */
-    constructor(firstArg: string, restArgs: string[], help: boolean, version: boolean, debug: boolean, coreLang: string, extraOpts: {[args: string]: any}) {
+    constructor(firstArg: string | undefined, restArgs: string[], help: boolean, version: boolean, debug: boolean, coreLang: string, extraOpts: {[args: string]: any}) {
         this.firstArg = firstArg;
         this.restArgs = restArgs;
         this.help = help;
@@ -33,10 +33,10 @@ export class ParserResult {
     }
     /**
      * The first argument that does not have an option associated with it
-     * @type {string}
+     * @type {string | undefined}
      * @memberof ParserResult
      */
-    firstArg: string;
+    firstArg: string | undefined;
     /**
      * The rest of the arguments that doesn't have an option associated with them
      * @type {string[]}

@@ -13,9 +13,10 @@ export class FailedCommandOutputter implements IFailedCommandOutputter  {
     
     output(command: ICommand, commandContext: CommandContext, error: Error, additionalDependencies: IDependency[] = []): void {
         this._outputter.warn('Failed not execute command');
-        if (error) this._outputter.error(`${error.message}\nCall Stack: ${error.stack}`);
+        if (error) this._outputter.error(`${error.message}`);
         this._outputter.print(this._cliCommand.getHelpDoc(additionalDependencies));
-
+        if (error) this._outputter.error(`Error call stack: 
+${error.stack}`);
     }
     
 }

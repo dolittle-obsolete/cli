@@ -19,7 +19,6 @@ export * from './util/getCoreLanguage';
 export * from './configurations/CliConfig';
 
 // commands
-
 export * from './commands/Command';
 export * from './commands/CommandGroup';
 export * from './commands/Namespace';

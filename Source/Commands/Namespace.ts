@@ -65,7 +65,7 @@ export class Namespace extends Command {
         else if (isCommandGroup) command = this.commandGroups.find(_ => _.name === firstArgument);
 
         if (command) {
-            parserResult.firstArg = parserResult.restArgs.shift() || '';
+            parserResult.firstArg = parserResult.restArgs.shift();
             await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
         }
         else {

@@ -54,7 +54,7 @@ export class CommandGroup extends Command {
         }
         let command = this.commands.find(_ => _.name === firstArgument);
         if (command) {
-            parserResult.firstArg = parserResult.restArgs.shift() || '';
+            parserResult.firstArg = parserResult.restArgs.shift();
             await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
         }
         else {

@@ -100,7 +100,7 @@ export class Commands implements ICommands {
             this._outputter.print(this.helpDocs);
             return;
         }
-        parserResult.firstArg = parserResult.restArgs.shift() || '';
+        parserResult.firstArg = parserResult.restArgs.shift();
 
         let cwd = process.cwd();
         let coreLanguage = getCoreLanguage(parserResult, projectConfigObject);
