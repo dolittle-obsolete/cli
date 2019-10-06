@@ -20,7 +20,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   },
   "files": [
     "bin"
@@ -31,19 +31,14 @@
   },
   "main": "bin/index.js",
   "scripts": {
-    "build": "yarn clean && tsc",
     "clean": "rimraf bin",
-    "prepublish": "yarn build"
+    "build": "yarn clean && tsc",
+    "test:clean": "rimraf 'bin/**/for_*'",
+    "test:run": "mocha --require '@dolittle/typescript.build/mocha.opts' --reporter=spec 'bin/**/for_*/**/*.+(js|ts)'",
+    "test": "yarn build && yarn test:run", 
+    "prepublish": "yarn build && yarn test:run && yarn test:clean"
   },
-  "devDependencies": {
-    "@types/debug": "^4.1.4",
-    "@types/inquirer": "^6.0.1",
-    "@types/minimist": "^1.2.0",
-    "@types/node": "12.0.0",
-    "@types/update-notifier": "^2.5.0",
-    "rimraf": "^2.6.3",
-    "typescript": "^3.4.5",
-
+  "optionalDependencies": {
     "@dolittle/tooling.common": "8.*",
     "@dolittle/tooling.common.boilerplates": "8.*",
     "@dolittle/tooling.common.commands": "8.*",
@@ -54,6 +49,14 @@
     "@dolittle/tooling.common.packages": "8.*",
     "@dolittle/tooling.common.plugins": "8.*",
     "@dolittle/tooling.common.utilities": "8.*"
+  },
+  "devDependencies": {
+
+    "@dolittle/typescript.build": "latest",
+    "@types/debug": "^4.1.4",
+    "@types/inquirer": "^6.0.1",
+    "@types/minimist": "^1.2.0",
+    "@types/update-notifier": "^2.5.0"
   },
   "dependencies": {
     "@dolittle/tooling.common.host": "8.0.0-alpha.9",
