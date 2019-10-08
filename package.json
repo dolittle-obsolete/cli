@@ -32,10 +32,10 @@
   "main": "bin/index.js",
   "scripts": {
     "clean": "rimraf bin",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && ./node_modules/typescript/bin/tsc",
     "test:clean": "rimraf 'bin/**/for_*'",
     "test:run": "mocha --require '@dolittle/typescript.build/mocha.opts' --reporter=spec 'bin/**/for_*/**/*.+(js|ts)'",
-    "test": "yarn build && yarn test:run", 
+    "test": "yarn build && yarn test:run",
     "prepublish": "yarn build && yarn test:run && yarn test:clean"
   },
   "optionalDependencies": {
@@ -51,7 +51,6 @@
     "@dolittle/tooling.common.utilities": "8.*"
   },
   "devDependencies": {
-
     "@dolittle/typescript.build": "latest",
     "@types/debug": "^4.1.4",
     "@types/inquirer": "^6.0.1",
