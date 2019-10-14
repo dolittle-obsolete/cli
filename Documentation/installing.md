@@ -3,6 +3,7 @@ title: Installing
 description: Learn about the Dolittle CLI
 keywords: Tools, CLI
 author: einari, woksin
+aliases: /tools/cli/installing
 ---
 
 The CLI tool is built using [NodeJS](https://nodejs.org/en/). You'll have to have it installed first.

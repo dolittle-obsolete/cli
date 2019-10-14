@@ -5,6 +5,7 @@ keywords: Tools, CLI
 author: einari, woksin
 weight: 2
 repository: https://github.com/dolittle-tools/cli
+aliases: /tools/cli
 ---
 
 The @dolittle/cli CLI tool is a command-line tool built upon the [Dolittle tooling platform](https://github.com/dolittle-tools/common).
