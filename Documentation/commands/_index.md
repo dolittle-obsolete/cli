@@ -3,6 +3,7 @@ title: CLI Commands
 description: Learn about the different CLI commands
 keywords: Tools, CLI, commands
 author: einari, woksin
+aliases: /tools/cli/commands/
 ---
 
 An overview of the dolittle cli commands.
