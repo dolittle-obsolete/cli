@@ -3,6 +3,7 @@ title: check
 description: Learn about the different CLI commands
 keywords: Tools, CLI, commands
 author: einari, woksin
+aliases: /tools/cli/commands/check
 ---
 
 To check the version of the dolittle cli tool simply run
