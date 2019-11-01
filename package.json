@@ -2,7 +2,7 @@
   "name": "@dolittle/cli",
   "version": "7.0.0",
   "description": "CLI tool for Dolittle",
-  "homepage": "https://dolittle.io",
+  "homepage": "https://dolittle.io/tooling/cli",
   "author": "Dolittle",
   "license": "MIT",
   "repository": {
@@ -23,20 +23,32 @@
     "node": ">=12.0.0"
   },
   "files": [
-    "bin"
+    "Distribution"
   ],
   "preferGlobal": true,
   "bin": {
-    "dolittle": "bin/dolittle.js"
+    "dolittle": "Distribution/dolittle.js"
   },
-  "main": "bin/index.js",
+  "main": "Distribution/index.js",
   "scripts": {
-    "clean": "rimraf bin",
-    "build": "yarn clean && ./node_modules/typescript/bin/tsc",
-    "test:clean": "rimraf 'bin/**/for_*'",
-    "test:run": "mocha --require '@dolittle/typescript.build/mocha.opts' --reporter=spec 'bin/**/for_*/**/*.+(js|ts)'",
-    "test": "yarn build && yarn test:run",
+    "tasks": "gulp --tasks --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
+    "clean": "gulp clean --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
+    "build": "gulp build --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
+    "test": "gulp test --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
+    "test:run": "gulp test-run --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
+    "test:clean": "gulp test-clean --gulpfile node_modules/@dolittle/typescript.build.node/Gulpfile.js",
     "prepublish": "yarn build && yarn test:run && yarn test:clean"
+  },
+  "dependencies": {
+    "@dolittle/tooling.common.host": "8.0.0-alpha.9",
+    "chalk": "2.4.2",
+    "conf": "3.0.0",
+    "debug": "4.1.1",
+    "inquirer": "6.4.1",
+    "minimist": "1.2.0",
+    "omelette": "0.4.12",
+    "ora": "3.4.0",
+    "update-notifier": "2.5.0"
   },
   "optionalDependencies": {
     "@dolittle/tooling.common": "8.*",
@@ -51,21 +63,10 @@
     "@dolittle/tooling.common.utilities": "8.*"
   },
   "devDependencies": {
-    "@dolittle/typescript.build": "latest",
+    "@dolittle/typescript.build.node": "^1.0.14",
     "@types/debug": "^4.1.4",
     "@types/inquirer": "^6.0.1",
     "@types/minimist": "^1.2.0",
     "@types/update-notifier": "^2.5.0"
-  },
-  "dependencies": {
-    "@dolittle/tooling.common.host": "8.0.0-alpha.9",
-    "chalk": "2.4.2",
-    "conf": "3.0.0",
-    "debug": "4.1.1",
-    "inquirer": "6.4.1",
-    "minimist": "1.2.0",
-    "omelette": "0.4.12",
-    "ora": "3.4.0",
-    "update-notifier": "2.5.0"
   }
 }
