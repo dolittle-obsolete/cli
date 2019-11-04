@@ -66,6 +66,7 @@ export class Namespace extends Command {
 
         if (command) {
             parserResult.firstArg = parserResult.restArgs.shift();
+            commandContext.namespace = this.name;
             await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
         }
         else {

@@ -12,5 +12,3 @@ npm link @dolittle/tooling.common.logging
 npm link @dolittle/tooling.common.packages
 npm link @dolittle/tooling.common.plugins
 npm link @dolittle/tooling.common.utilities
-
-npm i --no-optional
