@@ -2,7 +2,6 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
 /**
  * The representation of the parsing result from {Parser}
  *
@@ -23,22 +22,21 @@ export class ParserResult {
      * @param {{[args: string]: any}} extraOpts
      * @memberof ParserResult
      */
-    constructor(firstArg: string, restArgs: string[], help: boolean, version: boolean, debug: boolean, coreLang: string, extraArgs: string[], extraOpts: {[args: string]: any}) {
+    constructor(firstArg: string | undefined, restArgs: string[], help: boolean, version: boolean, debug: boolean, coreLang: string, extraOpts: {[args: string]: any}) {
         this.firstArg = firstArg;
         this.restArgs = restArgs;
         this.help = help;
         this.version = version;
         this.debug = debug;
         this.coreLang = coreLang;
-        this.extraArgs = extraArgs; 
         this.extraOpts = extraOpts;
     }
     /**
      * The first argument that does not have an option associated with it
-     * @type {string}
+     * @type {string | undefined}
      * @memberof ParserResult
      */
-    firstArg: string;
+    firstArg: string | undefined;
     /**
      * The rest of the arguments that doesn't have an option associated with them
      * @type {string[]}
@@ -74,13 +72,6 @@ export class ParserResult {
      */
     coreLang: string;
     /**
-     * The list of extra arguments after the '--'
-     *
-     * @type {string[]}
-     * @memberof ParserResult
-     */
-    extraArgs: string[];
-    /**
      * The list of extra, non defined, options
      *
      * @type {{[args: string]: any}}
@@ -105,6 +96,6 @@ export class ParserResult {
      * @memberof ParserResult
      */
     getCommandArgs() {
-        return [this.firstArg, ...this.restArgs, ...this.extraArgs].filter(_ => _ !== undefined);
+        return [this.firstArg, ...this.restArgs].filter(_ => _ !== undefined);
     }
 }

@@ -2,14 +2,12 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { PromptDependency, IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
+import { CommandContext, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
+import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@dolittle/tooling.common.dependencies';
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
-import { Outputter } from '../Outputter';
-import { BusyIndicator } from '../BusyIndicator';
-import { Command } from './Command';
-import hasHelpOption from '../Util/hasHelpOption';
+import { Command, ParserResult, FailedCommandOutputter } from '../internal';
 
 const pkg = require('../../package.json');
 
@@ -27,13 +25,15 @@ export class Check extends Command {
         super('check', description, 
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
-
-    async action(dependencyResolvers: IDependencyResolvers, currentWorkingDirectory: string, coreLanguage: string, commandArguments: string[], commandOptions: Map<string, string>, namespace?: string, 
-                outputter: ICanOutputMessages = new Outputter(), busyIndicator: IBusyIndicator = new BusyIndicator()) {
-        if (hasHelpOption(commandOptions)) {
-            outputter.print(this.helpDocs);
+    async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
+        if (parserResult.help) {
+            outputter.print(this.getHelpDoc());
             return;
         }
+        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
+    
+    }
+    async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         await requireInternet(this._connectionChecker, busyIndicator);
         const currentVersion = pkg.version;
         const pkgName = pkg.name;
@@ -53,11 +53,7 @@ export class Check extends Command {
         }
     }
 
-    getAllDependencies(currentWorkingDirectory: string, coreLanguage: string, commandArguments?: string[], commandOptions?: Map<string, string>, namespace?: string) {
-        return this.dependencies;
-    }
-
-    private output(outputter: Outputter, pkgName: string, currentVersion: string, latestVersion: string, sameVersion?: boolean, compatibleUpgrade?: boolean, majorUpgrade?: boolean) {
+    private output(outputter: ICanOutputMessages, pkgName: string, currentVersion: string, latestVersion: string, sameVersion?: boolean, compatibleUpgrade?: boolean, majorUpgrade?: boolean) {
         if (sameVersion === undefined) sameVersion = currentVersion === latestVersion;
         if (compatibleUpgrade === undefined) compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
         if (majorUpgrade === undefined) majorUpgrade = isGreaterVersion(latestVersion, currentVersion);
@@ -84,7 +80,8 @@ export class Check extends Command {
         let dep = new PromptDependency(
             'update',
             'Whether to update CLI or not',
-            'confirm',
+            [],
+            confirmUserInputType,
             `There is a new version of the CLI. Do you wish to update to latest?`);
         let answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
         return answers.update;

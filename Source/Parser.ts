@@ -2,9 +2,8 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
 import minimist from 'minimist';
-import { ParserResult } from './ParserResult';
+import { ParserResult } from './internal';
 
 /**
  * The parser of the CLI arguments.
@@ -40,7 +39,7 @@ export class Parser {
             boolean: ['h', 'help', 'v', 'version', 'd', 'debug']
         });
         const [firstArg, ...restArgs] = _;
-        return new ParserResult(firstArg, restArgs, help || h, version || v, debug || d, coreLang, extraArgs || [], extraOptions);
+        return new ParserResult(firstArg, restArgs, help || h, version || v, debug || d, coreLang, extraOptions);
 
     }
 }

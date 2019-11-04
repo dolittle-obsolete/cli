@@ -2,23 +2,13 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { ProjectConfig } from '@dolittle/tooling.common.boilerplates';
-import { ICommandManager } from '@dolittle/tooling.common.commands';
+import { ProjectConfigObject } from '@dolittle/tooling.common';
+import { ICommandManager, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
-
-import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
-import chalk from 'chalk';
-import { ParserResult } from '../ParserResult';
-import getCoreLanguage, { CoreLanguageNotFoundError } from '../Util/getCoreLanguage';
-import { MissingCommandArgumentError } from '../Util/requireArguments'
-import { Command } from './Command';
-import { CommandGroup } from './CommandGroup';
-import { ICommands } from './ICommands';
-import { Init } from './Init';
-import { Check } from './Check';
-import { Namespace } from './Namespace';
-import { BusyIndicator } from '../BusyIndicator';
 import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
+import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
+import chalk from 'chalk';
+import { ParserResult, getCoreLanguage, ICommands, Namespace, CommandGroup, Command, Check } from '../internal';
 
 const description = `${chalk.bold('Welcome to the Dolittle CLI!')}
 
@@ -46,9 +36,11 @@ export class Commands implements ICommands {
     private _isInitialized = false;
     
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers, 
-        private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) {
+                private _outputter: ICanOutputMessages, private _busyIndicator: IBusyIndicator, 
+                private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, 
+                private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) 
+    {
         this._commands = [
-            // new Init(),
             new Check(this._latestPackageVersionFinder, this._packageDownloader, this._connectionChecker)
         ];
     }
@@ -67,7 +59,6 @@ export class Commands implements ICommands {
         return this._isInitialized;
     }
 
-    // init - creates commands from command manager
     get helpDocs() {
         let res = [
             chalk.bold('Usage:'),
@@ -86,14 +77,14 @@ export class Commands implements ICommands {
         await this.createCommands();
     }
     
-    async execute(parserResult: ParserResult, projectConfig: ProjectConfig, outputter: ICanOutputMessages) {
+    async execute(parserResult: ParserResult, projectConfigObject: ProjectConfigObject) {
         if (!this.isInitialized) {
-            outputter.warn('Commands not initialized');
+            this._outputter.warn('Commands not initialized');
             return;
         }
         if (!parserResult.firstArg) {
-            if (!parserResult.help) outputter.warn('No command is given');
-            outputter.print(this.helpDocs);
+            if (!parserResult.help) this._outputter.warn('No command is given');
+            this._outputter.print(this.helpDocs);
             return;
         }
         const isCommandGroup = this._commandGroups.map(_ => _.name).includes(parserResult.firstArg);
@@ -104,25 +95,17 @@ export class Commands implements ICommands {
         else if (isCommandGroup) command = this._commandGroups.find(_ => _.name === parserResult.firstArg);
         else if (isFirstArgNamespace) command = this._namespaces.find(_ => _.name === parserResult.firstArg);
         if (command === undefined) {
-            outputter.warn(`No such command, command group or namespace '${parserResult.firstArg}'`);
-            outputter.print();
-            outputter.print(this.helpDocs);
+            this._outputter.warn(`No such command, command group or namespace '${parserResult.firstArg}'`);
+            this._outputter.print();
+            this._outputter.print(this.helpDocs);
             return;
         }
-        parserResult.firstArg = parserResult.restArgs.shift() || '';
+        parserResult.firstArg = parserResult.restArgs.shift();
 
-        try {
-            let commandOptions = new Map<string, any>();
-            Object.keys(parserResult.extraOpts).forEach(key => {
-                commandOptions.set(key, parserResult.extraOpts[key]);
-            });
-            if (parserResult.help) commandOptions.set('help', 'true');
-            await command.action(this._dependencyResolvers, process.cwd(), getCoreLanguage(parserResult, projectConfig.store), [parserResult.firstArg, ...parserResult.restArgs], commandOptions, undefined, outputter, new BusyIndicator());
-        } catch (error) {
-            outputter.error(error);
-            outputter.warn('Could not execute the command');
-            outputter.print(command.helpDocs);
-        }
+        let cwd = process.cwd();
+        let coreLanguage = getCoreLanguage(parserResult, projectConfigObject);
+        
+        await command.trigger(parserResult, {coreLanguage, currentWorkingDirectory: cwd}, this._dependencyResolvers, this._outputter, this._busyIndicator);
     }
 
     private async createCommands() {

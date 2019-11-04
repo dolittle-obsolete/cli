@@ -1,6 +1,7 @@
 .yalc
 yalc.lock
 bin
+Distribution
 # Logs
 logs
 *.log

@@ -2,6 +2,6 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { loggers } from '@dolittle/tooling.common.logging';
+const build = require('@dolittle/typescript.build.node');
 
-loggers.turnOffLogging();
+module.exports = build.wallaby();

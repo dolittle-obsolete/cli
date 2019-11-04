@@ -2,32 +2,26 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import { UserCacheConfig } from '@dolittle/tooling.common.configurations';
 
-import Conf from 'conf';
-import path from 'path';
-
+export type CliConfigObject = {
+    /**
+     * Whether to ignore that there are no boilerplates installed 
+     *
+     * @type {boolean}
+     */
+    ignoreBoilerplatePrompt: boolean
+}
 /**
- * Represents a config file that's used as a cache storage for the cli. 
+ * Keys defined in {CliConfigObject}
  *
  * @export
  * @class CliConfig
- * @extends {Conf}
+ * @extends {UserCacheConfig}
  */
-export class CliConfig extends Conf {
-    /**
-     * Creates an instance of {CliConfig}.
-     * @param {string} configName The name of the configuration. Becomes the filename
-     * @param {string} configFolder The path of the dolittle configuration folder
-     * @param {{[key: string]: any}} defaultObj
-     * @memberof CliConfig
-     */
-    constructor(configName: string, configFolder: string, defaultObj: {[key: string]: any}) {
-        super({
-            projectName: '.cli', 
-            configName,
-            cwd: path.join(configFolder, '.cli'),
-            defaults: defaultObj,
-            projectSuffix: ''
-        });
+export class CliConfig extends UserCacheConfig {
+    
+    constructor() {
+        super('cli', {ignoreBoilerplatePrompt: false});
     }
 }
