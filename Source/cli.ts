@@ -45,6 +45,9 @@ runDolittleCli();
  *
  */
 async function runDolittleCli() {
+    dependencyResolvers.add(
+        new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter)
+    );
     notifier.notify(
         {
             isGlobal: true, 
@@ -70,7 +73,7 @@ function handleIfCheckingVersion() {
 }
 
 async function handleIfMissingPrerequsites() {
-    if (!hasProjectConfiguration()) {
+    if (!(await hasProjectConfiguration())) {
         let coreLanguage;
         while (!coreLanguage) coreLanguage = await askForCoreLanguage();
 
@@ -92,9 +95,6 @@ async function handleIfMissingPrerequsites() {
 }
 
 async function setupToolingSystem() {
-    dependencyResolvers.add(
-        new PromptDependencyResolver(dependencyDiscoverResolver, dolittleConfig, outputter)
-    );
     await initializer.initialize(pkg as HostPackage, dependencyResolvers, busyIndicator);
     commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
     await commands.initialize();
@@ -117,7 +117,8 @@ function hasBoilerplates() {
 
 async function hasProjectConfiguration() {
     let projectConfigObj = projectConfig;
-    return fileSystem.exists(projectConfigObj.path);
+    let exists = await fileSystem.exists(projectConfigObj.path);
+    return exists;
 }
 
 // function setupTabCompletion(commandManager: ICommands, outputter: ICanOutputMessages) {
