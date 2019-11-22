@@ -73,7 +73,7 @@ function handleIfCheckingVersion() {
 }
 
 async function handleIfMissingPrerequsites() {
-    if (!(await hasProjectConfiguration())) {
+    if (!projectConfig.store.coreLanguage) {
         let coreLanguage;
         while (!coreLanguage) coreLanguage = await askForCoreLanguage();
 
@@ -112,13 +112,6 @@ function printCliVersion() {
 function hasBoilerplates() {
     let boilerplatesConfigObj = boilerplatesConfig.store;
     return Object.keys(boilerplatesConfigObj).length > 0;
-}
-
-
-async function hasProjectConfiguration() {
-    let projectConfigObj = projectConfig;
-    let exists = await fileSystem.exists(projectConfigObj.path);
-    return exists;
 }
 
 // function setupTabCompletion(commandManager: ICommands, outputter: ICanOutputMessages) {

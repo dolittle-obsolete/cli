@@ -2,7 +2,7 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IDependency, argumentUserInputType, ICanResolveDependencies, IDependencyRuleFor, IPromptDependency, CannotResolveDependency, RuleNotRespected, IsNotEmpty } from '@dolittle/tooling.common.dependencies';
+import { IDependency, argumentUserInputType, ICanResolveDependencies, IDependencyRuleFor, IPromptDependency, CannotResolveDependency, RuleNotRespected } from '@dolittle/tooling.common.dependencies';
 import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { ParserResult } from './internal';
 

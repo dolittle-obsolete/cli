@@ -1,6 +1,6 @@
 {
   "name": "@dolittle/cli",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "description": "CLI tool for Dolittle",
   "homepage": "https://dolittle.io/tooling/cli",
   "author": "Dolittle",
