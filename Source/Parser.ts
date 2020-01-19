@@ -14,13 +14,13 @@ import { ParserResult } from './internal';
 export class Parser {
     /**
      * Parses the given arguments.
-     * 
+     *
      * Parsed options:
-     * 
+     *
      *     [-v|--version]
      *     [-h|--help]
      *     [-d|--debug]
-     *     [--coreLang] 
+     *     [--coreLang]
      *
      * @param {*} [args=process.argv]
      * @memberof Parser

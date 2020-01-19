@@ -15,11 +15,11 @@ import { ParserResult, CoreLanguageNotFound } from '../internal';
  */
 export function getCoreLanguage(parserResult: ParserResult, projectConfigObject: ProjectConfigObject): string {
     try {
-        let language = parserResult.coreLang? parserResult.coreLang : projectConfigObject.coreLanguage;
+        const language = parserResult.coreLang ? parserResult.coreLang : projectConfigObject.coreLanguage;
         if (!language) throw new CoreLanguageNotFound();
         return language;
-    
-    } catch(error) {
+
+    } catch (error) {
         throw new CoreLanguageNotFound();
-    } 
+    }
 }

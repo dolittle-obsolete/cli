@@ -3,15 +3,15 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 
-import { ProjectConfigObject } from "@dolittle/tooling.common";
-import { ParserResult, Command, CommandGroup, Namespace } from "../internal";
+import { ProjectConfigObject } from '@dolittle/tooling.common';
+import { ParserResult, Command, CommandGroup, Namespace } from '../internal';
 
 
 /**
  * Defines a system that knows about {Command} commands
  */
 export interface ICommands {
-    
+
     /**
      * All the commands available
      *
@@ -46,7 +46,7 @@ export interface ICommands {
      * @type {boolean}
      */
     readonly isInitialized: boolean
-    
+
     /**
      * Initializes the commands system
      *

@@ -7,13 +7,13 @@ import { ICanOutputMessages } from '@dolittle/tooling.common.utilities';
 import { ParserResult } from './internal';
 
 export class ArgumentsDependencyResolver implements ICanResolveDependencies  {
-    
+
     constructor(private _parsingResult: ParserResult, private _outputter: ICanOutputMessages) { }
-    
+
     canResolve(dependency: IDependency) {
         return  (dependency as any).userInputType === argumentUserInputType;
     }
-    
+
     async resolve(context: any, dependencies: IPromptDependency[], additionalRules: IDependencyRuleFor<IDependency>[], destinationPath?: string, coreLanguage?: string): Promise<any> {
         dependencies.forEach(_ => {
             let value: any = undefined;
@@ -31,12 +31,12 @@ export class ArgumentsDependencyResolver implements ICanResolveDependencies  {
 
             _.rules.forEach(rule => {
                 if (! rule.isRespected(value)) throw new RuleNotRespected(_, rule);
-                
+
             });
             context[_.name] = value;
         });
 
         return context;
     }
-    
+
 }

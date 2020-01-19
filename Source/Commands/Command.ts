@@ -10,40 +10,40 @@ import chalk from 'chalk';
 import { ParserResult, FailedCommandOutputter, ArgumentsDependencyResolver } from '../internal';
 
 /**
- * The base class of a {Command} that is wrapped to fit the needs of the CLI. 
+ * The base class of a {Command} that is wrapped to fit the needs of the CLI.
  *
  * @export
  * @class Command
  */
 export class Command extends BaseCommand {
-    
+
     static fromCommand(command: ICommand, commandGroup?: string, namespace?: string) {
-        const usage = `dolittle${namespace? ' ' + namespace : ''}${commandGroup? ' ' + commandGroup : ''} ${command.name}`;
+        const usage = `dolittle${namespace ? ' ' + namespace : ''}${commandGroup ? ' ' + commandGroup : ''} ${command.name}`;
         return new Command(command.name, command.description, usage, commandGroup, undefined, command.shortDescription, command);
     }
- 
+
     /**
-     * The usage text used 
+     * The usage text used
      *
      * @type {string}
      */
     usage: string;
-    
+
     /**
      * The group of commands the command belongs to, if any
      *
-     * 
+     *
      * @type {string}
      */
-    readonly group?: string
+    readonly group?: string;
 
     /**
      * The optional help text that is printed as a addition to the description and the usage
      *
-     * 
+     *
      * @type {string}
      */
-    help?: string
+    help?: string;
 
     /**
      * Creates an instance of {Command}.
@@ -55,7 +55,7 @@ export class Command extends BaseCommand {
      * @memberof Command
      */
     constructor(name: string, description: string, usage: string, group?: string, help?: string, shortDescription?: string, private _derivedCommand?: ICommand) {
-        super(name, description, false, shortDescription)
+        super(name, description, false, shortDescription);
         this.usage = usage;
         this.group = group;
         this.help = help;
@@ -68,14 +68,14 @@ export class Command extends BaseCommand {
             return;
         }
         dependencyResolvers.add(new ArgumentsDependencyResolver(parserResult, outputter));
-        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
-        
+        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator);
+
     }
 
     async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         if (!this._derivedCommand) throw new Exception('Something unexpected happened. A bad command.');
         try {
-            await this._derivedCommand.action(commandContext, dependencyResolvers, failedCommandOutputter, outputter, busyIndicator);    
+            await this._derivedCommand.action(commandContext, dependencyResolvers, failedCommandOutputter, outputter, busyIndicator);
         }
         catch {
 
@@ -84,11 +84,11 @@ export class Command extends BaseCommand {
 
     getHelpDoc(additionalDependencies: IDependency[] = []) {
         if (this._derivedCommand) {
-            this.extendHelpDocs(this._derivedCommand.dependencies.concat(additionalDependencies))
-            let res = [chalk.bold('Usage:'), `\t${this.usage}`];
+            this.extendHelpDocs(this._derivedCommand.dependencies.concat(additionalDependencies));
+            const res = [chalk.bold('Usage:'), `\t${this.usage}`];
             res.push('', this.description);
             if (this.help) res.push('', chalk.bold('Help:'), this.help);
-            
+
             return res.join('\n');
         }
         return '';
@@ -98,12 +98,12 @@ export class Command extends BaseCommand {
      * Extends the help docs with the given dependencies
      */
     private extendHelpDocs(dependencies: IDependency[]) {
-        let argumentDependencies: IPromptDependency[] = dependencies.filter(_ => dependencyIsPromptDependency(_) && _.userInputType === argumentUserInputType) as IPromptDependency[];
-        const usageText = argumentDependencies.map(_ => _.optional? `[--${_.name}]`: `<${_.name}>`).join(' ');
+        const argumentDependencies: IPromptDependency[] = dependencies.filter(_ => dependencyIsPromptDependency(_) && _.userInputType === argumentUserInputType) as IPromptDependency[];
+        const usageText = argumentDependencies.map(_ => _.optional ? `[--${_.name}]` : `<${_.name}>`).join(' ');
         const helpText = argumentDependencies.map(_ => `\t${_.name}: ${_.description}`).join('\n');
 
         this.usage = `${this.usage} ${usageText}`;
-        this.help = this.help? `${this.help}\n${helpText}` : helpText;
+        this.help = this.help ? `${this.help}\n${helpText}` : helpText;
     }
-    
+
 }

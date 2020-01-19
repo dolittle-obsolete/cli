@@ -22,7 +22,7 @@ If there is an update to the CLI you will get to choose whether to download the 
 export class Check extends Command {
 
     constructor(private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) {
-        super('check', description, 
+        super('check', description,
             'dolittle check', undefined, undefined, 'Checks the Dolittle CLI version');
     }
     async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
@@ -30,23 +30,23 @@ export class Check extends Command {
             outputter.print(this.getHelpDoc());
             return;
         }
-        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator)
-    
+        await this.action(commandContext, dependencyResolvers, new FailedCommandOutputter(this, outputter), outputter, busyIndicator);
+
     }
     async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
         await requireInternet(this._connectionChecker, busyIndicator);
         const currentVersion = pkg.version;
         const pkgName = pkg.name;
         const latestVersion = await this._latestPackageVersionFinder.find(pkg.name);
-        
+
         const sameVersion = currentVersion === latestVersion;
         const compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
         const majorUpgrade = isGreaterVersion(latestVersion, currentVersion);
         this.output(outputter, pkgName, currentVersion, latestVersion, sameVersion, compatibleUpgrade, majorUpgrade);
-        
+
         if (compatibleUpgrade || majorUpgrade) {
             const update = await this.askWhetherToUpdate(dependencyResolvers);
-            let downloadPackageInfo: DownloadPackageInfo = {name: pkgName, version: latestVersion};
+            const downloadPackageInfo: DownloadPackageInfo = {name: pkgName, version: latestVersion};
             if (update) {
                 await this._packageDownloader.download([downloadPackageInfo]);
             }
@@ -57,19 +57,19 @@ export class Check extends Command {
         if (sameVersion === undefined) sameVersion = currentVersion === latestVersion;
         if (compatibleUpgrade === undefined) compatibleUpgrade = isCompatibleUpgrade(latestVersion, currentVersion);
         if (majorUpgrade === undefined) majorUpgrade = isGreaterVersion(latestVersion, currentVersion);
-        
+
         const latestVersionText = chalk.green(latestVersion);
         let versionText = `v${currentVersion}`;
-    
+
         if (compatibleUpgrade)
             versionText = chalk.yellow(versionText);
-        
+
         else if (majorUpgrade)
             versionText = chalk.red(versionText);
 
         else
             versionText = chalk.green(versionText);
-        
+
         if (sameVersion)
             outputter.print(`${pkgName} ${versionText} - You're using the version tagged with 'latest'`);
         else
@@ -77,13 +77,13 @@ export class Check extends Command {
     }
 
     private async askWhetherToUpdate(dependencyResolvers: IDependencyResolvers) {
-        let dep = new PromptDependency(
+        const dep = new PromptDependency(
             'update',
             'Whether to update CLI or not',
             [],
             confirmUserInputType,
-            `There is a new version of the CLI. Do you wish to update to latest?`);
-        let answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
+            'There is a new version of the CLI. Do you wish to update to latest?');
+        const answers: {update: boolean} = await dependencyResolvers.resolve({}, [dep]);
         return answers.update;
     }
 }

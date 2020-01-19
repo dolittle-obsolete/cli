@@ -16,7 +16,7 @@ import { Command, ParserResult } from '../internal';
  * @extends {Command}
  */
 export class CommandGroup extends Command {
-    
+
     readonly commands: Command[] = [];
 
     static fromCommandGroup(commandGroup: ICommandGroup, commands: Command[], namespace?: string) {
@@ -34,25 +34,25 @@ export class CommandGroup extends Command {
      */
     constructor(name: string, commands: Command[], description: string, usage: string, help?: string, shortDescription?: string) {
         super(name, description, usage, name, help, shortDescription);
-        this.commands = commands;   
+        this.commands = commands;
     }
 
     get helpDocs() {
-        let res = [chalk.bold('Usage:'), `\t${this.usage}`];
+        const res = [chalk.bold('Usage:'), `\t${this.usage}`];
         res.push('', this.description);
         if (this.commands.length > 0) res.push('', chalk.bold('Commands:'), this.commands.map(cmd => `\t${chalk.bold(cmd.name)} - ${cmd.shortDescription}`).join('\n'));
         if (this.help) res.push('', chalk.bold('Help:'), this.help);
-        
+
         return res.join('\n');
 
     }
     async trigger(parserResult: ParserResult, commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
-        let firstArgument = parserResult.firstArg;
+        const firstArgument = parserResult.firstArg;
         if (!firstArgument || firstArgument === '') {
             outputter.print(this.helpDocs);
             return;
         }
-        let command = this.commands.find(_ => _.name === firstArgument);
+        const command = this.commands.find(_ => _.name === firstArgument);
         if (command) {
             parserResult.firstArg = parserResult.restArgs.shift();
             await command.trigger(parserResult, commandContext, dependencyResolvers,outputter, busyIndicator);
@@ -64,6 +64,6 @@ export class CommandGroup extends Command {
         }
     }
     async onAction(commandContext: CommandContext, dependencyResolvers: IDependencyResolvers, failedCommandOutputter: IFailedCommandOutputter, outputter: ICanOutputMessages, busyIndicator: IBusyIndicator) {
-        
+
     }
 }

@@ -4,5 +4,5 @@
 *--------------------------------------------------------------------------------------------*/
 
 describe('something', () => {
-    it('Should be true', () => true.should.be.true)
+    it('Should be true', () => true.should.be.true);
 });

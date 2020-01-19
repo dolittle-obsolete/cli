@@ -29,29 +29,29 @@ const help = [
  */
 export class Commands implements ICommands {
 
-    private _namespaces: Namespace[] = []
+    private _namespaces: Namespace[] = [];
     private _commandGroups: CommandGroup[] = [];
     private _commands: Command[];
-    
+
     private _isInitialized = false;
-    
-    constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers, 
-                private _outputter: ICanOutputMessages, private _busyIndicator: IBusyIndicator, 
-                private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, 
-                private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker) 
+
+    constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers,
+                private _outputter: ICanOutputMessages, private _busyIndicator: IBusyIndicator,
+                private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage,
+                private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker)
     {
         this._commands = [
             new Check(this._latestPackageVersionFinder, this._packageDownloader, this._connectionChecker)
         ];
     }
-    
-    get commands() { 
+
+    get commands() {
         return this._commands;
     }
-    get commandGroups() { 
+    get commandGroups() {
         return this._commandGroups;
     }
-    get namespaces() { 
+    get namespaces() {
         return this._namespaces;
     }
 
@@ -60,7 +60,7 @@ export class Commands implements ICommands {
     }
 
     get helpDocs() {
-        let res = [
+        const res = [
             chalk.bold('Usage:'),
             '\tdolittle [<namespace>] <command-group | basic-command> [<command>] [<args>] [-h | --help] [-v | --version] [-d | --debug] [--coreLang] [-n | --namespace]'
         ];
@@ -76,7 +76,7 @@ export class Commands implements ICommands {
         this._isInitialized = true;
         await this.createCommands();
     }
-    
+
     async execute(parserResult: ParserResult, projectConfigObject: ProjectConfigObject) {
         if (!this.isInitialized) {
             this._outputter.warn('Commands not initialized');
@@ -90,7 +90,7 @@ export class Commands implements ICommands {
         const isCommandGroup = this._commandGroups.map(_ => _.name).includes(parserResult.firstArg);
         const isBasicCommand = this._commands.map(_ => _.name).includes(parserResult.firstArg);
         const isFirstArgNamespace = this._namespaces.map(_ => _.name).includes(parserResult.firstArg);
-        let command: Command | undefined
+        let command: Command | undefined;
         if (isBasicCommand) command = this._commands.find(_ => _.name === parserResult.firstArg);
         else if (isCommandGroup) command = this._commandGroups.find(_ => _.name === parserResult.firstArg);
         else if (isFirstArgNamespace) command = this._namespaces.find(_ => _.name === parserResult.firstArg);
@@ -102,34 +102,34 @@ export class Commands implements ICommands {
         }
         parserResult.firstArg = parserResult.restArgs.shift();
 
-        let cwd = process.cwd();
-        let coreLanguage = getCoreLanguage(parserResult, projectConfigObject);
-        
+        const cwd = process.cwd();
+        const coreLanguage = getCoreLanguage(parserResult, projectConfigObject);
+
         await command.trigger(parserResult, {coreLanguage, currentWorkingDirectory: cwd}, this._dependencyResolvers, this._outputter, this._busyIndicator);
     }
 
     private async createCommands() {
-        let commands = this._commandManager.commands;
-        let commandGroups = this._commandManager.commandGroups;
-        let namespaces = this._commandManager.namespaces;
+        const commands = this._commandManager.commands;
+        const commandGroups = this._commandManager.commandGroups;
+        const namespaces = this._commandManager.namespaces;
 
         this._commands.push(...commands.map(_ => Command.fromCommand(_)));
-        
-        let populateCommandGroups = Promise.all(commandGroups.map( async commandGroup => {
-            let baseCommands = await commandGroup.getCommands();
-            let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name));
+
+        const populateCommandGroups = Promise.all(commandGroups.map( async commandGroup => {
+            const baseCommands = await commandGroup.getCommands();
+            const commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name));
             this._commandGroups.push(await CommandGroup.fromCommandGroup(commandGroup, commands));
         }));
 
-        let populateNamespaces = Promise.all(namespaces.map(async namespace => {
+        const populateNamespaces = Promise.all(namespaces.map(async namespace => {
 
-            let baseCommands = namespace.commands;
-            let baseCommandGroups = namespace.commandGroups;
+            const baseCommands = namespace.commands;
+            const baseCommandGroups = namespace.commandGroups;
 
-            let commands = baseCommands.map(_ => Command.fromCommand(_, undefined, namespace.name));
-            let commandGroups = await Promise.all(baseCommandGroups.map(async commandGroup => {
-                let baseCommands = await commandGroup.getCommands();
-                let commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name, namespace.name));
+            const commands = baseCommands.map(_ => Command.fromCommand(_, undefined, namespace.name));
+            const commandGroups = await Promise.all(baseCommandGroups.map(async commandGroup => {
+                const baseCommands = await commandGroup.getCommands();
+                const commands = baseCommands.map(_ => Command.fromCommand(_, commandGroup.name, namespace.name));
                 return CommandGroup.fromCommandGroup(commandGroup, commands, namespace.name);
             }));
 

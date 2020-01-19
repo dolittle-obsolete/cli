@@ -12,9 +12,9 @@ const answerName = 'language';
  * @returns
  */
 export async function askForCoreLanguage() {
-    let answers: any = await inquirer.prompt([
+    const answers: any = await inquirer.prompt([
         {
-            type: 'list', name: answerName, message: 'Choose default core programming language:', 
+            type: 'list', name: answerName, message: 'Choose default core programming language:',
             choices: languages
         }]);
     return answers[answerName];

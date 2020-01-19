@@ -9,9 +9,9 @@
  * @class ParserResult
  */
 export class ParserResult {
-    
+
     /**
-     *Creates an instance of {ParserResult}.
+     * Creates an instance of {ParserResult}.
      * @param {string} firstArg
      * @param {string[]} restArgs
      * @param {boolean} help
@@ -64,7 +64,7 @@ export class ParserResult {
     debug: boolean;
     /**
      * The coreLang option. Overrides the desired core language of this particular command. If not set the core language will be derived from the context of the CLI.
-     * 
+     *
      * Only applies to certain command groups, like 'add' and 'create'
      *
      * @type {string}
@@ -78,9 +78,9 @@ export class ParserResult {
      * @memberof ParserResult
      */
     extraOpts: {[args: string]: any};
-    
+
     /**
-     * Whether or not the command should be executed 
+     * Whether or not the command should be executed
      *
      * @returns
      * @memberof ParserResult

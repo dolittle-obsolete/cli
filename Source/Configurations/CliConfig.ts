@@ -6,12 +6,12 @@ import { UserCacheConfig } from '@dolittle/tooling.common.configurations';
 
 export type CliConfigObject = {
     /**
-     * Whether to ignore that there are no boilerplates installed 
+     * Whether to ignore that there are no boilerplates installed
      *
      * @type {boolean}
      */
     ignoreBoilerplatePrompt: boolean
-}
+};
 /**
  * Keys defined in {CliConfigObject}
  *
@@ -20,7 +20,7 @@ export type CliConfigObject = {
  * @extends {UserCacheConfig}
  */
 export class CliConfig extends UserCacheConfig {
-    
+
     constructor() {
         super('cli', {ignoreBoilerplatePrompt: false});
     }

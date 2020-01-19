@@ -2,30 +2,30 @@
  *  Copyright (c) Dolittle. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { 
-    IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath, 
-    argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType, 
+import {
+    IDependency, IDependencyDiscoverResolver, MissingCoreLanguage, MissingDestinationPath,
+    argumentUserInputType, DiscoverAndPromptDependency, IPromptDependency, confirmUserInputType,
     dependencyIsPromptDependency, dependencyIsDiscoverDependency, ICanResolveDependencies, IDependencyRuleFor
 } from '@dolittle/tooling.common.dependencies';
 import inquirer, { Question as InqiurerQuestion } from 'inquirer';
 import { Outputter } from './internal';
 
 export class PromptDependencyResolver implements ICanResolveDependencies  {
-    
+
     /**
      * Initializes a new instance of {Inquirer}
      * @param {IDependenciesManager} dependenciesManager
      * @param {any} dolittleConfig
      */
     constructor(private _discoverResolver: IDependencyDiscoverResolver, private _dolittleConfig: any, private _outputter: Outputter) { }
-    
+
     canResolve(dependency: IDependency): boolean {
         return  (dependency as any).userInputType !== undefined && (dependency as any).userInputType !== argumentUserInputType;
     }
-    
+
     async resolve(context: any, dependencies: IDependency[], additionalRules: IDependencyRuleFor<IDependency>[], destinationPath?: string, coreLanguage?: string): Promise<any> {
-        let questions = await this.createQuestions(dependencies, destinationPath, coreLanguage);
-        let answers = await inquirer.prompt(questions);
+        const questions = await this.createQuestions(dependencies, destinationPath, coreLanguage);
+        const answers = await inquirer.prompt(questions);
         Object.keys(answers).forEach(name => {
             context[name] = answers[name];
         });
@@ -33,29 +33,29 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
     }
 
     private async createQuestions(dependencies: IDependency[], destinationPath?: string, language?: string) {
-        let questions: InqiurerQuestion[] = [];
-        for (let dep of dependencies) {
-            if (dep instanceof DiscoverAndPromptDependency || dependencyIsDiscoverDependency(dep) && (<any>dep).userInputType !== undefined) {
+        const questions: InqiurerQuestion[] = [];
+        for (const dep of dependencies) {
+            if (dep instanceof DiscoverAndPromptDependency || dependencyIsDiscoverDependency(dep) && (dep as any).userInputType !== undefined) {
                 if (!destinationPath) throw new MissingDestinationPath();
                 if (!language) throw new MissingCoreLanguage();
-                let discoveryResult = await this._discoverResolver.resolve(<DiscoverAndPromptDependency>dep, destinationPath, language, this._dolittleConfig);
-                let choices = typeof discoveryResult === 'string' || discoveryResult instanceof String?
+                const discoveryResult = await this._discoverResolver.resolve(dep as DiscoverAndPromptDependency, destinationPath, language, this._dolittleConfig);
+                const choices = typeof discoveryResult === 'string' || discoveryResult instanceof String ?
                     [discoveryResult]
-                    : discoveryResult.length === 0?
+                    : discoveryResult.length === 0 ?
                         []
-                        : discoveryResult[0].hasOwnProperty('namespace') !== undefined? 
-                            (<{value: string, namespace: string}[]>discoveryResult).map(item => new Object(
+                        : discoveryResult[0].hasOwnProperty('namespace') !== undefined ?
+                            (discoveryResult as {value: string, namespace: string}[]).map(item => new Object(
                                 {
-                                    name: `${item.namespace}.${item.value}`, 
-                                    value: {namespace: item.namespace, value: item.value} 
+                                    name: `${item.namespace}.${item.value}`,
+                                    value: {namespace: item.namespace, value: item.value}
                                 })
                             )
                         : discoveryResult;
-            
-            questions.push(...this.createPrompt(<DiscoverAndPromptDependency>dep, choices));
+
+            questions.push(...this.createPrompt(dep as DiscoverAndPromptDependency, choices));
             }
             else if (dependencyIsPromptDependency(dep)) questions.push(...this.createPrompt(dep));
-            
+
             else {
                 this._outputter.warn(`Found an invalid 'type' on dependency: '${dep.type}'`);
                 throw new Error(`Invalid type '${dep.type}'`);
@@ -65,22 +65,22 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
     }
     private createPrompt(dependency: IPromptDependency, choices: any[] = []) {
         const inputType = dependency.userInputType;
-        
+
         if (inputType === 'input') return this.createInputPrompt(dependency.name, dependency.promptMessage);
-        let items = dependency.choices !== undefined? 
+        const items = dependency.choices !== undefined ?
                 dependency.choices.concat(choices)
                 : choices;
         if (dependency.customInput) items.push(dependency.customInput);
         if (inputType === 'chooseOne') return this.createListPrompt(dependency, dependency.promptMessage, items);
         else if (inputType === 'chooseMultiple') return this.createCheckboxPrompt(dependency, dependency.promptMessage, items);
-        
-        else if (inputType === confirmUserInputType ) return this.createConfirmPrompt(dependency, dependency.promptMessage)
+
+        else if (inputType === confirmUserInputType ) return this.createConfirmPrompt(dependency, dependency.promptMessage);
         else {
             this._outputter.warn(`Found an invalid 'userInputType' on dependency: '${inputType}'`);
-            throw new Error(`Invalid userInputType '${inputType}'`)
+            throw new Error(`Invalid userInputType '${inputType}'`);
         }
     }
-    
+
     private createInputPrompt(name: string, message: string) {
         return [{
             type: 'input',
@@ -160,6 +160,6 @@ export class PromptDependencyResolver implements ICanResolveDependencies  {
                 message: promptMessage,
                 default: false
             }
-        ]
+        ];
     }
 }

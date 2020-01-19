@@ -2,15 +2,15 @@
 *  Copyright (c) Dolittle. All rights reserved.
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
-import { IBusyIndicator, BusyIndicatorNotCreated } from "@dolittle/tooling.common.utilities";
-import ora from "ora";
+import { IBusyIndicator, BusyIndicatorNotCreated } from '@dolittle/tooling.common.utilities';
+import ora from 'ora';
 
 export class BusyIndicator implements IBusyIndicator {
     private _indicator?: ora.Ora;
-    
+
     get text() {
         this.throwIfNotCreated();
-        return this._indicator!.text; 
+        return this._indicator!.text;
     }
 
     set text(text: string) {
