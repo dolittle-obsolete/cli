@@ -54,6 +54,7 @@ async function runDolittleCli() {
             message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'
         }
     );
+    await checkIfToolingPlatformUpdate();
     handleIfCheckingVersion();
     await handleIfMissingPrerequsites();
 
@@ -64,6 +65,18 @@ async function runDolittleCli() {
     } catch (error) {
         outputter.error(error);
     }
+}
+async function checkIfToolingPlatformUpdate() {
+    const hasUpdate = await initializer.toolingPlatformHasUpdate();
+    if (hasUpdate) {
+        const update = await askToUpdateToolingPlatform();
+        if (update) {
+            await initializer.updateToolingPlatform();
+            outputter.print('Tooling platform updated. Exiting CLI...')
+            process.exit(0);
+        }
+    }
+
 }
 function handleIfCheckingVersion() {
     if (parsingResult.version) {
@@ -98,6 +111,11 @@ async function setupToolingSystem() {
     await initializer.initialize(pkg as HostPackage, dependencyResolvers, busyIndicator);
     commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
     await commands.initialize();
+}
+
+async function askToUpdateToolingPlatform() {
+    const answers: any = await inquirer.prompt([{type: 'confirm', default: false, name: 'update', message: 'A newer version of the tooling platform was found. Do you wish to update?'}]);
+    return answers['update'];
 }
 
 async function askToFindBoilerplates() {
