@@ -53,7 +53,7 @@ async function runDolittleCli() {
             message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'
         }
     );
-    await checkIfToolingPlatformUpdate();
+    // await checkIfToolingPlatformUpdate();
     handleIfCheckingVersion();
     await handleIfMissingPrerequsites();
 
