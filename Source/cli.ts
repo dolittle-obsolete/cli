@@ -12,7 +12,6 @@ import { dolittleConfig } from '@dolittle/tooling.common.configurations';
 import { initializer, projectConfig, ProjectConfigObject, HostPackage } from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
-import { fileSystem } from '@dolittle/tooling.common.files';
 import { connectionChecker, npmPackageDownloader, latestNpmPackageVersionFinder } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import inquirer from 'inquirer';
@@ -67,12 +66,14 @@ async function runDolittleCli() {
     }
 }
 async function checkIfToolingPlatformUpdate() {
+    const isConnected = await connectionChecker.isConnected();
+    if (!isConnected) return;
     const hasUpdate = await initializer.toolingPlatformHasUpdate();
     if (hasUpdate) {
         const update = await askToUpdateToolingPlatform();
         if (update) {
             await initializer.updateToolingPlatform();
-            outputter.print('Tooling platform updated. Exiting CLI...')
+            outputter.print('Tooling platform updated. Exiting CLI...');
             process.exit(0);
         }
     }
