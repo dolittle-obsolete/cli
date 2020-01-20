@@ -95,7 +95,7 @@ async function handleIfMissingPrerequsites() {
 
 async function setupToolingSystem() {
     await initializer.initialize(pkg as HostPackage, dependencyResolvers, busyIndicator);
-    commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
+    commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, latestCompatiblePackageFinder, npmPackageDownloader, connectionChecker, toolingPackage);
     await commands.initialize();
 }
 

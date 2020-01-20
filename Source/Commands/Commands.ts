@@ -3,9 +3,9 @@
 *  Licensed under the MIT License. See LICENSE in the project root for license information.
 *--------------------------------------------------------------------------------------------*/
 import { ProjectConfigObject } from '@dolittle/tooling.common';
-import { ICommandManager, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
+import { ICommandManager } from '@dolittle/tooling.common.commands';
 import { IDependencyResolvers } from '@dolittle/tooling.common.dependencies';
-import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker } from '@dolittle/tooling.common.packages';
+import { ICanFindLatestVersionOfPackage, ICanDownloadPackages, IConnectionChecker, ILatestCompatiblePackageFinder } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { ParserResult, getCoreLanguage, ICommands, Namespace, CommandGroup, Command, Check } from '../internal';
@@ -37,11 +37,11 @@ export class Commands implements ICommands {
 
     constructor(private _commandManager: ICommandManager, private _dependencyResolvers: IDependencyResolvers,
                 private _outputter: ICanOutputMessages, private _busyIndicator: IBusyIndicator,
-                private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage,
-                private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker)
+                private _latestPackageVersionFinder: ICanFindLatestVersionOfPackage, private _latestCompatiblePackageFinder: ILatestCompatiblePackageFinder,
+                private _packageDownloader: ICanDownloadPackages, private _connectionChecker: IConnectionChecker, private _toolingPackage: any)
     {
         this._commands = [
-            new Check(this._latestPackageVersionFinder, this._packageDownloader, this._connectionChecker)
+            new Check(this._latestPackageVersionFinder, this._latestCompatiblePackageFinder, this._packageDownloader, this._connectionChecker, this._toolingPackage)
         ];
     }
 
