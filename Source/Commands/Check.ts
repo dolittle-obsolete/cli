@@ -5,7 +5,7 @@
 import { CommandContext, IFailedCommandOutputter } from '@dolittle/tooling.common.commands';
 import { PromptDependency, IDependencyResolvers, confirmUserInputType } from '@dolittle/tooling.common.dependencies';
 import { requireInternet, isCompatibleUpgrade, isGreaterVersion, DownloadPackageInfo, IConnectionChecker, ICanFindLatestVersionOfPackage, ICanDownloadPackages, ILatestCompatiblePackageFinder } from '@dolittle/tooling.common.packages';
-import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
+import { ICanOutputMessages, IBusyIndicator, Exception } from '@dolittle/tooling.common.utilities';
 import chalk from 'chalk';
 import { Command, ParserResult, FailedCommandOutputter } from '../internal';
 
@@ -68,6 +68,7 @@ export class Check extends Command {
 
     private async checkToolingPlatform(dependencyResolvers: IDependencyResolvers, outputter: ICanOutputMessages) {
         const latestCompatibleVersion = (await this._latestCompatiblePackageFinder.find('@dolittle/tooling.common'))?.version!;
+        if (latestCompatibleVersion === undefined) throw new Error('Could not find latest compatible version of Tooling Platform. Something must be wrong. Please report issue on https://github.com/dolittle-tools/cli/issues');
         this.output(outputter, 'Tooling Platform', this._toolingPackage.version, latestCompatibleVersion);
         const shouldUpdate = isGreaterVersion(latestCompatibleVersion, this._toolingPackage.version);
         if (shouldUpdate) {
