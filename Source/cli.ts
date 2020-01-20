@@ -12,7 +12,7 @@ import { dolittleConfig } from '@dolittle/tooling.common.configurations';
 import { initializer, projectConfig, ProjectConfigObject, HostPackage } from '@dolittle/tooling.common';
 import { commandManager } from '@dolittle/tooling.common.commands';
 import { dependencyResolvers, dependencyDiscoverResolver } from '@dolittle/tooling.common.dependencies';
-import { connectionChecker, npmPackageDownloader, latestNpmPackageVersionFinder } from '@dolittle/tooling.common.packages';
+import { connectionChecker, npmPackageDownloader, latestNpmPackageVersionFinder, DownloadPackageInfo, isGreaterVersion, toolingPackage, latestCompatiblePackageFinder } from '@dolittle/tooling.common.packages';
 import { ICanOutputMessages, IBusyIndicator } from '@dolittle/tooling.common.utilities';
 import inquirer from 'inquirer';
 import updateNotifier from 'update-notifier';
@@ -53,7 +53,6 @@ async function runDolittleCli() {
             message: 'There seems to be a new version of the CLI. Run \'dolittle check\' to check and update'
         }
     );
-    // await checkIfToolingPlatformUpdate();
     handleIfCheckingVersion();
     await handleIfMissingPrerequsites();
 
@@ -64,20 +63,6 @@ async function runDolittleCli() {
     } catch (error) {
         outputter.error(error);
     }
-}
-async function checkIfToolingPlatformUpdate() {
-    const isConnected = await connectionChecker.isConnected();
-    if (!isConnected) return;
-    const hasUpdate = await initializer.toolingPlatformHasUpdate();
-    if (hasUpdate) {
-        const update = await askToUpdateToolingPlatform();
-        if (update) {
-            await initializer.updateToolingPlatform();
-            outputter.print('Tooling platform updated. Exiting CLI...');
-            process.exit(0);
-        }
-    }
-
 }
 function handleIfCheckingVersion() {
     if (parsingResult.version) {
@@ -112,11 +97,6 @@ async function setupToolingSystem() {
     await initializer.initialize(pkg as HostPackage, dependencyResolvers, busyIndicator);
     commands = new Commands(commandManager, dependencyResolvers, outputter, busyIndicator, latestNpmPackageVersionFinder, npmPackageDownloader, connectionChecker);
     await commands.initialize();
-}
-
-async function askToUpdateToolingPlatform() {
-    const answers: any = await inquirer.prompt([{type: 'confirm', default: false, name: 'update', message: 'A newer version of the tooling platform was found. Do you wish to update?'}]);
-    return answers['update'];
 }
 
 async function askToFindBoilerplates() {
