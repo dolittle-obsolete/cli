@@ -1,6 +1,5 @@
 ---
 title: Get started
-url: /tooling/cli/
 description: Learn about the Dolittle CLI
 keywords: Tools, CLI 
 author: einari, woksin
