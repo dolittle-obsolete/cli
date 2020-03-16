@@ -50,7 +50,7 @@
     "conf": "3.0.0",
     "debug": "4.1.1",
     "inquirer": "6.4.1",
-    "minimist": "1.2.0",
+    "minimist": "1.2.5",
     "omelette": "0.4.12",
     "ora": "3.4.0",
     "update-notifier": "2.5.0"
